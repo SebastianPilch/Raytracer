@@ -1,29 +1,24 @@
 #ifndef RAY_H
 #define RAY_H
-
+#include <map>
+#include <vector>
 #include "vec3.h"
+using namespace std;
 
 class ray {
 public:
-    ray() {}
-
-    ray(const point3& origin, const vec3& direction) : orig(origin), dir(direction) {}
-
-    const point3& origin() const { return orig; }
-    const vec3& direction() const { return dir; }
-
-    point3 at(double t) const {
-        return orig + t * dir;
-    }
-
+    ray();
+    ray(const point3& origin, const vec3& direction);
+    const point3& origin() { return orig; };
+    const vec3& direction() { return dir; };
+    point3 at(double t) const;
+    point3 findIntersection(const Plane& plane) const;
 private:
     point3 orig;
     vec3 dir;
 };
 
-
-
-bool Plane_hit(vec3 normal, const ray& r);
+bool Face_hit(const Plane& pl, const ray& r,const vector<int>& polygon, map<int, point3> vertices_coords);
 
 
 

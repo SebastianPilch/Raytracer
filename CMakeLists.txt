@@ -14,4 +14,4 @@ include_directories(helpers)
 file(GLOB SOURCES "src/*.cpp")
 
 # Tworzenie wykonywalnego pliku z plikami źródłowymi
-add_executable(MyExecutable ${SOURCES} "include/ImportObj.h" "src/ImportObj.cpp" "include/vec3.h"  "include/Ray.h")
+add_executable(MyExecutable ${SOURCES} "include/ImportObj.h" "src/ImportObj.cpp" "include/vec3.h"  "include/Ray.h" "src/Ray.cpp")
