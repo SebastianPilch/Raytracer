@@ -16,5 +16,4 @@ size_t split(const string& txt, vector<string>& strs, char ch);
 void GetDataFromObj(map<int, vec3> &vertices_coors, map<int, vector<int>> &vertices_to_faces, map<int, vec3> &faces_normals, map<int, Plane>& Planes_to_faces, string file_path);
 
 
-
 #endif 

@@ -24,13 +24,20 @@ int main() {
     map<int, Plane> Planes_to_faces;
     GetDataFromObj(vertices_coors, vertices_to_faces, faces_normals,Planes_to_faces, "..\\..\\..\\helpers\\untitled.obj");
 
-    ray MainRay = ray(point3(5, 5, 5), vec3(-2, -2, -2));
+    ray MainRay = ray(point3(0, 0.1,0), vec3(2, 0, 2));
 
     for (const auto& pair : Planes_to_faces) {
         bool hit = Face_hit(pair.second, MainRay, vertices_to_faces[pair.first], vertices_coors);
         if (hit) { cout << "Nastapilo odbicie od sciany "<< pair.first << endl; }
         else { cout << "Nie nastapilo odbicie od sciany " << pair.first << endl; }    
     }
-        
+    
+
+
+
+
+
+
+
     return 0;
 }
