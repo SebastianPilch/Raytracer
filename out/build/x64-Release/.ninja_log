@@ -1,0 +1,5 @@
+# ninja log v5
+2	568	7361055300647881	CMakeFiles/MyExecutable.dir/src/blender_to_cpp.cpp.obj	27b6882815809da3
+569	686	7361055301577650	MyExecutable.exe	f0e8ff128f357a42
+1	1071	7361046863113683	CMakeFiles/MyExecutable.dir/src/ImportObj.cpp.obj	f935df69cad4d412
+2	484	7361054049768951	CMakeFiles/MyExecutable.dir/src/Ray.cpp.obj	8fe5f9dfb8c42323

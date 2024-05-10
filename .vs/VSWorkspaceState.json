@@ -1,0 +1,20 @@
+{
+  "OutputFoldersPerTargetSystem": {
+    "Maszyna lokalna": [
+      "out\\build\\x64-Debug",
+      "out\\install\\x64-Debug",
+      "out\\build\\x64-Release",
+      "out\\install\\x64-Release"
+    ]
+  },
+  "ExpandedNodes": [
+    "",
+    "\\Dokumentacja",
+    "\\helpers",
+    "\\include",
+    "\\out",
+    "\\out\\build",
+    "\\src"
+  ],
+  "PreviewInSolutionExplorer": false
+}
