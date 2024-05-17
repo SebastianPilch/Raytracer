@@ -10,12 +10,12 @@ ray::ray(const point3& origin, const vec3& direction) : orig(origin), dir(direct
 point3 ray::at(double t) const { return this->dir*t + this->orig; }
 point3 ray::findIntersection(const Plane& plane) const
 {
-    cout << this->dir << endl;
+    //cout << this->dir << endl;
     double t = -(plane.A * this->orig.x() + plane.B * this->orig.y() + plane.C * this->orig.z() + plane.D) /
         (plane.A * this->dir.x() + plane.B * this->dir.y() + plane.C * this->dir.z());
 
     point3 intersection(at(t));
-    cout << intersection << endl;
+   // cout << intersection << endl;
 
     return intersection;
 }
@@ -29,8 +29,8 @@ bool Face_hit(const Plane& pl, const ray& r, const vector<int>& polygon, map<int
     }
     vec3 edge;
     for (size_t i = 0; i < polygon.size(); ++i) {
-
-        edge = vertices_coords[polygon[i + 1]] - vertices_coords[polygon[i]];
+        size_t next_index = (i + 1) % polygon.size();
+        edge = vertices_coords[polygon[next_index]] - vertices_coords[polygon[i]];
         vec3 vp = intersection - vertices_coords[polygon[i]];
         vec3 n = crossProduct_(edge, vp);
         vec3 normal = vec3(pl.A, pl.B, pl.C);
@@ -38,6 +38,7 @@ bool Face_hit(const Plane& pl, const ray& r, const vector<int>& polygon, map<int
             return false;
         }
     }
+
     return true;
 
 };
