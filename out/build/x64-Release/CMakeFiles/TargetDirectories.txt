@@ -1,3 +1,0 @@
-D:/Projects/raytracer-project/out/build/x64-Release/CMakeFiles/MyExecutable.dir
-D:/Projects/raytracer-project/out/build/x64-Release/CMakeFiles/edit_cache.dir
-D:/Projects/raytracer-project/out/build/x64-Release/CMakeFiles/rebuild_cache.dir
