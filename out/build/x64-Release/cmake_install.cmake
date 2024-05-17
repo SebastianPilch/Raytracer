@@ -1,8 +1,8 @@
-# Install script for directory: C:/Users/Sebastian/Desktop/Raytracing/Raytracer
+# Install script for directory: D:/Projects/raytracer-project
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "C:/Users/Sebastian/Desktop/Raytracing/Raytracer/out/install/x64-Release")
+  set(CMAKE_INSTALL_PREFIX "D:/Projects/raytracer-project/out/install/x64-Release")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -40,5 +40,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "C:/Users/Sebastian/Desktop/Raytracing/Raytracer/out/build/x64-Release/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "D:/Projects/raytracer-project/out/build/x64-Release/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
