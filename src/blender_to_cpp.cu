@@ -1,4 +1,4 @@
-﻿// blender_to_cpp.cpp: definiuje punkt wejścia dla aplikacji.
+// blender_to_cpp.cpp: definiuje punkt wejścia dla aplikacji.
 
 
 #include <iostream>
@@ -51,54 +51,43 @@ void saveAsBMP(const std::vector<std::vector<float>>& img, int width, int height
 
 int main() {
 
-    int vert_num = 3;
-    float** vert = new float* [vert_num];
+    int vert_num1 = 3;
+    int face_num1 = 1;
+    int normal_num1 = 1;
 
-    for (int i = 0; i < vert_num; ++i) {
-        vert[i] = new float[3];  // Allocating 3 floats for each row
-    }
+   Pointer_storage Kostka = GetDataFromObj( vert_num1,
+        face_num1, normal_num1, "..\\..\\..\\helpers\\untitled.obj");
 
-    map<int, vector<int>> vertices_to_faces;
-    map<int, vec3> faces_normals;
-    map<int, Plane> Planes_to_faces;
-    GetDataFromObj(vert, vert_num,  vertices_to_faces, faces_normals,Planes_to_faces, "..\\..\\..\\helpers\\Trojkatny_szescian.obj");
+    int vert_num2 = 3;
+    int face_num2 = 1;
+    int normal_num2 = 1;
+
+    Pointer_storage Trojkatna_Kostka = GetDataFromObj(vert_num2,
+        face_num2, normal_num2, "..\\..\\..\\helpers\\Trojkatny_szescian.obj");
 
 
+
+    int vert_num3=3;
+    int face_num3 = 1;
+    int normal_num3 = 1;
+
+    Pointer_storage pociety_walec = GetDataFromObj(vert_num3,
+        face_num3, normal_num3, "..\\..\\..\\helpers\\walec_ale_kanciastyXD.obj");
+
+
+    cout << endl << endl << "Kostka" << endl << endl;
+
+    Print_Import_data(Kostka, vert_num1, normal_num1, face_num1);
+
+    cout << endl << endl << "Sześcian pokrojony" << endl << endl;
+    Print_Import_data(Trojkatna_Kostka, vert_num2, normal_num2, face_num2);
+
+    cout << endl << endl << "zlosliwy przyklad kanciastego walca" << endl << endl;
+
+    Print_Import_data(pociety_walec, vert_num3, normal_num3, face_num3);
 
     //saveAsBMP(img, width, height, "result_image.bmp");
 
-
-
-
-
-    //float** x = new float* [4];
-    //float** y = new float* [4];
-    //float** z= new float* [4];
-
-
-
-    //MatrixAddition(4,4,x,y,z);
-
-
-    //for (int i = 0; i < 4; i++) {
-    //    for (int j = 0; j < 4; j++) 
-    //    {
-    //        cout <<" " << z[i][j];
-
-    //    }
-    //    cout << endl;
-    //}
-
-
-
-
-
-
-
-
-
-
-
-
     return 0;
+
 }
