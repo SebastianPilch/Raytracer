@@ -1,17 +1,21 @@
-cmake_minimum_required(VERSION 3.10)
-project(MyProject)
+cmake_minimum_required(VERSION 3.18)
+project(ProjektCUDA LANGUAGES CXX CUDA)
 
-# Ustawianie standardu C++
+# Ustawienie wersji CUDA, jeżeli jest wymagane
+set(CMAKE_CUDA_STANDARD 11)
 set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# Dodawanie folderu include
-include_directories(include)
+# Dodanie ścieżki do plików nagłówkowych
+include_directories(${PROJECT_SOURCE_DIR}/include)
 
-# Dodawanie ścieżki do plików pomocniczych
-include_directories(helpers)
-# Znajdowanie wszystkich plików źródłowych w folderze src
-file(GLOB SOURCES "src/*.cpp")
+# Lista plików źródłowych CUDA
+file(GLOB_RECURSE CUDA_SOURCES ${PROJECT_SOURCE_DIR}/src/*.cu ${PROJECT_SOURCE_DIR}/helpers/*.cu)
 
-# Tworzenie wykonywalnego pliku z plikami źródłowymi
-add_executable(MyExecutable ${SOURCES} "include/ImportObj.h" "src/ImportObj.cpp" "include/vec3.h"  "include/Ray.h" "src/Ray.cpp")
+# Dodanie głównego pliku wykonywalnego
+add_executable(projekt ${CUDA_SOURCES})
+
+# Ustawienia specyficzne dla CUDA
+set_target_properties(projekt PROPERTIES
+    CUDA_SEPARABLE_COMPILATION ON
+    CUDA_ARCHITECTURES "all"
+)
