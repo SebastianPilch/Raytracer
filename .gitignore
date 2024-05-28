@@ -1,0 +1,13 @@
+# Ignoruj wszystkie pliki
+*
+
+# Wyjątki od reguły - dodajemy poniższe typy plików
+!*.cu
+!*.cuh
+!*.cpp
+!*.h
+!*.txt
+
+# Dodatkowe wykluczenia dla katalogów
+!.gitignore
+!CMakeLists.txt
