@@ -9,12 +9,8 @@
   },
   "ExpandedNodes": [
     "",
-    "\\Dokumentacja",
-    "\\helpers",
-    "\\include",
-    "\\out",
-    "\\out\\build",
-    "\\src"
+    "\\helpers"
   ],
+  "SelectedNode": "\\vec3.cuh",
   "PreviewInSolutionExplorer": false
 }

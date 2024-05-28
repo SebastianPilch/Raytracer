@@ -11,7 +11,7 @@
 # =============================================================================
 
 # =============================================================================
-# Project: MyProject
+# Project: ProjektCUDA
 # Configurations: Debug
 # =============================================================================
 
@@ -41,49 +41,85 @@ include CMakeFiles\rules.ninja
 
 cmake_ninja_workdir = C$:\Users\Sebastian\Desktop\Raytracing\Raytracer\out\build\x64-Debug\
 # =============================================================================
-# Object build statements for EXECUTABLE target MyExecutable
+# Object build statements for EXECUTABLE target projekt
 
 
 #############################################
-# Order-only phony target for MyExecutable
+# Order-only phony target for projekt
 
-build cmake_object_order_depends_target_MyExecutable: phony || CMakeFiles\MyExecutable.dir
+build cmake_object_order_depends_target_projekt: phony || CMakeFiles\projekt.dir
 
-build CMakeFiles\MyExecutable.dir\src\ImportObj.cpp.obj: CXX_COMPILER__MyExecutable_unscanned_Debug C$:\Users\Sebastian\Desktop\Raytracing\Raytracer\src\ImportObj.cpp || cmake_object_order_depends_target_MyExecutable
-  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
-  INCLUDES = -IC:\Users\Sebastian\Desktop\Raytracing\Raytracer\include -IC:\Users\Sebastian\Desktop\Raytracing\Raytracer\helpers
-  OBJECT_DIR = CMakeFiles\MyExecutable.dir
-  OBJECT_FILE_DIR = CMakeFiles\MyExecutable.dir\src
-  TARGET_COMPILE_PDB = CMakeFiles\MyExecutable.dir\
-  TARGET_PDB = MyExecutable.pdb
+build CMakeFiles\projekt.dir\ImportObj.cu.obj: CUDA_COMPILER__projekt_unscanned_Debug C$:\Users\Sebastian\Desktop\Raytracing\Raytracer\ImportObj.cu || cmake_object_order_depends_target_projekt
+  DEP_FILE = CMakeFiles\projekt.dir\ImportObj.cu.obj.d
+  FLAGS = -D_WINDOWS -Xcompiler=" /GR /EHsc" -Xcompiler=" -Zi -Ob0 -Od /RTC1" -arch=all -Xcompiler=-MDd
+  INCLUDES = -IC:\Users\Sebastian\Desktop\Raytracing\Raytracer -isystem "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.3\include"
+  OBJECT_DIR = CMakeFiles\projekt.dir
+  OBJECT_FILE_DIR = CMakeFiles\projekt.dir
+  TARGET_COMPILE_PDB = CMakeFiles\projekt.dir\
+  TARGET_PDB = projekt.pdb
 
-build CMakeFiles\MyExecutable.dir\src\blender_to_cpp.cpp.obj: CXX_COMPILER__MyExecutable_unscanned_Debug C$:\Users\Sebastian\Desktop\Raytracing\Raytracer\src\blender_to_cpp.cpp || cmake_object_order_depends_target_MyExecutable
-  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
-  INCLUDES = -IC:\Users\Sebastian\Desktop\Raytracing\Raytracer\include -IC:\Users\Sebastian\Desktop\Raytracing\Raytracer\helpers
-  OBJECT_DIR = CMakeFiles\MyExecutable.dir
-  OBJECT_FILE_DIR = CMakeFiles\MyExecutable.dir\src
-  TARGET_COMPILE_PDB = CMakeFiles\MyExecutable.dir\
-  TARGET_PDB = MyExecutable.pdb
+build CMakeFiles\projekt.dir\Parllel_fun.cu.obj: CUDA_COMPILER__projekt_unscanned_Debug C$:\Users\Sebastian\Desktop\Raytracing\Raytracer\Parllel_fun.cu || cmake_object_order_depends_target_projekt
+  DEP_FILE = CMakeFiles\projekt.dir\Parllel_fun.cu.obj.d
+  FLAGS = -D_WINDOWS -Xcompiler=" /GR /EHsc" -Xcompiler=" -Zi -Ob0 -Od /RTC1" -arch=all -Xcompiler=-MDd
+  INCLUDES = -IC:\Users\Sebastian\Desktop\Raytracing\Raytracer -isystem "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.3\include"
+  OBJECT_DIR = CMakeFiles\projekt.dir
+  OBJECT_FILE_DIR = CMakeFiles\projekt.dir
+  TARGET_COMPILE_PDB = CMakeFiles\projekt.dir\
+  TARGET_PDB = projekt.pdb
+
+build CMakeFiles\projekt.dir\Ray.cu.obj: CUDA_COMPILER__projekt_unscanned_Debug C$:\Users\Sebastian\Desktop\Raytracing\Raytracer\Ray.cu || cmake_object_order_depends_target_projekt
+  DEP_FILE = CMakeFiles\projekt.dir\Ray.cu.obj.d
+  FLAGS = -D_WINDOWS -Xcompiler=" /GR /EHsc" -Xcompiler=" -Zi -Ob0 -Od /RTC1" -arch=all -Xcompiler=-MDd
+  INCLUDES = -IC:\Users\Sebastian\Desktop\Raytracing\Raytracer -isystem "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.3\include"
+  OBJECT_DIR = CMakeFiles\projekt.dir
+  OBJECT_FILE_DIR = CMakeFiles\projekt.dir
+  TARGET_COMPILE_PDB = CMakeFiles\projekt.dir\
+  TARGET_PDB = projekt.pdb
+
+build CMakeFiles\projekt.dir\blender_to_cpp.cu.obj: CUDA_COMPILER__projekt_unscanned_Debug C$:\Users\Sebastian\Desktop\Raytracing\Raytracer\blender_to_cpp.cu || cmake_object_order_depends_target_projekt
+  DEP_FILE = CMakeFiles\projekt.dir\blender_to_cpp.cu.obj.d
+  FLAGS = -D_WINDOWS -Xcompiler=" /GR /EHsc" -Xcompiler=" -Zi -Ob0 -Od /RTC1" -arch=all -Xcompiler=-MDd
+  INCLUDES = -IC:\Users\Sebastian\Desktop\Raytracing\Raytracer -isystem "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.3\include"
+  OBJECT_DIR = CMakeFiles\projekt.dir
+  OBJECT_FILE_DIR = CMakeFiles\projekt.dir
+  TARGET_COMPILE_PDB = CMakeFiles\projekt.dir\
+  TARGET_PDB = projekt.pdb
 
 
 # =============================================================================
-# Link build statements for EXECUTABLE target MyExecutable
+# Device Link build statements for EXECUTABLE target projekt
 
 
 #############################################
-# Link the executable MyExecutable.exe
+# Link the executable CMakeFiles\projekt.dir\cmake_device_link.obj
 
-build MyExecutable.exe: CXX_EXECUTABLE_LINKER__MyExecutable_Debug CMakeFiles\MyExecutable.dir\src\ImportObj.cpp.obj CMakeFiles\MyExecutable.dir\src\blender_to_cpp.cpp.obj
-  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
-  LINK_FLAGS = /machine:x64 /debug /INCREMENTAL /subsystem:console
-  LINK_LIBRARIES = kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib
-  OBJECT_DIR = CMakeFiles\MyExecutable.dir
+build CMakeFiles\projekt.dir\cmake_device_link.obj: CUDA_EXECUTABLE_DEVICE_LINKER__projekt_Debug CMakeFiles\projekt.dir\ImportObj.cu.obj CMakeFiles\projekt.dir\Parllel_fun.cu.obj CMakeFiles\projekt.dir\Ray.cu.obj CMakeFiles\projekt.dir\blender_to_cpp.cu.obj | C$:\Program$ Files\NVIDIA$ GPU$ Computing$ Toolkit\CUDA\v12.3\lib\x64\cudart.lib
+  LANGUAGE_COMPILE_FLAGS = -D_WINDOWS -Xcompiler=" /GR /EHsc" -Xcompiler=" -Zi -Ob0 -Od /RTC1" -arch=all -Xcompiler=-MDd
+  LINK_LIBRARIES = "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.3\lib\x64\cudart.lib" cudadevrt.lib cudart_static.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib
+  OBJECT_DIR = CMakeFiles\projekt.dir
+  TARGET_COMPILE_PDB = CMakeFiles\projekt.dir\
+  TARGET_FILE = CMakeFiles\projekt.dir\cmake_device_link.obj
+  TARGET_IMPLIB = projekt.lib
+  TARGET_PDB = projekt.pdb
+
+# =============================================================================
+# Link build statements for EXECUTABLE target projekt
+
+
+#############################################
+# Link the executable projekt.exe
+
+build projekt.exe: CUDA_EXECUTABLE_LINKER__projekt_Debug CMakeFiles\projekt.dir\ImportObj.cu.obj CMakeFiles\projekt.dir\Parllel_fun.cu.obj CMakeFiles\projekt.dir\Ray.cu.obj CMakeFiles\projekt.dir\blender_to_cpp.cu.obj CMakeFiles\projekt.dir\cmake_device_link.obj | C$:\Program$ Files\NVIDIA$ GPU$ Computing$ Toolkit\CUDA\v12.3\lib\x64\cudart.lib
+  FLAGS = -D_WINDOWS -Xcompiler=" /GR /EHsc" -Xcompiler=" -Zi -Ob0 -Od /RTC1" -arch=all -Xcompiler=-MDd
+  LINK_FLAGS = /machine:x64 /debug /INCREMENTAL
+  LINK_LIBRARIES = "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.3\lib\x64\cudart.lib"  cudadevrt.lib  cudart_static.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib
+  OBJECT_DIR = CMakeFiles\projekt.dir
   POST_BUILD = cd .
   PRE_LINK = cd .
-  TARGET_COMPILE_PDB = CMakeFiles\MyExecutable.dir\
-  TARGET_FILE = MyExecutable.exe
-  TARGET_IMPLIB = MyExecutable.lib
-  TARGET_PDB = MyExecutable.pdb
+  TARGET_COMPILE_PDB = CMakeFiles\projekt.dir\
+  TARGET_FILE = projekt.exe
+  TARGET_IMPLIB = projekt.lib
+  TARGET_PDB = projekt.pdb
 
 
 #############################################
@@ -111,7 +147,7 @@ build rebuild_cache: phony CMakeFiles\rebuild_cache.util
 # =============================================================================
 # Target aliases.
 
-build MyExecutable: phony MyExecutable.exe
+build projekt: phony projekt.exe
 
 # =============================================================================
 # Folder targets.
@@ -121,7 +157,7 @@ build MyExecutable: phony MyExecutable.exe
 #############################################
 # Folder: C:/Users/Sebastian/Desktop/Raytracing/Raytracer/out/build/x64-Debug
 
-build all: phony MyExecutable.exe
+build all: phony projekt.exe
 
 # =============================================================================
 # Built-in targets
@@ -130,14 +166,14 @@ build all: phony MyExecutable.exe
 #############################################
 # Re-run CMake if any of its inputs changed.
 
-build build.ninja: RERUN_CMAKE | C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\CMakeCInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\CMakeCXXInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\CMakeCommonLanguageInclude.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\CMakeGenericSystem.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\CMakeInitializeConfigs.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\CMakeLanguageInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\CMakeRCInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\CMakeSystemSpecificInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\CMakeSystemSpecificInitialize.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\Compiler\CMakeCommonCompilerMacros.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\Compiler\MSVC-C.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\Compiler\MSVC-CXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\Compiler\MSVC.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\Platform\Windows-Initialize.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\Platform\Windows-MSVC-C.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\Platform\Windows-MSVC-CXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\Platform\Windows-MSVC.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\Platform\Windows.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\Platform\WindowsPaths.cmake C$:\Users\Sebastian\Desktop\Raytracing\Raytracer\CMakeLists.txt CMakeCache.txt CMakeFiles\3.28.0-msvc1\CMakeCCompiler.cmake CMakeFiles\3.28.0-msvc1\CMakeCXXCompiler.cmake CMakeFiles\3.28.0-msvc1\CMakeRCCompiler.cmake CMakeFiles\3.28.0-msvc1\CMakeSystem.cmake
+build build.ninja: RERUN_CMAKE | C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\CMakeCUDAInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\CMakeCXXInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\CMakeCommonLanguageInclude.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\CMakeGenericSystem.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\CMakeInitializeConfigs.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\CMakeLanguageInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\CMakeRCInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\CMakeSystemSpecificInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\CMakeSystemSpecificInitialize.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\Compiler\CMakeCommonCompilerMacros.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\Compiler\MSVC-CXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\Compiler\MSVC.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\Compiler\NVIDIA-CUDA.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\Compiler\NVIDIA.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\FindCUDAToolkit.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\FindPackageHandleStandardArgs.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\FindPackageMessage.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\Platform\Windows-Initialize.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\Platform\Windows-MSVC-CXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\Platform\Windows-MSVC.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\Platform\Windows-NVIDIA-CUDA.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\Platform\Windows.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\Platform\WindowsPaths.cmake C$:\Users\Sebastian\Desktop\Raytracing\Raytracer\CMakeLists.txt CMakeCache.txt CMakeFiles\3.28.0-msvc1\CMakeCUDACompiler.cmake CMakeFiles\3.28.0-msvc1\CMakeCXXCompiler.cmake CMakeFiles\3.28.0-msvc1\CMakeRCCompiler.cmake CMakeFiles\3.28.0-msvc1\CMakeSystem.cmake
   pool = console
 
 
 #############################################
 # A missing CMake input file is not an error.
 
-build C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\CMakeCInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\CMakeCXXInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\CMakeCommonLanguageInclude.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\CMakeGenericSystem.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\CMakeInitializeConfigs.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\CMakeLanguageInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\CMakeRCInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\CMakeSystemSpecificInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\CMakeSystemSpecificInitialize.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\Compiler\CMakeCommonCompilerMacros.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\Compiler\MSVC-C.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\Compiler\MSVC-CXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\Compiler\MSVC.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\Platform\Windows-Initialize.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\Platform\Windows-MSVC-C.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\Platform\Windows-MSVC-CXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\Platform\Windows-MSVC.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\Platform\Windows.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\Platform\WindowsPaths.cmake C$:\Users\Sebastian\Desktop\Raytracing\Raytracer\CMakeLists.txt CMakeCache.txt CMakeFiles\3.28.0-msvc1\CMakeCCompiler.cmake CMakeFiles\3.28.0-msvc1\CMakeCXXCompiler.cmake CMakeFiles\3.28.0-msvc1\CMakeRCCompiler.cmake CMakeFiles\3.28.0-msvc1\CMakeSystem.cmake: phony
+build C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\CMakeCUDAInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\CMakeCXXInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\CMakeCommonLanguageInclude.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\CMakeGenericSystem.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\CMakeInitializeConfigs.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\CMakeLanguageInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\CMakeRCInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\CMakeSystemSpecificInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\CMakeSystemSpecificInitialize.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\Compiler\CMakeCommonCompilerMacros.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\Compiler\MSVC-CXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\Compiler\MSVC.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\Compiler\NVIDIA-CUDA.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\Compiler\NVIDIA.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\FindCUDAToolkit.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\FindPackageHandleStandardArgs.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\FindPackageMessage.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\Platform\Windows-Initialize.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\Platform\Windows-MSVC-CXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\Platform\Windows-MSVC.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\Platform\Windows-NVIDIA-CUDA.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\Platform\Windows.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.28\Modules\Platform\WindowsPaths.cmake C$:\Users\Sebastian\Desktop\Raytracing\Raytracer\CMakeLists.txt CMakeCache.txt CMakeFiles\3.28.0-msvc1\CMakeCUDACompiler.cmake CMakeFiles\3.28.0-msvc1\CMakeCXXCompiler.cmake CMakeFiles\3.28.0-msvc1\CMakeRCCompiler.cmake CMakeFiles\3.28.0-msvc1\CMakeSystem.cmake: phony
 
 
 #############################################

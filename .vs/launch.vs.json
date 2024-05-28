@@ -5,8 +5,8 @@
     {
       "type": "default",
       "project": "CMakeLists.txt",
-      "projectTarget": "MyExecutable.exe",
-      "name": "MyExecutable.exe"
+      "projectTarget": "projekt.exe",
+      "name": "projekt.exe"
     }
   ]
 }

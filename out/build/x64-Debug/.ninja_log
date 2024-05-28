@@ -1,3 +1,7 @@
 # ninja log v5
-2	522	7358440814316649	CMakeFiles/MyExecutable.dir/src/blender_to_cpp.cpp.obj	51d2f6627c326a3b
-523	650	7358440815327442	MyExecutable.exe	a3186a172765bcbd
+9	19065	7386151371735559	CMakeFiles/projekt.dir/Parllel_fun.cu.obj	e791db76fdbfb485
+6	19821	7386151379385944	CMakeFiles/projekt.dir/ImportObj.cu.obj	c51cf7309525dc44
+11	18503	7386151366079107	CMakeFiles/projekt.dir/Ray.cu.obj	b682846ac86b2fe6
+14	19567	7386151376755909	CMakeFiles/projekt.dir/blender_to_cpp.cu.obj	f1982840292914e8
+3	14669	7386161064917668	CMakeFiles/projekt.dir/Ray.cu.obj	b682846ac86b2fe6
+7	15425	7386161072548464	CMakeFiles/projekt.dir/blender_to_cpp.cu.obj	f1982840292914e8
