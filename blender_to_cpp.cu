@@ -88,7 +88,7 @@ int main() {
 
     //saveAsBMP(img, width, height, "result_image.bmp");
 
-
+    cout << "XDD" << endl;
     cout << endl << endl << " Linia przed cuda";
     const int size = 10;
     Vector* d_vectors;

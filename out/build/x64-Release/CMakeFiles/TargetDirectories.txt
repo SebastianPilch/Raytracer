@@ -1,3 +1,0 @@
-C:/Users/Sebastian/Desktop/Raytracing/Raytracer/out/build/x64-Release/CMakeFiles/projekt.dir
-C:/Users/Sebastian/Desktop/Raytracing/Raytracer/out/build/x64-Release/CMakeFiles/edit_cache.dir
-C:/Users/Sebastian/Desktop/Raytracing/Raytracer/out/build/x64-Release/CMakeFiles/rebuild_cache.dir

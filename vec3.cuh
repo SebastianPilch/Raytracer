@@ -50,7 +50,7 @@ struct Plane {
     double A, B, C, D;
 
     __host__ __device__ Plane();
-    __host__ __device__ Plane(double _A, double _B, double _C, double _D);
+    __host__ __device__ Plane(float _A, float _B, float _C, float _D);
     __host__ __device__ Plane(const vec3& normal, const point3& point_on_face);
     __host__ __device__ Plane(const Plane& other);
     __host__ __device__ Plane(Plane&& other) noexcept;

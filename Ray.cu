@@ -18,25 +18,25 @@ double t = -(plane.A * this->orig.x() + plane.B * this->orig.y() + plane.C * thi
     return intersection;
 }
 
-//bool Face_hit(float* pl, const ray& r, int polygon_langht ,int* polygon, float** vertices_coords)
-//{
-//    point3 intersection = r.findIntersection(pl);
-//    if (intersection[0] == INFINITY || intersection[0] == -INFINITY || intersection[1] == INFINITY ||
-//        intersection[1] == -INFINITY == -INFINITY || intersection[2] == INFINITY || intersection[2] == -INFINITY) {
-//        return false;
-//    }
-//    vec3 edge;
-//    for (size_t i = 0; i < polygon_langht; ++i) {
-//        size_t next_index = (i + 1) % polygon_langht;
-//        edge = vertices_coords[polygon[next_index]] - vertices_coords[polygon[i]];
-//        vec3 vp = intersection - vertices_coords[polygon[i]];
-//        vec3 n = crossProduct_(edge, vp);
-//        vec3 normal = vec3(pl.A, pl.B, pl.C);
-//        if (dotProduct_(n, normal) < 0) {
-//            return false;
-//        }
-//    }
-//
-//////    return true;
-//
-//};
+bool Face_hit(float* pl, const ray& r, int polygon_langht ,int* polygon, float** vertices_coords)
+{
+    point3 intersection = r.findIntersection(pl);
+    if (intersection[0] == INFINITY || intersection[0] == -INFINITY || intersection[1] == INFINITY ||
+        intersection[1] == -INFINITY == -INFINITY || intersection[2] == INFINITY || intersection[2] == -INFINITY) {
+        return false;
+    }
+    vec3 edge;
+    for (size_t i = 0; i < polygon_langht; ++i) {
+        size_t next_index = (i + 1) % polygon_langht;
+        edge = vertices_coords[polygon[next_index]] - vertices_coords[polygon[i]];
+        vec3 vp = intersection - vertices_coords[polygon[i]];
+        vec3 n = crossProduct_(edge, vp);
+        vec3 normal = vec3(pl.A, pl.B, pl.C);
+        if (dotProduct_(n, normal) < 0) {
+            return false;
+        }
+    }
+
+////    return true;
+
+};

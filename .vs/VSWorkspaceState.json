@@ -1,15 +1,21 @@
 {
+  "ExpandedNodes": [
+    ""
+  ],
+  "SelectedNode": "\\blender_to_cpp.cu",
+  "PreviewInSolutionExplorer": false,
   "OutputFoldersPerTargetSystem": {
     "Maszyna lokalna": [
       "out\\build\\x64-Debug",
       "out\\install\\x64-Debug",
       "out\\build\\x64-Release",
       "out\\install\\x64-Release"
+    ],
+    "Local Machine": [
+      "out\\build\\x64-Debug",
+      "out\\install\\x64-Debug",
+      "out\\build\\x64-Release",
+      "out\\install\\x64-Release"
     ]
-  },
-  "ExpandedNodes": [
-    ""
-  ],
-  "SelectedNode": "\\blender_to_cpp.cu",
-  "PreviewInSolutionExplorer": false
+  }
 }

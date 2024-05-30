@@ -147,6 +147,7 @@ __global__ void MyKernel(Vector* vectors, int size) {
     if (idx < size) {
         vectors[idx] = Vector(1.0f, 2.0f, 3.0f); 
     }
+    vec3 x = vec3();
 }
 __host__ void printVectors(Vector* vectors, int size) {
     for (int i = 0; i < size; ++i) {
