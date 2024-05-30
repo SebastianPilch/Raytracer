@@ -7,19 +7,12 @@
 #include "vec3.cuh"
 #include "Parllel_fun.cuh"
 #include "Ray.cuh"
+
 using namespace std;
 #ifndef __CUDACC__ 
 #define __CUDACC__
 #endif
 
-#define WIDTH 400
-#define HEIGHT 400
-#define VIEWPORT_HEIGHT  2.0
-#define VIEWPORT_WIDTH VIEWPORT_HEIGHT * (double)(WIDTH / HEIGHT)
-#define VIEWPORT_U vec3(VIEWPORT_WIDTH, 0, 0)
-#define VIEWPORT_V vec3(0, -VIEWPORT_HEIGHT, 0)
-#define DELTA_U VIEWPORT_U / WIDTH
-#define DELTA_V VIEWPORT_V / HEIGHT
 
 //__global__ void Matrixadd(int m, int n, float* d_x, float* d_y, float* d_z)
 //{
@@ -96,27 +89,50 @@ using namespace std;
 //    }
 //}
 
-
-
-//__global__ void Image_matrix(int** img,double focal_length, point3 camera_center, point3 camera_focal)
-//{
-//    int i = threadIdx.x + blockIdx.x * blockDim.x;
-//    int j = threadIdx.y + blockIdx.y * blockDim.y;
+//void saveAsBMP(const std::vector<std::vector<float>>& img, int width, int height, const std::string& filename) {
+//    std::ofstream file(filename, std::ios::out | std::ios::binary);
 //
-//    auto viewport_upper_left = camera_center - vec3(0, 0, focal_length) - VIEWPORT_U / 2 - VIEWPORT_V / 2;
-//    auto pixel00_loc = viewport_upper_left + 0.5 * (DELTA_U + DELTA_V);
-//
-//    auto pixel_center = pixel00_loc + (i * DELTA_U) + (j * DELTA_V);
-//    auto ray_direction = pixel_center - camera_center;
-//    ray newRay = ray(camera_center, ray_direction);
-//    float hit_anything = 0.0;
-//
-//    bool hit = Face_hit(pair.second, newRay, vertices_to_faces[pair.first], vertices_coors);
-//    if (hit) 
-//    {
-//       hit_anything += 0.2;
+//    if (!file) {
+//        std::cerr << "Cannot open file: " << filename << std::endl;
+//        return;
 //    }
-//    img[j][i] = hit_anything;
 //
+//    int paddingSize = (4 - (width * 3) % 4) % 4; // Padding wymagany przez format BMP
+//
+//    // Nag³ówek BMP
+//    int filesize = 54 + (3 * width + paddingSize) * height;
+//    char fileHeader[54] = { 'B', 'M', 0,0,0,0, 0,0, 0,0, 54,0,0,0, 40,0,0,0, static_cast<char>(width), static_cast<char>(width >> 8), static_cast<char>(width >> 16), static_cast<char>(width >> 24), static_cast<char>(height), static_cast<char>(height >> 8), static_cast<char>(height >> 16), static_cast<char>(height >> 24), 1,0, 24,0, 0,0,0,0, static_cast<char>(filesize), static_cast<char>(filesize >> 8), static_cast<char>(filesize >> 16), static_cast<char>(filesize >> 24), 0,0,0,0, 0,0,0,0 };
+//
+//    // Zapisanie nag³ówka
+//    file.write(fileHeader, 54);
+//
+//    // Zapisanie danych pikseli
+//    for (int i = height - 1; i >= 0; i--) {
+//        for (int j = 0; j < width; j++) {
+//            unsigned char color = static_cast<unsigned char>(img[i][j] * 255); // Skalowanie wartoœci z [0, 1] do [0, 255]
+//            file.put(color);
+//            file.put(color);
+//            file.put(color);
+//        }
+//        // Dodanie paddingu
+//        for (int k = 0; k < paddingSize; k++) {
+//            file.put(0);
+//        }
+//    }
+//
+//    file.close();
 //}
-//dim3 Image_size(width, height);
+
+
+__global__ void Generate_rays(ray* viewport_rays,double focal_length, point3 camera_center, point3 camera_focal)
+{
+    int i = threadIdx.x + blockIdx.x * blockDim.x;
+    int j = threadIdx.y + blockIdx.y * blockDim.y;
+
+    auto viewport_upper_left = camera_center - vec3(0, 0, focal_length) - VIEWPORT_U / 2 - VIEWPORT_V / 2;
+    auto pixel00_loc = viewport_upper_left + 0.5 * (DELTA_U + DELTA_V);
+
+    auto pixel_center = pixel00_loc + (i * DELTA_U) + (j * DELTA_V);
+    auto ray_direction = pixel_center - camera_center;
+    viewport_rays[j*HEIGHT + i] = ray(camera_center, ray_direction);
+}

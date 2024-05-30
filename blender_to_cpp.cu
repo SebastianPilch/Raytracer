@@ -12,39 +12,6 @@
 #include "Ray.cuh"
 #include "Parllel_fun.cuh"
 //
-//void saveAsBMP(const std::vector<std::vector<float>>& img, int width, int height, const std::string& filename) {
-//    std::ofstream file(filename, std::ios::out | std::ios::binary);
-//
-//    if (!file) {
-//        std::cerr << "Cannot open file: " << filename << std::endl;
-//        return;
-//    }
-//
-//    int paddingSize = (4 - (width * 3) % 4) % 4; // Padding wymagany przez format BMP
-//
-//    // Nagłówek BMP
-//    int filesize = 54 + (3 * width + paddingSize) * height;
-//    char fileHeader[54] = { 'B', 'M', 0,0,0,0, 0,0, 0,0, 54,0,0,0, 40,0,0,0, static_cast<char>(width), static_cast<char>(width >> 8), static_cast<char>(width >> 16), static_cast<char>(width >> 24), static_cast<char>(height), static_cast<char>(height >> 8), static_cast<char>(height >> 16), static_cast<char>(height >> 24), 1,0, 24,0, 0,0,0,0, static_cast<char>(filesize), static_cast<char>(filesize >> 8), static_cast<char>(filesize >> 16), static_cast<char>(filesize >> 24), 0,0,0,0, 0,0,0,0 };
-//
-//    // Zapisanie nagłówka
-//    file.write(fileHeader, 54);
-//
-//    // Zapisanie danych pikseli
-//    for (int i = height - 1; i >= 0; i--) {
-//        for (int j = 0; j < width; j++) {
-//            unsigned char color = static_cast<unsigned char>(img[i][j] * 255); // Skalowanie wartości z [0, 1] do [0, 255]
-//            file.put(color);
-//            file.put(color);
-//            file.put(color);
-//        }
-//        // Dodanie paddingu
-//        for (int k = 0; k < paddingSize; k++) {
-//            file.put(0);
-//        }
-//    }
-//
-//    file.close();
-//}
 
 
 
@@ -90,6 +57,8 @@ int main() {
 
     cout << "XDD" << endl;
     cout << endl << endl << " Linia przed cuda";
+
+
     const int size = 10;
     Vector* d_vectors;
     vec3* d_z = (vec3*)malloc(size * sizeof(vec3));
@@ -114,6 +83,57 @@ int main() {
     }
     cudaFree(d_vectors);
     cudaFree(d_z);
+
+
+
+    cout << endl << endl << "Testowanie promieni";
+
+
+    ray** h_ray;
+    ray* d_ray;
+    h_ray = (ray**)malloc(WIDTH * sizeof(ray*));
+    h_ray[0] = (ray*)malloc(HEIGHT * WIDTH * sizeof(ray));
+    for (int i = 1; i < HEIGHT; i++) {
+        h_ray[i] = h_ray[0] + i * WIDTH;
+    }
+
+    cudaMalloc(&d_ray, WIDTH*HEIGHT * sizeof(ray));
+
+
+    dim3 threadsPerBlock2(16, 16);
+    dim3 numBlocks((WIDTH + threadsPerBlock2.x - 1) / threadsPerBlock2.x,(HEIGHT + threadsPerBlock2.y - 1) / threadsPerBlock2.y);
+
+    double focal_length = 10;
+    point3 h_camera_center = point3(5, 5, 5);
+    point3 h_camera_focal = point3(-5, -5, -5);
+    point3* d_camera_center;
+    point3* d_camera_focal;
+
+    cudaMalloc((point3)&d_camera_center, sizeof(point3));
+    cudaMalloc((point3)&d_camera_focal, sizeof(point3));
+    cudaMemcpy(&d_camera_center, h_camera_center, sizeof(point3), cudaMemcpyHostToDevice);
+    cudaMemcpy(&d_camera_focal, h_camera_focal, sizeof(point3), cudaMemcpyHostToDevice);
+
+
+    Generate_rays<<<numBlocks, threadsPerBlock2 >>> (h_ray[0], focal_length, d_camera_center, d_camera_focal);
+
+    cudaMemcpy(h_ray, d_ray, HEIGHT * sizeof(ray), cudaMemcpyDeviceToHost);
+  
+    cudaFree(d_ray);
+    cudaFree(d_camera_center);
+    cudaFree(d_camera_focal);
+    
+
+    for(int i = 0; i < WIDTH; i++)
+    {
+        for (int j = 0; j < HEIGHT; j++) 
+        {
+            cout << "  " << h_ray[j][i] << "  ";
+        }
+        cout << endl;
+    }
+
+
 
     return 0;
 

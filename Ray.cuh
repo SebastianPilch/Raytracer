@@ -13,10 +13,10 @@ public:
     __host__ __device__ const vec3& direction() { return dir; };
     __host__ __device__ point3 at(double t) const;
     __host__ __device__ point3 findIntersection(const Plane& plane) const;
-private:
     point3 orig;
     vec3 dir;
 };
+__host__ __device__ std::ostream& operator<<(std::ostream& out, const ray& r);
 
 //bool Face_hit(const Plane& pl, const ray& r,const vector<int>& polygon, map<int, point3> vertices_coords);
 

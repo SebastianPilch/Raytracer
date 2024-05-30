@@ -34,17 +34,17 @@ using point3 = vec3;
 using color = vec3;
 
 __host__ __device__ std::ostream& operator<<(std::ostream& out, const vec3& v);
-__host__ __device__   vec3 operator+(const vec3& u, const vec3& v);
-__host__ __device__   vec3 operator-(const vec3& u, const vec3& v);
-__host__ __device__   vec3 operator*(const vec3& u, const vec3& v);
-__host__ __device__   vec3 operator*(double t, const vec3& v);
-__host__ __device__   vec3 operator*(const vec3& v, double t);
-__host__ __device__   vec3 operator/(const vec3& v, double t);
-__host__ __device__   double dot(const vec3& u, const vec3& v);
-__host__ __device__   vec3 cross(const vec3& u, const vec3& v);
-__host__ __device__   vec3 unit_vector(const vec3& v);
-__host__ __device__   vec3 crossProduct_(const vec3& a, const vec3& b);
-__host__ __device__   double dotProduct_(const vec3& a, const vec3& b);
+__host__ __device__ vec3 operator+(const vec3& u, const vec3& v);
+__host__ __device__ vec3 operator-(const vec3& u, const vec3& v);
+__host__ __device__ vec3 operator*(const vec3& u, const vec3& v);
+__host__ __device__ vec3 operator*(double t, const vec3& v);
+__host__ __device__ vec3 operator*(const vec3& v, double t);
+__host__ __device__ vec3 operator/(const vec3& v, double t);
+__host__ __device__ double dot(const vec3& u, const vec3& v);
+__host__ __device__ vec3 cross(const vec3& u, const vec3& v);
+__host__ __device__ vec3 unit_vector(const vec3& v);
+__host__ __device__ vec3 crossProduct_(const vec3& a, const vec3& b);
+__host__ __device__ double dotProduct_(const vec3& a, const vec3& b);
 
 struct Plane {
     float A, B, C, D;

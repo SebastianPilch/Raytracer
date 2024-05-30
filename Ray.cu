@@ -4,6 +4,7 @@
 #include "Ray.cuh"
 
 
+
 using namespace std;
 double positiveInfinity = INFINITY;
 double negativeInfinity = -INFINITY;
@@ -17,6 +18,15 @@ double t = -(plane.A * this->orig.x() + plane.B * this->orig.y() + plane.C * thi
     point3 intersection(at(t));
     return intersection;
 }
+
+__host__ __device__ std::ostream& operator<<(std::ostream& out, const ray& r) {
+    return out <<'[' << r.dir <<"]*t + [" << r.orig <<"]";
+}
+
+
+
+
+
 
 bool Face_hit(float* pl, const ray& r, int polygon_langht ,int* polygon, float** vertices_coords)
 {

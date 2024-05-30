@@ -1,3 +1,3 @@
-D:/studia2/agh/sem8/gpu/raytracing/Raytracer/out/build/x64-Debug/CMakeFiles/projekt.dir
-D:/studia2/agh/sem8/gpu/raytracing/Raytracer/out/build/x64-Debug/CMakeFiles/edit_cache.dir
-D:/studia2/agh/sem8/gpu/raytracing/Raytracer/out/build/x64-Debug/CMakeFiles/rebuild_cache.dir
+C:/Users/Sebastian/Desktop/Raytracing/Raytracer/out/build/x64-Debug/CMakeFiles/projekt.dir
+C:/Users/Sebastian/Desktop/Raytracing/Raytracer/out/build/x64-Debug/CMakeFiles/edit_cache.dir
+C:/Users/Sebastian/Desktop/Raytracing/Raytracer/out/build/x64-Debug/CMakeFiles/rebuild_cache.dir
