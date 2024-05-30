@@ -18,7 +18,7 @@ public:
 };
 __host__ __device__ std::ostream& operator<<(std::ostream& out, const ray& r);
 
-//bool Face_hit(const Plane& pl, const ray& r,const vector<int>& polygon, map<int, point3> vertices_coords);
+bool Face_hit(const Plane& pl, const ray& r,const vector<int>& polygon, map<int, point3> vertices_coords);
 
 
 

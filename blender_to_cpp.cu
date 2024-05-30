@@ -86,53 +86,37 @@ int main() {
 
 
 
-    cout << endl << endl << "Testowanie promieni";
+    cout << endl << endl << "Testowanie promieni" << WIDTH << HEIGHT;
 
 
+    double focal_length = 10;
+    point3 h_camera_center(5, 5, 5);
+    point3 h_camera_focal(-5, -5, -5);
+    point3* d_camera_center;
+    point3* d_camera_focal;
     ray** h_ray;
     ray* d_ray;
-    h_ray = (ray**)malloc(WIDTH * sizeof(ray*));
+    h_ray = (ray**)malloc(HEIGHT * sizeof(ray*));
     h_ray[0] = (ray*)malloc(HEIGHT * WIDTH * sizeof(ray));
     for (int i = 1; i < HEIGHT; i++) {
         h_ray[i] = h_ray[0] + i * WIDTH;
     }
-
-    cudaMalloc(&d_ray, WIDTH*HEIGHT * sizeof(ray));
-
-
+    cudaMalloc(&d_ray, WIDTH * HEIGHT * sizeof(ray));
+    cudaMalloc((void**)&d_camera_center, sizeof(point3));
+    cudaMalloc((void**)&d_camera_focal, sizeof(point3));
+    cudaMemcpy(d_camera_center, &h_camera_center, sizeof(point3), cudaMemcpyHostToDevice);
+    cudaMemcpy(d_camera_focal, &h_camera_focal, sizeof(point3), cudaMemcpyHostToDevice);
     dim3 threadsPerBlock2(16, 16);
-    dim3 numBlocks((WIDTH + threadsPerBlock2.x - 1) / threadsPerBlock2.x,(HEIGHT + threadsPerBlock2.y - 1) / threadsPerBlock2.y);
-
-    double focal_length = 10;
-    point3 h_camera_center = point3(5, 5, 5);
-    point3 h_camera_focal = point3(-5, -5, -5);
-    point3* d_camera_center;
-    point3* d_camera_focal;
-
-    cudaMalloc((point3)&d_camera_center, sizeof(point3));
-    cudaMalloc((point3)&d_camera_focal, sizeof(point3));
-    cudaMemcpy(&d_camera_center, h_camera_center, sizeof(point3), cudaMemcpyHostToDevice);
-    cudaMemcpy(&d_camera_focal, h_camera_focal, sizeof(point3), cudaMemcpyHostToDevice);
-
-
-    Generate_rays<<<numBlocks, threadsPerBlock2 >>> (h_ray[0], focal_length, d_camera_center, d_camera_focal);
-
-    cudaMemcpy(h_ray, d_ray, HEIGHT * sizeof(ray), cudaMemcpyDeviceToHost);
-  
+    dim3 numBlocks((WIDTH + threadsPerBlock2.x - 1) / threadsPerBlock2.x, (HEIGHT + threadsPerBlock2.y - 1) / threadsPerBlock2.y);
+    Generate_rays<<<numBlocks, threadsPerBlock2>>> (d_ray, focal_length, d_camera_center, d_camera_focal);
+    cudaMemcpy(h_ray[0], d_ray, WIDTH * HEIGHT * sizeof(ray), cudaMemcpyDeviceToHost);
     cudaFree(d_ray);
     cudaFree(d_camera_center);
     cudaFree(d_camera_focal);
-    
+    free(h_ray[0]);
+    free(h_ray);
 
-    for(int i = 0; i < WIDTH; i++)
-    {
-        for (int j = 0; j < HEIGHT; j++) 
-        {
-            cout << "  " << h_ray[j][i] << "  ";
-        }
-        cout << endl;
-    }
-
+    cout << endl << endl << "Bicie sciany" ;
 
 
     return 0;
