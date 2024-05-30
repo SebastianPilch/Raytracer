@@ -7,12 +7,12 @@ using namespace std;
 
 class ray {
 public:
-     ray();
-     ray(const point3& origin, const vec3& direction);
-     const point3& origin() { return orig; };
-     const vec3& direction() { return dir; };
-     point3 at(double t) const;
-     point3 findIntersection(const Plane& plane) const;
+    __host__ __device__ ray();
+    __host__ __device__ ray(const point3& origin, const vec3& direction);
+    __host__ __device__ const point3& origin() { return orig; };
+    __host__ __device__ const vec3& direction() { return dir; };
+    __host__ __device__ point3 at(double t) const;
+    __host__ __device__ point3 findIntersection(const Plane& plane) const;
 private:
     point3 orig;
     vec3 dir;
