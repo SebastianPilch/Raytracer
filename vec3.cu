@@ -43,51 +43,51 @@ __host__ __device__ std::ostream& operator<<(std::ostream& out, const vec3& v) {
     return out << v.e[0] << ' ' << v.e[1] << ' ' << v.e[2];
 }
 
-__host__ __device__ inline vec3 operator+(const vec3& u, const vec3& v) {
+__host__ __device__  vec3 operator+(const vec3& u, const vec3& v) {
     return vec3(u.e[0] + v.e[0], u.e[1] + v.e[1], u.e[2] + v.e[2]);
 }
 
-__host__ __device__ inline vec3 operator-(const vec3& u, const vec3& v) {
+__host__ __device__  vec3 operator-(const vec3& u, const vec3& v) {
     return vec3(u.e[0] - v.e[0], u.e[1] - v.e[1], u.e[2] - v.e[2]);
 }
 
-__host__ __device__ inline vec3 operator*(const vec3& u, const vec3& v) {
+__host__ __device__  vec3 operator*(const vec3& u, const vec3& v) {
     return vec3(u.e[0] * v.e[0], u.e[1] * v.e[1], u.e[2] * v.e[2]);
 }
 
-__host__ __device__ inline vec3 operator*(double t, const vec3& v) {
+__host__ __device__  vec3 operator*(double t, const vec3& v) {
     return vec3(t * v.e[0], t * v.e[1], t * v.e[2]);
 }
 
-__host__ __device__ inline vec3 operator*(const vec3& v, double t) {
+__host__ __device__  vec3 operator*(const vec3& v, double t) {
     return t * v;
 }
 
-__host__ __device__ inline vec3 operator/(const vec3& v, double t) {
+__host__ __device__  vec3 operator/(const vec3& v, double t) {
     return (1 / t) * v;
 }
 
-__host__ __device__ inline double dot(const vec3& u, const vec3& v) {
+__host__ __device__  double dot(const vec3& u, const vec3& v) {
     return u.e[0] * v.e[0]
         + u.e[1] * v.e[1]
         + u.e[2] * v.e[2];
 }
 
-__host__ __device__ inline vec3 cross(const vec3& u, const vec3& v) {
+__host__ __device__  vec3 cross(const vec3& u, const vec3& v) {
     return vec3(u.e[1] * v.e[2] - u.e[2] * v.e[1],
         u.e[2] * v.e[0] - u.e[0] * v.e[2],
         u.e[0] * v.e[1] - u.e[1] * v.e[0]);
 }
 
-__host__ __device__ inline vec3 unit_vector(const vec3& v) {
+__host__ __device__  vec3 unit_vector(const vec3& v) {
     return v / v.length();
 }
 
-__host__ __device__ inline vec3 crossProduct_(const vec3& a, const vec3& b) {
+__host__ __device__  vec3 crossProduct_(const vec3& a, const vec3& b) {
     return vec3(a.y() * b.z() - a.z() * b.y(), a.z() * b.x() - a.x() * b.z(), a.x() * b.y() - a.y() * b.x());
 }
 
-__host__ __device__ inline double dotProduct_(const vec3& a, const vec3& b) {
+__host__ __device__  double dotProduct_(const vec3& a, const vec3& b) {
     return a.x() * b.x() + a.y() * b.y() + a.z() * b.z();
 }
 
@@ -142,12 +142,15 @@ __host__ __device__ std::ostream& operator<<(std::ostream& out, const Plane& v) 
 __host__ __device__ Vector::Vector(float _x, float _y, float _z) : x(_x), y(_y), z(_z) {}
 __host__ __device__ Vector::Vector() : x(0.0f), y(0.0f), z(0.0f) {}
 
-__global__ void MyKernel(Vector* vectors, int size) {
+__global__ void MyKernel(Vector* vectors, int size, vec3* z) {
     int idx = threadIdx.x + blockIdx.x * blockDim.x;
     if (idx < size) {
-        vectors[idx] = Vector(1.0f, 2.0f, 3.0f); 
+        vectors[idx] = Vector(1.0f, idx, 3.0f); 
+        vec3 x = vec3(1, 1, 1);
+        vec3 y = vec3(idx, idx, idx);
+        z[idx] = x + y;
     }
-    vec3 x = vec3();
+
 }
 __host__ void printVectors(Vector* vectors, int size) {
     for (int i = 0; i < size; ++i) {

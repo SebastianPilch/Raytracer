@@ -34,23 +34,23 @@ using point3 = vec3;
 using color = vec3;
 
 __host__ __device__ std::ostream& operator<<(std::ostream& out, const vec3& v);
-__host__ __device__ inline  vec3 operator+(const vec3& u, const vec3& v);
-__host__ __device__ inline  vec3 operator-(const vec3& u, const vec3& v);
-__host__ __device__ inline  vec3 operator*(const vec3& u, const vec3& v);
-__host__ __device__ inline  vec3 operator*(double t, const vec3& v);
-__host__ __device__ inline  vec3 operator*(const vec3& v, double t);
-__host__ __device__ inline  vec3 operator/(const vec3& v, double t);
-__host__ __device__ inline  double dot(const vec3& u, const vec3& v);
-__host__ __device__ inline  vec3 cross(const vec3& u, const vec3& v);
-__host__ __device__ inline  vec3 unit_vector(const vec3& v);
-__host__ __device__ inline  vec3 crossProduct_(const vec3& a, const vec3& b);
-__host__ __device__ inline  double dotProduct_(const vec3& a, const vec3& b);
+__host__ __device__   vec3 operator+(const vec3& u, const vec3& v);
+__host__ __device__   vec3 operator-(const vec3& u, const vec3& v);
+__host__ __device__   vec3 operator*(const vec3& u, const vec3& v);
+__host__ __device__   vec3 operator*(double t, const vec3& v);
+__host__ __device__   vec3 operator*(const vec3& v, double t);
+__host__ __device__   vec3 operator/(const vec3& v, double t);
+__host__ __device__   double dot(const vec3& u, const vec3& v);
+__host__ __device__   vec3 cross(const vec3& u, const vec3& v);
+__host__ __device__   vec3 unit_vector(const vec3& v);
+__host__ __device__   vec3 crossProduct_(const vec3& a, const vec3& b);
+__host__ __device__   double dotProduct_(const vec3& a, const vec3& b);
 
 struct Plane {
-    double A, B, C, D;
+    float A, B, C, D;
 
     __host__ __device__ Plane();
-    __host__ __device__ Plane(float _A, float _B, float _C, float _D);
+    __host__ __device__ Plane(double _A, double _B, double _C, double _D);
     __host__ __device__ Plane(const vec3& normal, const point3& point_on_face);
     __host__ __device__ Plane(const Plane& other);
     __host__ __device__ Plane(Plane&& other) noexcept;
@@ -67,7 +67,7 @@ public:
     __host__ __device__ Vector();
 };
 
-__global__ void MyKernel(Vector* vectors, int size);
+__global__ void MyKernel(Vector* vectors, int size, vec3* z);
 __host__ void printVectors(Vector* vectors, int size);
 
 #endif

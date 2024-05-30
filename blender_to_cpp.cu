@@ -92,14 +92,28 @@ int main() {
     cout << endl << endl << " Linia przed cuda";
     const int size = 10;
     Vector* d_vectors;
+    vec3* d_z = (vec3*)malloc(size * sizeof(vec3));
+    vec3* z = (vec3*)malloc(size * sizeof(vec3));
+
     cudaMalloc(&d_vectors, size * sizeof(Vector));
-    int threadsPerBlock = 256;
+    cudaMalloc(&d_z, size * sizeof(vec3));
+    int threadsPerBlock = 512;
     int blocksPerGrid = (size + threadsPerBlock - 1) / threadsPerBlock;
-    MyKernel <<<blocksPerGrid, threadsPerBlock >> > (d_vectors, size);
+    
+    for (int i = 0; i < size; i++) {
+        z[i] = vec3();
+    }
+
+    MyKernel <<<blocksPerGrid, threadsPerBlock >> > (d_vectors, size, d_z);
     Vector h_vectors[size];
     cudaMemcpy(h_vectors, d_vectors, size * sizeof(Vector), cudaMemcpyDeviceToHost);
+    cudaMemcpy(z, d_z, size * sizeof(vec3), cudaMemcpyDeviceToHost);
     printVectors(h_vectors, size);
+    for (int i = 0; i < size; i++) {
+        cout << z[i] << endl;
+    }
     cudaFree(d_vectors);
+    cudaFree(d_z);
 
     return 0;
 
