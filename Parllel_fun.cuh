@@ -15,7 +15,8 @@
 #define DELTA_V VIEWPORT_V / HEIGHT
 
 
-__global__ void Generate_rays(ray* viewport_rays, double focal_length, point3 *camera_center, point3 *camera_focal);
-
+__global__ void Generate_rays(ray* viewport_rays, double focal_length, point3 *camera_center,
+	point3 *camera_focal, int* d_normal_index_to_face, int* d_number_of_vertices_in_one_face,int* d_Faces,
+	float* d_Vertices,float* d_Normals,float* d_Planes);
 
 #endif // PAR_FUN_H

@@ -72,7 +72,9 @@ using namespace std;
 //}
 
 
-__global__ void Generate_rays(ray* viewport_rays,double focal_length, point3* camera_center, point3* camera_focal)
+__global__ void Generate_rays(ray* viewport_rays,double focal_length, point3* camera_center,
+    point3* camera_focal, int* d_normal_index_to_face, int* d_number_of_vertices_in_one_face,
+    int* d_Faces, float* d_Vertices, float* d_Normals, float* d_Planes)
 {
     int i = threadIdx.x + blockIdx.x * blockDim.x;
     int j = threadIdx.y + blockIdx.y * blockDim.y;
@@ -87,5 +89,12 @@ __global__ void Generate_rays(ray* viewport_rays,double focal_length, point3* ca
 }
 
 
-__global__ void Face_hit(ray* viewport_rays,   Faces )
+__global__ void Face_hit()
 {
+
+
+
+
+
+
+};

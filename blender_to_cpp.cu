@@ -55,38 +55,71 @@ int main() {
 
     //saveAsBMP(img, width, height, "result_image.bmp");
 
-    cout << "XDD" << endl;
-    cout << endl << endl << " Linia przed cuda";
+
+    cout << endl << endl << "Testowanie promieni" ;
 
 
-    const int size = 10;
-    Vector* d_vectors;
-    vec3* d_z = (vec3*)malloc(size * sizeof(vec3));
-    vec3* z = (vec3*)malloc(size * sizeof(vec3));
 
-    cudaMalloc(&d_vectors, size * sizeof(Vector));
-    cudaMalloc(&d_z, size * sizeof(vec3));
-    int threadsPerBlock = 512;
-    int blocksPerGrid = (size + threadsPerBlock - 1) / threadsPerBlock;
-    
-    for (int i = 0; i < size; i++) {
-        z[i] = vec3();
+
+
+
+
+
+
+
+
+
+    //wybór obiektu
+    int Vert_NUM = vert_num3;
+    int Face_NUM = face_num3;
+    int Normal_NUM = normal_num3;
+    Pointer_storage liczony_objekt = pociety_walec;
+    // // // //
+
+
+    int** Faces = liczony_objekt.Faces;
+    float** Verticies = liczony_objekt.Vertices;
+    float** Normals = liczony_objekt.Normals;
+    float** Planes = liczony_objekt.Planes;
+    int* number_of_vertices_in_one_face = liczony_objekt.Face_size;
+    int* normal_index_to_face = liczony_objekt.Face_to_Normal;
+
+    int Length_to_Allocate_Faces = 0;
+    for (int i = 0; i < Face_NUM; i++) { Length_to_Allocate_Faces += number_of_vertices_in_one_face[i]; }
+
+    int* Faces_d = new int[Length_to_Allocate_Faces];
+    float* Vertices_d, Normals_d, Planes_d;
+    int current_index = 0;
+    for (int i = 1; i < Face_NUM; i++)
+    {
+        Faces[i] = Faces[current_index] + number_of_vertices_in_one_face[i - 1];
+        current_index += number_of_vertices_in_one_face[i - 1];
+        Planes[i] = Planes[0] + i * 4;
+
     }
-
-    MyKernel <<<blocksPerGrid, threadsPerBlock >> > (d_vectors, size, d_z);
-    Vector h_vectors[size];
-    cudaMemcpy(h_vectors, d_vectors, size * sizeof(Vector), cudaMemcpyDeviceToHost);
-    cudaMemcpy(z, d_z, size * sizeof(vec3), cudaMemcpyDeviceToHost);
-    printVectors(h_vectors, size);
-    for (int i = 0; i < size; i++) {
-        cout << z[i] << endl;
+    for (int i = 1; i < Vert_NUM; i++)
+    {
+        Verticies[i] = Verticies[0] + i * 3;
     }
-    cudaFree(d_vectors);
-    cudaFree(d_z);
+    for (int i = 1; i < Normal_NUM; i++)
+    {
+        Normals[i] = Normals[0] + i * 3;
+    }
+    int* d_Faces;
+    int* d_number_of_vertices_in_one_face;
+    int* d_normal_index_to_face;
+    float* d_Vertices;
+    float* d_Normals;
+    float* d_Planes;
 
 
+    cudaMalloc(&d_Faces, Length_to_Allocate_Faces * sizeof(int));
+    cudaMalloc(&d_Planes, 4 * Face_NUM * sizeof(float));
+    cudaMalloc(&d_Normals, 3 * Normal_NUM * sizeof(float));
+    cudaMalloc(&d_Vertices, 3 * Vert_NUM * sizeof(float));
+    cudaMalloc(&d_number_of_vertices_in_one_face, Face_NUM * sizeof(int));
+    cudaMalloc(&d_normal_index_to_face, Face_NUM * sizeof(int));
 
-    cout << endl << endl << "Testowanie promieni" << WIDTH << HEIGHT;
 
 
     double focal_length = 10;
@@ -108,7 +141,8 @@ int main() {
     cudaMemcpy(d_camera_focal, &h_camera_focal, sizeof(point3), cudaMemcpyHostToDevice);
     dim3 threadsPerBlock2(16, 16);
     dim3 numBlocks((WIDTH + threadsPerBlock2.x - 1) / threadsPerBlock2.x, (HEIGHT + threadsPerBlock2.y - 1) / threadsPerBlock2.y);
-    Generate_rays<<<numBlocks, threadsPerBlock2>>> (d_ray, focal_length, d_camera_center, d_camera_focal);
+    Generate_rays<<<numBlocks, threadsPerBlock2>>> (d_ray, focal_length, d_camera_center, d_camera_focal, normal_index_to_face,number_of_vertices_in_one_face,
+     Faces[0], Verticies[0], Normals[0], Planes[0]);
     cudaMemcpy(h_ray[0], d_ray, WIDTH * HEIGHT * sizeof(ray), cudaMemcpyDeviceToHost);
     cudaFree(d_ray);
     cudaFree(d_camera_center);
@@ -117,6 +151,34 @@ int main() {
     free(h_ray);
 
     cout << endl << endl << "Bicie sciany" ;
+
+
+
+
+
+
+    cout << endl<<Length_to_Allocate_Faces;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     return 0;
