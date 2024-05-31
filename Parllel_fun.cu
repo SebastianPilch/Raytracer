@@ -74,7 +74,8 @@ using namespace std;
 
 __global__ void Generate_rays(ray* viewport_rays,double focal_length, point3* camera_center,
     point3* camera_focal, int* d_normal_index_to_face, int* d_number_of_vertices_in_one_face,
-    int* d_Faces, float* d_Vertices, float* d_Normals, float* d_Planes)
+    int* d_Faces, float* d_Vertices, float* d_Normals, float* d_Planes,int* start_face_at_index 
+    ,int Face_NUM, int Vertex_NUM, int Normal_NUM)
 {
     int i = threadIdx.x + blockIdx.x * blockDim.x;
     int j = threadIdx.y + blockIdx.y * blockDim.y;
@@ -86,7 +87,11 @@ __global__ void Generate_rays(ray* viewport_rays,double focal_length, point3* ca
     vec3 ray_direction = pixel_center - *camera_center;
     viewport_rays[j*HEIGHT + i] = ray(*camera_center , ray_direction);
 
+
+
 }
+
+
 
 
 __global__ void Face_hit()

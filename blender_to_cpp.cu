@@ -84,6 +84,9 @@ int main() {
     int* number_of_vertices_in_one_face = liczony_objekt.Face_size;
     int* normal_index_to_face = liczony_objekt.Face_to_Normal;
 
+    int* start_face_at_index = new int[Face_NUM];
+
+    start_face_at_index[0] = 0;
     int Length_to_Allocate_Faces = 0;
     for (int i = 0; i < Face_NUM; i++) { Length_to_Allocate_Faces += number_of_vertices_in_one_face[i]; }
 
@@ -94,6 +97,7 @@ int main() {
     {
         Faces[i] = Faces[current_index] + number_of_vertices_in_one_face[i - 1];
         current_index += number_of_vertices_in_one_face[i - 1];
+        start_face_at_index[i] = current_index;
         Planes[i] = Planes[0] + i * 4;
 
     }
@@ -108,6 +112,7 @@ int main() {
     int* d_Faces;
     int* d_number_of_vertices_in_one_face;
     int* d_normal_index_to_face;
+    int* d_start_face_at_index;
     float* d_Vertices;
     float* d_Normals;
     float* d_Planes;
@@ -119,7 +124,7 @@ int main() {
     cudaMalloc(&d_Vertices, 3 * Vert_NUM * sizeof(float));
     cudaMalloc(&d_number_of_vertices_in_one_face, Face_NUM * sizeof(int));
     cudaMalloc(&d_normal_index_to_face, Face_NUM * sizeof(int));
-
+    cudaMalloc(&d_start_face_at_index, Face_NUM * sizeof(int));
 
 
     double focal_length = 10;
@@ -140,9 +145,13 @@ int main() {
     cudaMemcpy(d_camera_center, &h_camera_center, sizeof(point3), cudaMemcpyHostToDevice);
     cudaMemcpy(d_camera_focal, &h_camera_focal, sizeof(point3), cudaMemcpyHostToDevice);
     dim3 threadsPerBlock2(16, 16);
+
+
     dim3 numBlocks((WIDTH + threadsPerBlock2.x - 1) / threadsPerBlock2.x, (HEIGHT + threadsPerBlock2.y - 1) / threadsPerBlock2.y);
     Generate_rays<<<numBlocks, threadsPerBlock2>>> (d_ray, focal_length, d_camera_center, d_camera_focal, normal_index_to_face,number_of_vertices_in_one_face,
-     Faces[0], Verticies[0], Normals[0], Planes[0]);
+     Faces[0], Verticies[0], Normals[0], Planes[0], d_start_face_at_index, Face_NUM, Vert_NUM, Normal_NUM);
+
+
     cudaMemcpy(h_ray[0], d_ray, WIDTH * HEIGHT * sizeof(ray), cudaMemcpyDeviceToHost);
     cudaFree(d_ray);
     cudaFree(d_camera_center);
