@@ -85,9 +85,29 @@ __global__ void Generate_rays(ray* viewport_rays,double focal_length, point3* ca
 
     vec3 pixel_center = pixel00_loc + (i * DELTA_U) + (j * DELTA_V);
     vec3 ray_direction = pixel_center - *camera_center;
-    viewport_rays[j*HEIGHT + i] = ray(*camera_center , ray_direction);
+    ray UV_ray = ray(*camera_center, ray_direction);
+    viewport_rays[j * HEIGHT + i] = UV_ray;
+
+    __syncthreads();
 
 
+    float* distance;
+    cudaMalloc((void**)&distance, Face_NUM * sizeof(float));
+
+    int Cuda_Blocks = (Face_NUM + 255) / 256;
+    int Threads_in_one_block = 256;
+
+    Face_hit << <Cuda_Blocks, Threads_in_one_block >> > (d_Planes, UV_ray, d_number_of_vertices_in_one_face, d_Faces, d_Vertices, Face_NUM, start_face_at_index, distance);
+
+
+
+
+
+
+
+
+    cudaDeviceSynchronize();
+    cudaFree(distance);
 
 }
 
