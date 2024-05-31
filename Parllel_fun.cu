@@ -97,29 +97,11 @@ __global__ void Generate_rays(ray* viewport_rays,double focal_length, point3* ca
     int Cuda_Blocks = (Face_NUM + 255) / 256;
     int Threads_in_one_block = 256;
 
-    Face_hit << <Cuda_Blocks, Threads_in_one_block >> > (d_Planes, UV_ray, d_number_of_vertices_in_one_face, d_Faces, d_Vertices, Face_NUM, start_face_at_index, distance);
+    Face_hit << <Cuda_Blocks, Threads_in_one_block >> > (d_Planes, UV_ray, d_number_of_vertices_in_one_face, d_Faces, d_Vertices, Face_NUM, start_face_at_index,distance);
 
 
 
-
-
-
-
-
-    cudaDeviceSynchronize();
-    cudaFree(distance);
 
 }
 
 
-
-
-__global__ void Face_hit()
-{
-
-
-
-
-
-
-};
