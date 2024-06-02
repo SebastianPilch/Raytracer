@@ -68,7 +68,6 @@ int main() {
 
 
 
-
     //wybór obiektu
     int Vert_NUM = vert_num1;
     int Face_NUM = face_num1;
@@ -76,13 +75,17 @@ int main() {
     Pointer_storage liczony_objekt = Kostka;
     // // // //
 
-
+    float** Planes = new float*[Face_NUM];
+    Planes[0] = new float[Face_NUM * 4];
     int** Faces = liczony_objekt.Faces;
     float** Verticies = liczony_objekt.Vertices;
     float** Normals = liczony_objekt.Normals;
-    float** Planes = liczony_objekt.Planes;
     float* Distances = new float[WIDTH*HEIGHT*Face_NUM];
     // (face_idx * WIDTH * HEIGHT) + (h * WIDTH) + w;
+
+
+
+
 
 
     int* number_of_vertices_in_one_face = liczony_objekt.Face_size;
@@ -104,6 +107,16 @@ int main() {
         start_face_at_index[i] = current_index;
         Planes[i] = Planes[0] + i * 4;
 
+    }
+    Planes = liczony_objekt.Planes;
+
+    for (int i = 0; i < Face_NUM; i++)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            cout << "  " << Planes[i][j] << "  ";
+        }
+        cout << endl;
     }
     for (int i = 1; i < Vert_NUM; i++)
     {
@@ -164,7 +177,7 @@ int main() {
 
     cudaMemcpy(h_ray[0], d_ray, WIDTH * HEIGHT * sizeof(ray), cudaMemcpyDeviceToHost);
     cudaMemcpy(Distances, d_distances, WIDTH * HEIGHT*Face_NUM * sizeof(float), cudaMemcpyDeviceToHost);
-    cudaMemcpy(Normals[0], d_Normals,3 * Normal_NUM * sizeof(float), cudaMemcpyDeviceToHost);
+    cudaMemcpy(Planes[0], d_Planes,3 * Face_NUM * sizeof(float), cudaMemcpyDeviceToHost);
 
     cudaFree(d_ray);
     cudaFree(d_distances);
@@ -172,14 +185,14 @@ int main() {
     cudaFree(d_camera_focal);
 
 
-    //for (int i = 0; i < Normal_NUM; i++)
-    //{
-    //    for (int j = 0; j < 3; j++)
-    //    {
-    //            cout << "  " << Normals[i][j] << "  ";
-    //    }
-    //    cout << endl;
-    //}
+    for (int i = 0; i < Face_NUM; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+                cout << "  " << Planes[i][j] << "  ";
+        }
+        cout << endl;
+    }
 
 
 
@@ -195,16 +208,16 @@ int main() {
     //    }
     //}
 
-    for (int i = 0; i < WIDTH; i++) 
-    {
-        for (int j = 0; j < HEIGHT; j++) 
-        {
-            for (int f = 0; f < Face_NUM; f++) 
-            {
-                  cout << "  " << Distances[(j * WIDTH * Face_NUM) + (i * Face_NUM) + f] << "  ";
-            }
-        }
-    }
+    //for (int i = 0; i < WIDTH; i++) 
+    //{
+    //    for (int j = 0; j < HEIGHT; j++) 
+    //    {
+    //        for (int f = 0; f < Face_NUM; f++) 
+    //        {
+    //              cout << "  " << Distances[(j * WIDTH * Face_NUM) + (i * Face_NUM) + f] << "  ";
+    //        }
+    //    }
+    //}
 
 
 

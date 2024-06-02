@@ -148,7 +148,7 @@ __global__ void Generate_rays(ray* viewport_rays,double focal_length, point3* ca
     }
     else
     {
-        d_distances[j * Face_NUM * WIDTH + i * Face_NUM + f] =(float)plane.A;//sqrt(dis[0] * dis[0] + dis[1] * dis[1] + dis[2] * dis[2]);
+        d_distances[j * Face_NUM * WIDTH + i * Face_NUM + f] =(float)d_Faces[f];//sqrt(dis[0] * dis[0] + dis[1] * dis[1] + dis[2] * dis[2]);
     }
     __syncthreads();
 //
