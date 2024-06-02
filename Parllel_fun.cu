@@ -119,7 +119,7 @@ __global__ void Generate_rays(ray* viewport_rays,double focal_length, point3* ca
         int vertex_index = d_Faces[i] - 1;
         int vertex_next = d_Faces[next_index] - 1;
 
-        printf("%d, %d)\n", d_Faces[i], i);
+        //printf("%d, %d)\n", d_Faces[i], i);
 
         point3 next_vertex = point3(
             (double)d_Vertices[3 * vertex_index],
@@ -152,8 +152,8 @@ __global__ void Generate_rays(ray* viewport_rays,double focal_length, point3* ca
         d_distances[j * Face_NUM * WIDTH + i * Face_NUM + f] = sqrt(dis[0] * dis[0] + dis[1] * dis[1] + dis[2] * dis[2]);
     }
     __syncthreads();
-    printf("Thread (%d, %d, %d): Intersection (%f, %f, %f), Distance %f\n",
-    i, j, f, intersection[0], intersection[1], intersection[2], d_distances[j * Face_NUM * WIDTH + i * Face_NUM + f]);
+    //printf("Thread (%d, %d, %d): Intersection (%f, %f, %f), Distance %f\n",
+    //i, j, f, intersection[0], intersection[1], intersection[2], d_distances[j * Face_NUM * WIDTH + i * Face_NUM + f]);
    // 
         //Face_hit << <Cuda_Blocks, Threads_in_one_block >> > (d_Planes, UV_ray, d_number_of_vertices_in_one_face, d_Faces, d_Vertices, Face_NUM, start_face_at_index);
 

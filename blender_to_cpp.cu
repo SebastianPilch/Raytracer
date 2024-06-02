@@ -93,9 +93,8 @@ int main() {
     int current_index = 0;
     for (int i = 1; i < Face_NUM+1; i++)
     {
-        Faces[i] = Faces[current_index] + number_of_vertices_in_one_face[i - 1];
+        Faces[i] = Faces[0] + current_index + number_of_vertices_in_one_face[i - 1];
         start_face_at_index[i] = current_index;
-        cout << current_index<<  " "<< i - 1 << endl;
         current_index += number_of_vertices_in_one_face[i - 1];
         
         Planes[i] = Planes[0] + i * 4;
@@ -129,6 +128,7 @@ int main() {
     for (int i = 0; i < Face_NUM; i++)
     {
         for (int j = 0; j < liczony_objekt.Face_size[i]; j++) {
+            cout << i << " " << j << endl;
             Faces[i][j] = liczony_objekt.Faces[i][j];
         }
     }
