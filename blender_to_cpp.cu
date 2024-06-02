@@ -68,9 +68,6 @@ int main() {
     float** Planes = new float*[Face_NUM];
     Planes[0] = new float[Face_NUM * 4];
   
-    int** Faces = new int* [Face_NUM];
-    Faces[0] = new int[Face_NUM * 3];
-
     float** Verticies = new float* [Vert_NUM];
     Verticies[0] = new float[Vert_NUM * 3 * 4];
 
@@ -89,42 +86,53 @@ int main() {
     int Length_to_Allocate_Faces = 0;
     for (int i = 0; i < Face_NUM; i++) { Length_to_Allocate_Faces += number_of_vertices_in_one_face[i]; }
 
+    int** Faces = new int* [Face_NUM];
+    Faces[0] = new int[Length_to_Allocate_Faces];
+
+
     int current_index = 0;
-    for (int i = 1; i < Face_NUM; i++)
+    for (int i = 1; i < Face_NUM+1; i++)
     {
         Faces[i] = Faces[current_index] + number_of_vertices_in_one_face[i - 1];
-        current_index += number_of_vertices_in_one_face[i - 1];
         start_face_at_index[i] = current_index;
+        cout << current_index<<  " "<< i - 1 << endl;
+        current_index += number_of_vertices_in_one_face[i - 1];
+        
         Planes[i] = Planes[0] + i * 4;
-
     }
-    Planes = liczony_objekt.Planes;
+
+
+
+    for (int i = 1; i < Vert_NUM; i++)
+    {
+        Verticies[i] = Verticies[0] + i * 3;
+    }
+    for (int i = 1; i < Normal_NUM; i++)
+    {
+        Normals[i] = Normals[0] + i * 3;
+    }
     for (int i = 0; i < Face_NUM; i++) 
     {
         for (int j = 0; j < 4; j++)
         Planes[i][j] = liczony_objekt.Planes[i][j];
     }
-
-    for (int i = 0; i < Face_NUM*4; i++)
+    for (int i = 0; i < Vert_NUM; i++)
     {
-            std::cout << "  " << Planes[i] << "  ";
-        std::cout << endl;
+        for (int j = 0; j < 3; j++)
+            Verticies[i][j] = liczony_objekt.Vertices[i][j];
+    }
+    for (int i = 0; i < Normal_NUM; i++)
+    {
+        for (int j = 0; j < 3; j++)
+            Normals[i][j] = liczony_objekt.Normals[i][j];
+    }
+    for (int i = 0; i < Face_NUM; i++)
+    {
+        for (int j = 0; j < liczony_objekt.Face_size[i]; j++) {
+            Faces[i][j] = liczony_objekt.Faces[i][j];
+        }
     }
 
-    Faces = liczony_objekt.Faces;
-    for (int i = 1; i < Vert_NUM; i++)
-    {
-        Verticies[i] = Verticies[0] + i * 3;
-    }
-
-    Verticies = liczony_objekt.Vertices;
-
-    for (int i = 1; i < Normal_NUM; i++)
-    {
-        Normals[i] = Normals[0] + i * 3;
-    }
-
-    Normals = liczony_objekt.Normals;
     int* d_Faces;
     int* d_number_of_vertices_in_one_face;
     int* d_normal_index_to_face;
@@ -152,9 +160,9 @@ int main() {
     cudaMemcpy(d_Planes, Planes[0], 4 * Face_NUM * sizeof(float), cudaMemcpyHostToDevice);
     cudaMemcpy(d_Normals, Normals[0], 3 * Face_NUM * sizeof(float), cudaMemcpyHostToDevice);
     cudaMemcpy(d_Vertices, Verticies[0], 3 * Face_NUM *  sizeof(float), cudaMemcpyHostToDevice);
-    cudaMemcpy(d_number_of_vertices_in_one_face, &number_of_vertices_in_one_face, Face_NUM * sizeof(int), cudaMemcpyHostToDevice);
-    cudaMemcpy(d_normal_index_to_face, &normal_index_to_face, Face_NUM * sizeof(int), cudaMemcpyHostToDevice);
-    cudaMemcpy(d_start_face_at_index, &start_face_at_index, Face_NUM * sizeof(int), cudaMemcpyHostToDevice);
+    cudaMemcpy(d_number_of_vertices_in_one_face, number_of_vertices_in_one_face, Face_NUM * sizeof(int), cudaMemcpyHostToDevice);
+    cudaMemcpy(d_normal_index_to_face, normal_index_to_face, Face_NUM * sizeof(int), cudaMemcpyHostToDevice);
+    cudaMemcpy(d_start_face_at_index, start_face_at_index, Face_NUM * sizeof(int), cudaMemcpyHostToDevice);
 
     double focal_length = 10;
     point3 h_camera_center(5, 5, 5);

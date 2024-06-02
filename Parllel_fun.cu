@@ -96,8 +96,6 @@ __global__ void Generate_rays(ray* viewport_rays,double focal_length, point3* ca
     Plane plane = Plane((double)d_Planes[f*4], (double)d_Planes[f * 4+1], (double)d_Planes[f * 4+2], (double)d_Planes[f * 4+3]);
     point3 intersection = UV_ray.findIntersection(plane);
     bool Is_Hitten_correct = true;
-    printf(" dla %d %d %d  wartosc plana: a  %.2f  b %.2f c %.2f d  %.2f\n",i,j,f, d_Planes[4*f], d_Planes[f * 4 + 1], d_Planes[4 * f + 2], d_Planes[4 * f + 3]);
-
     if (intersection[0] == INFINITY || intersection[0] == -INFINITY || intersection[1] == INFINITY ||
         intersection[1] == -INFINITY == -INFINITY || intersection[2] == INFINITY || intersection[2] == -INFINITY) 
     {
@@ -106,6 +104,7 @@ __global__ void Generate_rays(ray* viewport_rays,double focal_length, point3* ca
     
     vec3 edge;
     size_t next_index;
+
     for (size_t i = start_face_at_index[f]; i < start_face_at_index[f] + d_number_of_vertices_in_one_face[f]; ++i) 
     {
         size_t next_index;
@@ -119,6 +118,8 @@ __global__ void Generate_rays(ray* viewport_rays,double focal_length, point3* ca
         }
         int vertex_index = d_Faces[i] - 1;
         int vertex_next = d_Faces[next_index] - 1;
+
+        printf("%d, %d)\n", d_Faces[i], i);
 
         point3 next_vertex = point3(
             (double)d_Vertices[3 * vertex_index],
@@ -152,8 +153,8 @@ __global__ void Generate_rays(ray* viewport_rays,double focal_length, point3* ca
     }
     __syncthreads();
     printf("Thread (%d, %d, %d): Intersection (%f, %f, %f), Distance %f\n",
-    i, j, f, intersection[0], intersection[1], intersection[2],
-    d_distances[j * Face_NUM * WIDTH + i * Face_NUM + f]);
+    i, j, f, intersection[0], intersection[1], intersection[2], d_distances[j * Face_NUM * WIDTH + i * Face_NUM + f]);
+   // 
         //Face_hit << <Cuda_Blocks, Threads_in_one_block >> > (d_Planes, UV_ray, d_number_of_vertices_in_one_face, d_Faces, d_Vertices, Face_NUM, start_face_at_index);
 
 }
