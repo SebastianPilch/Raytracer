@@ -80,6 +80,7 @@ __global__ void Generate_rays(ray* viewport_rays,double focal_length, point3* ca
     int i = blockIdx.x * blockDim.x + threadIdx.x;
     int j = blockIdx.y * blockDim.y + threadIdx.y;
     int f = blockIdx.z * blockDim.z + threadIdx.z;
+
     if (f >= Face_NUM || i >= WIDTH || j >= HEIGHT) return;
 
     vec3 viewport_upper_left = *camera_center - vec3(0, 0, focal_length) - VIEWPORT_U / 2 - VIEWPORT_V / 2;
@@ -88,21 +89,23 @@ __global__ void Generate_rays(ray* viewport_rays,double focal_length, point3* ca
     vec3 pixel_center = pixel00_loc + (i * DELTA_U) + (j * DELTA_V);
     vec3 ray_direction = pixel_center - *camera_center;
     ray UV_ray = ray(*camera_center, ray_direction);
-    viewport_rays[j * HEIGHT + i] = UV_ray;
-
+    viewport_rays[j * HEIGHT + i] = ray(*camera_center, ray_direction);
+    
     __syncthreads();
 
-
+    
     Plane plane = Plane((double)d_Planes[f*4], (double)d_Planes[f * 4+1], (double)d_Planes[f * 4+2], (double)d_Planes[f * 4+3]);
     point3 intersection = UV_ray.findIntersection(plane);
     bool Is_Hitten_correct = true;
-
+ 
     if (intersection[0] == INFINITY || intersection[0] == -INFINITY || intersection[1] == INFINITY ||
         intersection[1] == -INFINITY == -INFINITY || intersection[2] == INFINITY || intersection[2] == -INFINITY) 
     {
         Is_Hitten_correct = false;
     }
+    
     vec3 edge;
+    size_t next_index;
     for (size_t i = start_face_at_index[f]; i < start_face_at_index[f] + d_number_of_vertices_in_one_face[f]; ++i) 
     {
         size_t next_index;
@@ -139,15 +142,16 @@ __global__ void Generate_rays(ray* viewport_rays,double focal_length, point3* ca
         }
     }
     vec3 dis = *camera_center - intersection;
-    __syncthreads();
-    if (!Is_Hitten_correct) 
+    if (!Is_Hitten_correct)
     {
-        d_distances[i * WIDTH * HEIGHT + j * WIDTH + f] = INFINITY;
+        d_distances[j * Face_NUM * WIDTH + i * Face_NUM + f] = INFINITY;
     }
-    else 
+    else
     {
-        d_distances[i * WIDTH * HEIGHT + j * WIDTH + f] = i * WIDTH * HEIGHT + j * WIDTH + f;
-    }   //d_distances[i * WIDTH * HEIGHT + j * WIDTH + f] = sqrt(dis[0] * dis[0] + dis[1] * dis[1] + dis[2] * dis[2]);
+        d_distances[j * Face_NUM * WIDTH + i * Face_NUM + f] =(float)plane.A;//sqrt(dis[0] * dis[0] + dis[1] * dis[1] + dis[2] * dis[2]);
+    }
+    __syncthreads();
+//
 
 
         //Face_hit << <Cuda_Blocks, Threads_in_one_block >> > (d_Planes, UV_ray, d_number_of_vertices_in_one_face, d_Faces, d_Vertices, Face_NUM, start_face_at_index);

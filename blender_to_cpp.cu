@@ -153,17 +153,18 @@ int main() {
     cudaMemcpy(d_camera_focal, &h_camera_focal, sizeof(point3), cudaMemcpyHostToDevice);
     
 
-    dim3 blockDim(512, 512, 512); 
+    dim3 blockDim(8, 8, 8); 
     dim3 gridDim((WIDTH + blockDim.x - 1) / blockDim.x,
         (HEIGHT + blockDim.y - 1) / blockDim.y,
         (Face_NUM + blockDim.z - 1) / blockDim.z);
 
-    Generate_rays<<< gridDim, blockDim >>> (d_ray, focal_length, d_camera_center, d_camera_focal, normal_index_to_face,number_of_vertices_in_one_face,
-    Faces[0], Verticies[0], Normals[0], Planes[0], d_start_face_at_index, Face_NUM, Vert_NUM, Normal_NUM, d_distances);
+    Generate_rays<<< gridDim, blockDim >>> (d_ray, focal_length, d_camera_center, d_camera_focal, d_normal_index_to_face,d_number_of_vertices_in_one_face,
+    d_Faces, d_Vertices, d_Normals, d_Planes, d_start_face_at_index, Face_NUM, Vert_NUM, Normal_NUM, d_distances);
 
 
     cudaMemcpy(h_ray[0], d_ray, WIDTH * HEIGHT * sizeof(ray), cudaMemcpyDeviceToHost);
-    cudaMemcpy(Distances, d_distances, WIDTH * HEIGHT * sizeof(ray), cudaMemcpyDeviceToHost);
+    cudaMemcpy(Distances, d_distances, WIDTH * HEIGHT*Face_NUM * sizeof(float), cudaMemcpyDeviceToHost);
+    cudaMemcpy(Normals[0], d_Normals,3 * Normal_NUM * sizeof(float), cudaMemcpyDeviceToHost);
 
     cudaFree(d_ray);
     cudaFree(d_distances);
@@ -171,7 +172,28 @@ int main() {
     cudaFree(d_camera_focal);
 
 
-    cout << endl << endl << "Bicie sciany" ;
+    //for (int i = 0; i < Normal_NUM; i++)
+    //{
+    //    for (int j = 0; j < 3; j++)
+    //    {
+    //            cout << "  " << Normals[i][j] << "  ";
+    //    }
+    //    cout << endl;
+    //}
+
+
+
+    //cout << endl << endl << "Bicie sciany" ;
+    //for (int i = 0; i < WIDTH; i++)
+    //{
+    //    for (int j = 0; j < HEIGHT; j++)
+    //    {
+    //        if(h_ray[i][j].orig[0] == 5)
+    //        {
+    //            cout << "  " << h_ray[i][j] << "  ";
+    //        }
+    //    }
+    //}
 
     for (int i = 0; i < WIDTH; i++) 
     {
@@ -179,15 +201,9 @@ int main() {
         {
             for (int f = 0; f < Face_NUM; f++) 
             {
-                if (Distances[(f * WIDTH * HEIGHT) + (j * WIDTH) + i] > 0)
-                {
-                    cout << "  " << Distances[(f * WIDTH * HEIGHT) + (j * WIDTH) + i] << "  ";
-                }
+                  cout << "  " << Distances[(j * WIDTH * Face_NUM) + (i * Face_NUM) + f] << "  ";
             }
-        
         }
-
-    
     }
 
 
@@ -197,28 +213,6 @@ int main() {
     free(h_ray);
 
     cout << endl<<Length_to_Allocate_Faces;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     return 0;
 
