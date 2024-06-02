@@ -80,7 +80,6 @@ __global__ void Generate_rays(ray* viewport_rays,double focal_length, point3* ca
     int i = blockIdx.x * blockDim.x + threadIdx.x;
     int j = blockIdx.y * blockDim.y + threadIdx.y;
     int f = blockIdx.z * blockDim.z + threadIdx.z;
-
     if (f >= Face_NUM || i >= WIDTH || j >= HEIGHT) return;
 
     vec3 viewport_upper_left = *camera_center - vec3(0, 0, focal_length) - VIEWPORT_U / 2 - VIEWPORT_V / 2;
@@ -97,7 +96,8 @@ __global__ void Generate_rays(ray* viewport_rays,double focal_length, point3* ca
     Plane plane = Plane((double)d_Planes[f*4], (double)d_Planes[f * 4+1], (double)d_Planes[f * 4+2], (double)d_Planes[f * 4+3]);
     point3 intersection = UV_ray.findIntersection(plane);
     bool Is_Hitten_correct = true;
- 
+    printf(" dla %d %d %d  wartosc plana: a  %.2f  b %.2f c %.2f d  %.2f\n",i,j,f, d_Planes[4*f], d_Planes[f * 4 + 1], d_Planes[4 * f + 2], d_Planes[4 * f + 3]);
+
     if (intersection[0] == INFINITY || intersection[0] == -INFINITY || intersection[1] == INFINITY ||
         intersection[1] == -INFINITY == -INFINITY || intersection[2] == INFINITY || intersection[2] == -INFINITY) 
     {
@@ -148,16 +148,13 @@ __global__ void Generate_rays(ray* viewport_rays,double focal_length, point3* ca
     }
     else
     {
-        d_distances[j * Face_NUM * WIDTH + i * Face_NUM + f] =(float)d_Faces[f];//sqrt(dis[0] * dis[0] + dis[1] * dis[1] + dis[2] * dis[2]);
+        d_distances[j * Face_NUM * WIDTH + i * Face_NUM + f] = sqrt(dis[0] * dis[0] + dis[1] * dis[1] + dis[2] * dis[2]);
     }
     __syncthreads();
-//
-
-
+    printf("Thread (%d, %d, %d): Intersection (%f, %f, %f), Distance %f\n",
+    i, j, f, intersection[0], intersection[1], intersection[2],
+    d_distances[j * Face_NUM * WIDTH + i * Face_NUM + f]);
         //Face_hit << <Cuda_Blocks, Threads_in_one_block >> > (d_Planes, UV_ray, d_number_of_vertices_in_one_face, d_Faces, d_Vertices, Face_NUM, start_face_at_index);
-
-
-
 
 }
 

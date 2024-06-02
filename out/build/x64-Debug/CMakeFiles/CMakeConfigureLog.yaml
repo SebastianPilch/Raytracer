@@ -408,6 +408,8 @@ events:
       CommonProgramFiles=C:\\Program Files\\Common Files
       CommonProgramFiles(x86)=C:\\Program Files (x86)\\Common Files
       CommonProgramW6432=C:\\Program Files\\Common Files
+      COMPLUS_InstallRoot=${env.COMPLUS_InstallRoot}
+      COMPLUS_Version=${env.COMPLUS_Version}
       COMPUTERNAME=DESKTOP-HHIHHGG
       ComSpec=C:\\Windows\\system32\\cmd.exe
       CUDA_PATH=C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.3
@@ -460,7 +462,8 @@ events:
       PROMPT=$P$G
       PSModulePath=C:\\Program Files\\WindowsPowerShell\\Modules;C:\\Windows\\system32\\WindowsPowerShell\\v1.0\\Modules
       PUBLIC=C:\\Users\\Public
-      ServiceHubLogSessionKey=DCE95402
+      remoteMachineName=
+      ServiceHubLogSessionKey=20E96E4D
       SESSIONNAME=Console
       SignInWithHomeTenantOnly=False
       SystemDrive=C:
@@ -496,7 +499,7 @@ events:
       vsconsoleoutput=1
       VSINSTALLDIR=C:\\Program Files\\Microsoft Visual Studio\\2022\\Professional\\
       VSLANG=1045
-      VsPerMonitorDpiAwarenessEnabled.15788=TRUE
+      VsPerMonitorDpiAwarenessEnabled.10776=TRUE
       VSSKUEDITION=Professional
       VS_Perf_Session_GCHeapCount=2
       VXIPNPPATH=C:\\Program Files (x86)\\IVI Foundation\\VISA\\
@@ -510,6 +513,7 @@ events:
       WindowsSDKVersion=10.0.22621.0\\
       WindowsSDK_ExecutablePath_x64=C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v10.0A\\bin\\NETFX 4.8 Tools\\x64\\
       WindowsSDK_ExecutablePath_x86=C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v10.0A\\bin\\NETFX 4.8 Tools\\
+      wslPath=
       ZES_ENABLE_SYSMAN=1
       __DOTNET_ADD_64BIT=1
       __DOTNET_PREFERRED_BITNESS=64
@@ -2321,6 +2325,7 @@ events:
       [DEBUG:ext\\vcvars.bat] Adding "C:\\Program Files\\Microsoft Visual Studio\\2022\\Professional\\VC\\Tools\\MSVC\\14.39.33519\\bin\\HostX64\\x64"
       [DEBUG:ext\\vcvars.bat] init:COMPLETE
       [DEBUG:VsDevCmd.bat] Sending telemetry
+      Version v4.0.30319 of the .NET Framework is not installed and it is required to run version 3 of Windows PowerShell.
       [DEBUG:core\\vsdevcmd_end] initializing with arguments ''
       [DEBUG:VsDevCmd] Writing post-execution environment to C:\\Users\\SEBAST~1\\AppData\\Local\\Temp\\dd_vsdevcmd17_env.log
       [DEBUG:VsDevCmd.bat] --------------------- VS Developer Command Prompt Environment [post-init] ---------------------
@@ -2330,6 +2335,8 @@ events:
       CommonProgramFiles=C:\\Program Files\\Common Files
       CommonProgramFiles(x86)=C:\\Program Files (x86)\\Common Files
       CommonProgramW6432=C:\\Program Files\\Common Files
+      COMPLUS_InstallRoot=${env.COMPLUS_InstallRoot}
+      COMPLUS_Version=${env.COMPLUS_Version}
       COMPUTERNAME=DESKTOP-HHIHHGG
       ComSpec=C:\\Windows\\system32\\cmd.exe
       CUDA_PATH=C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.3
@@ -2383,7 +2390,8 @@ events:
       PROMPT=$P$G
       PSModulePath=C:\\Program Files\\WindowsPowerShell\\Modules;C:\\Windows\\system32\\WindowsPowerShell\\v1.0\\Modules
       PUBLIC=C:\\Users\\Public
-      ServiceHubLogSessionKey=DCE95402
+      remoteMachineName=
+      ServiceHubLogSessionKey=20E96E4D
       SESSIONNAME=Console
       SignInWithHomeTenantOnly=False
       SystemDrive=C:
@@ -2418,7 +2426,7 @@ events:
       vsconsoleoutput=1
       VSINSTALLDIR=C:\\Program Files\\Microsoft Visual Studio\\2022\\Professional\\
       VSLANG=1045
-      VsPerMonitorDpiAwarenessEnabled.15788=TRUE
+      VsPerMonitorDpiAwarenessEnabled.10776=TRUE
       VSSKUEDITION=Professional
       VS_Perf_Session_GCHeapCount=2
       VXIPNPPATH=C:\\Program Files (x86)\\IVI Foundation\\VISA\\
@@ -2432,6 +2440,7 @@ events:
       WindowsSDKVersion=10.0.22621.0\\
       WindowsSDK_ExecutablePath_x64=C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v10.0A\\bin\\NETFX 4.8 Tools\\x64\\
       WindowsSDK_ExecutablePath_x86=C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v10.0A\\bin\\NETFX 4.8 Tools\\
+      wslPath=
       ZES_ENABLE_SYSMAN=1
       __DOTNET_ADD_64BIT=1
       __DOTNET_PREFERRED_BITNESS=64
@@ -2451,6 +2460,8 @@ events:
       #$ CommonProgramFiles=C:\\Program Files\\Common Files
       #$ CommonProgramFiles(x86)=C:\\Program Files (x86)\\Common Files
       #$ CommonProgramW6432=C:\\Program Files\\Common Files
+      #$ COMPLUS_InstallRoot=${env.COMPLUS_InstallRoot}
+      #$ COMPLUS_Version=${env.COMPLUS_Version}
       #$ COMPUTERNAME=DESKTOP-HHIHHGG
       #$ ComSpec=C:\\Windows\\system32\\cmd.exe
       #$ CUDA_PATH=C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.3
@@ -2504,7 +2515,8 @@ events:
       #$ PROMPT=$P$G
       #$ PSModulePath=C:\\Program Files\\WindowsPowerShell\\Modules;C:\\Windows\\system32\\WindowsPowerShell\\v1.0\\Modules
       #$ PUBLIC=C:\\Users\\Public
-      #$ ServiceHubLogSessionKey=DCE95402
+      #$ remoteMachineName=
+      #$ ServiceHubLogSessionKey=20E96E4D
       #$ SESSIONNAME=Console
       #$ SignInWithHomeTenantOnly=False
       #$ SystemDrive=C:
@@ -2536,7 +2548,7 @@ events:
       #$ vsconsoleoutput=1
       #$ VSINSTALLDIR=C:\\Program Files\\Microsoft Visual Studio\\2022\\Professional\\
       #$ VSLANG=1045
-      #$ VsPerMonitorDpiAwarenessEnabled.15788=TRUE
+      #$ VsPerMonitorDpiAwarenessEnabled.10776=TRUE
       #$ VSSKUEDITION=Professional
       #$ VS_Perf_Session_GCHeapCount=2
       #$ VXIPNPPATH=C:\\Program Files (x86)\\IVI Foundation\\VISA\\
@@ -2550,6 +2562,7 @@ events:
       #$ WindowsSDKVersion=10.0.22621.0\\
       #$ WindowsSDK_ExecutablePath_x64=C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v10.0A\\bin\\NETFX 4.8 Tools\\x64\\
       #$ WindowsSDK_ExecutablePath_x86=C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v10.0A\\bin\\NETFX 4.8 Tools\\
+      #$ wslPath=
       #$ ZES_ENABLE_SYSMAN=1
       #$ __DOTNET_ADD_64BIT=1
       #$ __DOTNET_PREFERRED_BITNESS=64
@@ -2893,6 +2906,8 @@ events:
         considering line: [CommonProgramFiles=C:\\Program Files\\Common Files]
         considering line: [CommonProgramFiles(x86)=C:\\Program Files (x86)\\Common Files]
         considering line: [CommonProgramW6432=C:\\Program Files\\Common Files]
+        considering line: [COMPLUS_InstallRoot=${env.COMPLUS_InstallRoot}]
+        considering line: [COMPLUS_Version=${env.COMPLUS_Version}]
         considering line: [COMPUTERNAME=DESKTOP-HHIHHGG]
         considering line: [ComSpec=C:\\Windows\\system32\\cmd.exe]
         considering line: [CUDA_PATH=C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.3]
@@ -3012,7 +3027,8 @@ events:
         considering line: [PSModulePath=C:\\Program Files\\WindowsPowerShell\\Modules]
         considering line: [C:\\Windows\\system32\\WindowsPowerShell\\v1.0\\Modules]
         considering line: [PUBLIC=C:\\Users\\Public]
-        considering line: [ServiceHubLogSessionKey=DCE95402]
+        considering line: [remoteMachineName=]
+        considering line: [ServiceHubLogSessionKey=20E96E4D]
         considering line: [SESSIONNAME=Console]
         considering line: [SignInWithHomeTenantOnly=False]
         considering line: [SystemDrive=C:]
@@ -3040,13 +3056,14 @@ events:
         considering line: [VSCMD_VER=17.9.2]
         considering line: [vsconsoleoutput=1]
         considering line: [VSINSTALLDIR=C:\\Program Files\\Microsoft Visual Studio\\2022\\Professional;VSLANG=1045]
-        considering line: [VsPerMonitorDpiAwarenessEnabled.15788=TRUE]
+        considering line: [VsPerMonitorDpiAwarenessEnabled.10776=TRUE]
         considering line: [VSSKUEDITION=Professional]
         considering line: [VS_Perf_Session_GCHeapCount=2]
         considering line: [VXIPNPPATH=C:\\Program Files (x86)\\IVI Foundation\\VISA;VXIPNPPATH64=C:\\Program Files\\IVI Foundation\\VISA;windir=C:\\Windows]
         considering line: [WindowsLibPath=C:\\Program Files (x86)\\Windows Kits\\10\\UnionMetadata\\10.0.22621.0]
         considering line: [C:\\Program Files (x86)\\Windows Kits\\10\\References\\10.0.22621.0]
-        considering line: [WindowsSdkBinPath=C:\\Program Files (x86)\\Windows Kits\\10\\bin;WindowsSdkDir=C:\\Program Files (x86)\\Windows Kits\\10;WindowsSDKLibVersion=10.0.22621.0;WindowsSdkVerBinPath=C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.22621.0;WindowsSDKVersion=10.0.22621.0;WindowsSDK_ExecutablePath_x64=C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v10.0A\\bin\\NETFX 4.8 Tools\\x64;WindowsSDK_ExecutablePath_x86=C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v10.0A\\bin\\NETFX 4.8 Tools;ZES_ENABLE_SYSMAN=1]
+        considering line: [WindowsSdkBinPath=C:\\Program Files (x86)\\Windows Kits\\10\\bin;WindowsSdkDir=C:\\Program Files (x86)\\Windows Kits\\10;WindowsSDKLibVersion=10.0.22621.0;WindowsSdkVerBinPath=C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.22621.0;WindowsSDKVersion=10.0.22621.0;WindowsSDK_ExecutablePath_x64=C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v10.0A\\bin\\NETFX 4.8 Tools\\x64;WindowsSDK_ExecutablePath_x86=C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v10.0A\\bin\\NETFX 4.8 Tools;wslPath=]
+        considering line: [ZES_ENABLE_SYSMAN=1]
         considering line: [__DOTNET_ADD_64BIT=1]
         considering line: [__DOTNET_PREFERRED_BITNESS=64]
         considering line: [__VCVARSALL_HOST_ARCH=x64]
@@ -5098,6 +5115,7 @@ events:
         considering line: [[DEBUG:ext\\vcvars.bat] Adding "C:\\Program Files\\Microsoft Visual Studio\\2022\\Professional\\VC\\Tools\\MSVC\\14.39.33519\\bin\\HostX64\\x64"]
         considering line: [[DEBUG:ext\\vcvars.bat] init:COMPLETE]
         considering line: [[DEBUG:VsDevCmd.bat] Sending telemetry]
+        considering line: [Version v4.0.30319 of the .NET Framework is not installed and it is required to run version 3 of Windows PowerShell.]
         considering line: [[DEBUG:core\\vsdevcmd_end] initializing with arguments '']
         considering line: [[DEBUG:VsDevCmd] Writing post-execution environment to C:\\Users\\SEBAST~1\\AppData\\Local\\Temp\\dd_vsdevcmd17_env.log]
         considering line: [[DEBUG:VsDevCmd.bat] --------------------- VS Developer Command Prompt Environment [post-init] ---------------------]
@@ -5107,6 +5125,8 @@ events:
         considering line: [CommonProgramFiles=C:\\Program Files\\Common Files]
         considering line: [CommonProgramFiles(x86)=C:\\Program Files (x86)\\Common Files]
         considering line: [CommonProgramW6432=C:\\Program Files\\Common Files]
+        considering line: [COMPLUS_InstallRoot=${env.COMPLUS_InstallRoot}]
+        considering line: [COMPLUS_Version=${env.COMPLUS_Version}]
         considering line: [COMPUTERNAME=DESKTOP-HHIHHGG]
         considering line: [ComSpec=C:\\Windows\\system32\\cmd.exe]
         considering line: [CUDA_PATH=C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.3]
@@ -5271,7 +5291,8 @@ events:
         considering line: [PSModulePath=C:\\Program Files\\WindowsPowerShell\\Modules]
         considering line: [C:\\Windows\\system32\\WindowsPowerShell\\v1.0\\Modules]
         considering line: [PUBLIC=C:\\Users\\Public]
-        considering line: [ServiceHubLogSessionKey=DCE95402]
+        considering line: [remoteMachineName=]
+        considering line: [ServiceHubLogSessionKey=20E96E4D]
         considering line: [SESSIONNAME=Console]
         considering line: [SignInWithHomeTenantOnly=False]
         considering line: [SystemDrive=C:]
@@ -5298,13 +5319,14 @@ events:
         considering line: [VSCMD_VER=17.9.2]
         considering line: [vsconsoleoutput=1]
         considering line: [VSINSTALLDIR=C:\\Program Files\\Microsoft Visual Studio\\2022\\Professional;VSLANG=1045]
-        considering line: [VsPerMonitorDpiAwarenessEnabled.15788=TRUE]
+        considering line: [VsPerMonitorDpiAwarenessEnabled.10776=TRUE]
         considering line: [VSSKUEDITION=Professional]
         considering line: [VS_Perf_Session_GCHeapCount=2]
         considering line: [VXIPNPPATH=C:\\Program Files (x86)\\IVI Foundation\\VISA;VXIPNPPATH64=C:\\Program Files\\IVI Foundation\\VISA;windir=C:\\Windows]
         considering line: [WindowsLibPath=C:\\Program Files (x86)\\Windows Kits\\10\\UnionMetadata\\10.0.22621.0]
         considering line: [C:\\Program Files (x86)\\Windows Kits\\10\\References\\10.0.22621.0]
-        considering line: [WindowsSdkBinPath=C:\\Program Files (x86)\\Windows Kits\\10\\bin;WindowsSdkDir=C:\\Program Files (x86)\\Windows Kits\\10;WindowsSDKLibVersion=10.0.22621.0;WindowsSdkVerBinPath=C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.22621.0;WindowsSDKVersion=10.0.22621.0;WindowsSDK_ExecutablePath_x64=C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v10.0A\\bin\\NETFX 4.8 Tools\\x64;WindowsSDK_ExecutablePath_x86=C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v10.0A\\bin\\NETFX 4.8 Tools;ZES_ENABLE_SYSMAN=1]
+        considering line: [WindowsSdkBinPath=C:\\Program Files (x86)\\Windows Kits\\10\\bin;WindowsSdkDir=C:\\Program Files (x86)\\Windows Kits\\10;WindowsSDKLibVersion=10.0.22621.0;WindowsSdkVerBinPath=C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.22621.0;WindowsSDKVersion=10.0.22621.0;WindowsSDK_ExecutablePath_x64=C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v10.0A\\bin\\NETFX 4.8 Tools\\x64;WindowsSDK_ExecutablePath_x86=C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v10.0A\\bin\\NETFX 4.8 Tools;wslPath=]
+        considering line: [ZES_ENABLE_SYSMAN=1]
         considering line: [__DOTNET_ADD_64BIT=1]
         considering line: [__DOTNET_PREFERRED_BITNESS=64]
         considering line: [__VCVARSALL_HOST_ARCH=x64]
@@ -5652,6 +5674,8 @@ events:
         considering line: [CommonProgramFiles=C:\\Program Files\\Common Files]
         considering line: [CommonProgramFiles(x86)=C:\\Program Files (x86)\\Common Files]
         considering line: [CommonProgramW6432=C:\\Program Files\\Common Files]
+        considering line: [COMPLUS_InstallRoot=${env.COMPLUS_InstallRoot}]
+        considering line: [COMPLUS_Version=${env.COMPLUS_Version}]
         considering line: [COMPUTERNAME=DESKTOP-HHIHHGG]
         considering line: [ComSpec=C:\\Windows\\system32\\cmd.exe]
         considering line: [CUDA_PATH=C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.3]
@@ -5771,7 +5795,8 @@ events:
         considering line: [PSModulePath=C:\\Program Files\\WindowsPowerShell\\Modules]
         considering line: [C:\\Windows\\system32\\WindowsPowerShell\\v1.0\\Modules]
         considering line: [PUBLIC=C:\\Users\\Public]
-        considering line: [ServiceHubLogSessionKey=DCE95402]
+        considering line: [remoteMachineName=]
+        considering line: [ServiceHubLogSessionKey=20E96E4D]
         considering line: [SESSIONNAME=Console]
         considering line: [SignInWithHomeTenantOnly=False]
         considering line: [SystemDrive=C:]
@@ -5799,13 +5824,14 @@ events:
         considering line: [VSCMD_VER=17.9.2]
         considering line: [vsconsoleoutput=1]
         considering line: [VSINSTALLDIR=C:\\Program Files\\Microsoft Visual Studio\\2022\\Professional;VSLANG=1045]
-        considering line: [VsPerMonitorDpiAwarenessEnabled.15788=TRUE]
+        considering line: [VsPerMonitorDpiAwarenessEnabled.10776=TRUE]
         considering line: [VSSKUEDITION=Professional]
         considering line: [VS_Perf_Session_GCHeapCount=2]
         considering line: [VXIPNPPATH=C:\\Program Files (x86)\\IVI Foundation\\VISA;VXIPNPPATH64=C:\\Program Files\\IVI Foundation\\VISA;windir=C:\\Windows]
         considering line: [WindowsLibPath=C:\\Program Files (x86)\\Windows Kits\\10\\UnionMetadata\\10.0.22621.0]
         considering line: [C:\\Program Files (x86)\\Windows Kits\\10\\References\\10.0.22621.0]
-        considering line: [WindowsSdkBinPath=C:\\Program Files (x86)\\Windows Kits\\10\\bin;WindowsSdkDir=C:\\Program Files (x86)\\Windows Kits\\10;WindowsSDKLibVersion=10.0.22621.0;WindowsSdkVerBinPath=C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.22621.0;WindowsSDKVersion=10.0.22621.0;WindowsSDK_ExecutablePath_x64=C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v10.0A\\bin\\NETFX 4.8 Tools\\x64;WindowsSDK_ExecutablePath_x86=C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v10.0A\\bin\\NETFX 4.8 Tools;ZES_ENABLE_SYSMAN=1]
+        considering line: [WindowsSdkBinPath=C:\\Program Files (x86)\\Windows Kits\\10\\bin;WindowsSdkDir=C:\\Program Files (x86)\\Windows Kits\\10;WindowsSDKLibVersion=10.0.22621.0;WindowsSdkVerBinPath=C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.22621.0;WindowsSDKVersion=10.0.22621.0;WindowsSDK_ExecutablePath_x64=C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v10.0A\\bin\\NETFX 4.8 Tools\\x64;WindowsSDK_ExecutablePath_x86=C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v10.0A\\bin\\NETFX 4.8 Tools;wslPath=]
+        considering line: [ZES_ENABLE_SYSMAN=1]
         considering line: [__DOTNET_ADD_64BIT=1]
         considering line: [__DOTNET_PREFERRED_BITNESS=64]
         considering line: [__VCVARSALL_HOST_ARCH=x64]
@@ -7857,6 +7883,7 @@ events:
         considering line: [[DEBUG:ext\\vcvars.bat] Adding "C:\\Program Files\\Microsoft Visual Studio\\2022\\Professional\\VC\\Tools\\MSVC\\14.39.33519\\bin\\HostX64\\x64"]
         considering line: [[DEBUG:ext\\vcvars.bat] init:COMPLETE]
         considering line: [[DEBUG:VsDevCmd.bat] Sending telemetry]
+        considering line: [Version v4.0.30319 of the .NET Framework is not installed and it is required to run version 3 of Windows PowerShell.]
         considering line: [[DEBUG:core\\vsdevcmd_end] initializing with arguments '']
         considering line: [[DEBUG:VsDevCmd] Writing post-execution environment to C:\\Users\\SEBAST~1\\AppData\\Local\\Temp\\dd_vsdevcmd17_env.log]
         considering line: [[DEBUG:VsDevCmd.bat] --------------------- VS Developer Command Prompt Environment [post-init] ---------------------]
@@ -7866,6 +7893,8 @@ events:
         considering line: [CommonProgramFiles=C:\\Program Files\\Common Files]
         considering line: [CommonProgramFiles(x86)=C:\\Program Files (x86)\\Common Files]
         considering line: [CommonProgramW6432=C:\\Program Files\\Common Files]
+        considering line: [COMPLUS_InstallRoot=${env.COMPLUS_InstallRoot}]
+        considering line: [COMPLUS_Version=${env.COMPLUS_Version}]
         considering line: [COMPUTERNAME=DESKTOP-HHIHHGG]
         considering line: [ComSpec=C:\\Windows\\system32\\cmd.exe]
         considering line: [CUDA_PATH=C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.3]
@@ -8030,7 +8059,8 @@ events:
         considering line: [PSModulePath=C:\\Program Files\\WindowsPowerShell\\Modules]
         considering line: [C:\\Windows\\system32\\WindowsPowerShell\\v1.0\\Modules]
         considering line: [PUBLIC=C:\\Users\\Public]
-        considering line: [ServiceHubLogSessionKey=DCE95402]
+        considering line: [remoteMachineName=]
+        considering line: [ServiceHubLogSessionKey=20E96E4D]
         considering line: [SESSIONNAME=Console]
         considering line: [SignInWithHomeTenantOnly=False]
         considering line: [SystemDrive=C:]
@@ -8057,13 +8087,14 @@ events:
         considering line: [VSCMD_VER=17.9.2]
         considering line: [vsconsoleoutput=1]
         considering line: [VSINSTALLDIR=C:\\Program Files\\Microsoft Visual Studio\\2022\\Professional;VSLANG=1045]
-        considering line: [VsPerMonitorDpiAwarenessEnabled.15788=TRUE]
+        considering line: [VsPerMonitorDpiAwarenessEnabled.10776=TRUE]
         considering line: [VSSKUEDITION=Professional]
         considering line: [VS_Perf_Session_GCHeapCount=2]
         considering line: [VXIPNPPATH=C:\\Program Files (x86)\\IVI Foundation\\VISA;VXIPNPPATH64=C:\\Program Files\\IVI Foundation\\VISA;windir=C:\\Windows]
         considering line: [WindowsLibPath=C:\\Program Files (x86)\\Windows Kits\\10\\UnionMetadata\\10.0.22621.0]
         considering line: [C:\\Program Files (x86)\\Windows Kits\\10\\References\\10.0.22621.0]
-        considering line: [WindowsSdkBinPath=C:\\Program Files (x86)\\Windows Kits\\10\\bin;WindowsSdkDir=C:\\Program Files (x86)\\Windows Kits\\10;WindowsSDKLibVersion=10.0.22621.0;WindowsSdkVerBinPath=C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.22621.0;WindowsSDKVersion=10.0.22621.0;WindowsSDK_ExecutablePath_x64=C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v10.0A\\bin\\NETFX 4.8 Tools\\x64;WindowsSDK_ExecutablePath_x86=C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v10.0A\\bin\\NETFX 4.8 Tools;ZES_ENABLE_SYSMAN=1]
+        considering line: [WindowsSdkBinPath=C:\\Program Files (x86)\\Windows Kits\\10\\bin;WindowsSdkDir=C:\\Program Files (x86)\\Windows Kits\\10;WindowsSDKLibVersion=10.0.22621.0;WindowsSdkVerBinPath=C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.22621.0;WindowsSDKVersion=10.0.22621.0;WindowsSDK_ExecutablePath_x64=C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v10.0A\\bin\\NETFX 4.8 Tools\\x64;WindowsSDK_ExecutablePath_x86=C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v10.0A\\bin\\NETFX 4.8 Tools;wslPath=]
+        considering line: [ZES_ENABLE_SYSMAN=1]
         considering line: [__DOTNET_ADD_64BIT=1]
         considering line: [__DOTNET_PREFERRED_BITNESS=64]
         considering line: [__VCVARSALL_HOST_ARCH=x64]
@@ -8157,8 +8188,8 @@ events:
     checks:
       - "Detecting CXX compiler ABI info"
     directories:
-      source: "C:/Users/Sebastian/Desktop/Raytracing/Raytracer/out/build/x64-Debug/CMakeFiles/CMakeScratch/TryCompile-009lsz"
-      binary: "C:/Users/Sebastian/Desktop/Raytracing/Raytracer/out/build/x64-Debug/CMakeFiles/CMakeScratch/TryCompile-009lsz"
+      source: "C:/Users/Sebastian/Desktop/Raytracing/Raytracer/out/build/x64-Debug/CMakeFiles/CMakeScratch/TryCompile-7ztx0o"
+      binary: "C:/Users/Sebastian/Desktop/Raytracing/Raytracer/out/build/x64-Debug/CMakeFiles/CMakeScratch/TryCompile-7ztx0o"
     cmakeVariables:
       CMAKE_CUDA_ARCHITECTURES: "52"
       CMAKE_CXX_FLAGS: "/DWIN32 /D_WINDOWS /GR /EHsc"
@@ -8168,11 +8199,11 @@ events:
       variable: "CMAKE_CXX_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: 'C:/Users/Sebastian/Desktop/Raytracing/Raytracer/out/build/x64-Debug/CMakeFiles/CMakeScratch/TryCompile-009lsz'
+        Change Dir: 'C:/Users/Sebastian/Desktop/Raytracing/Raytracer/out/build/x64-Debug/CMakeFiles/CMakeScratch/TryCompile-7ztx0o'
         
-        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Professional/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe" -v cmTC_fea72
-        [1/2] C:\\PROGRA~1\\MIB055~1\\2022\\PROFES~1\\VC\\Tools\\MSVC\\1439~1.335\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP   /DWIN32 /D_WINDOWS /GR /EHsc  /Zi /Ob0 /Od /RTC1 -MDd /showIncludes /FoCMakeFiles\\cmTC_fea72.dir\\CMakeCXXCompilerABI.cpp.obj /FdCMakeFiles\\cmTC_fea72.dir\\ /FS -c "C:\\Program Files\\Microsoft Visual Studio\\2022\\Professional\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\share\\cmake-3.28\\Modules\\CMakeCXXCompilerABI.cpp"
-        [2/2] C:\\Windows\\system32\\cmd.exe /C "cd . && "C:\\Program Files\\Microsoft Visual Studio\\2022\\Professional\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin\\cmake.exe" -E vs_link_exe --intdir=CMakeFiles\\cmTC_fea72.dir --rc=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100226~1.0\\x64\\rc.exe --mt=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100226~1.0\\x64\\mt.exe --manifests  -- C:\\PROGRA~1\\MIB055~1\\2022\\PROFES~1\\VC\\Tools\\MSVC\\1439~1.335\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\cmTC_fea72.dir\\CMakeCXXCompilerABI.cpp.obj  /out:cmTC_fea72.exe /implib:cmTC_fea72.lib /pdb:cmTC_fea72.pdb /version:0.0 /machine:x64  /debug /INCREMENTAL /subsystem:console  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib && cd ."
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Professional/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe" -v cmTC_cb9fa
+        [1/2] C:\\PROGRA~1\\MIB055~1\\2022\\PROFES~1\\VC\\Tools\\MSVC\\1439~1.335\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP   /DWIN32 /D_WINDOWS /GR /EHsc  /Zi /Ob0 /Od /RTC1 -MDd /showIncludes /FoCMakeFiles\\cmTC_cb9fa.dir\\CMakeCXXCompilerABI.cpp.obj /FdCMakeFiles\\cmTC_cb9fa.dir\\ /FS -c "C:\\Program Files\\Microsoft Visual Studio\\2022\\Professional\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\share\\cmake-3.28\\Modules\\CMakeCXXCompilerABI.cpp"
+        [2/2] C:\\Windows\\system32\\cmd.exe /C "cd . && "C:\\Program Files\\Microsoft Visual Studio\\2022\\Professional\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin\\cmake.exe" -E vs_link_exe --intdir=CMakeFiles\\cmTC_cb9fa.dir --rc=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100226~1.0\\x64\\rc.exe --mt=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100226~1.0\\x64\\mt.exe --manifests  -- C:\\PROGRA~1\\MIB055~1\\2022\\PROFES~1\\VC\\Tools\\MSVC\\1439~1.335\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\cmTC_cb9fa.dir\\CMakeCXXCompilerABI.cpp.obj  /out:cmTC_cb9fa.exe /implib:cmTC_cb9fa.lib /pdb:cmTC_cb9fa.pdb /version:0.0 /machine:x64  /debug /INCREMENTAL /subsystem:console  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib && cd ."
         
       exitCode: 0
   -
@@ -8184,8 +8215,8 @@ events:
     checks:
       - "Detecting CUDA compiler ABI info"
     directories:
-      source: "C:/Users/Sebastian/Desktop/Raytracing/Raytracer/out/build/x64-Debug/CMakeFiles/CMakeScratch/TryCompile-ug9jmp"
-      binary: "C:/Users/Sebastian/Desktop/Raytracing/Raytracer/out/build/x64-Debug/CMakeFiles/CMakeScratch/TryCompile-ug9jmp"
+      source: "C:/Users/Sebastian/Desktop/Raytracing/Raytracer/out/build/x64-Debug/CMakeFiles/CMakeScratch/TryCompile-edr9bj"
+      binary: "C:/Users/Sebastian/Desktop/Raytracing/Raytracer/out/build/x64-Debug/CMakeFiles/CMakeScratch/TryCompile-edr9bj"
     cmakeVariables:
       CMAKE_CUDA_ARCHITECTURES: "52"
       CMAKE_CUDA_FLAGS: "-D_WINDOWS -Xcompiler=\" /GR /EHsc\""
@@ -8196,19 +8227,19 @@ events:
       variable: "CMAKE_CUDA_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: 'C:/Users/Sebastian/Desktop/Raytracing/Raytracer/out/build/x64-Debug/CMakeFiles/CMakeScratch/TryCompile-ug9jmp'
+        Change Dir: 'C:/Users/Sebastian/Desktop/Raytracing/Raytracer/out/build/x64-Debug/CMakeFiles/CMakeScratch/TryCompile-edr9bj'
         
-        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Professional/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe" -v cmTC_7d8d0
-        [1/2] C:\\PROGRA~1\\NVIDIA~2\\CUDA\\v12.3\\bin\\nvcc.exe -forward-unknown-to-host-compiler   -D_WINDOWS -Xcompiler=" /GR /EHsc"  -Xcompiler=" -Zi -Ob0 -Od /RTC1" "--generate-code=arch=compute_52,code=[compute_52,sm_52]" -Xcompiler=-MDd   -Xcompiler=-v -MD -MT CMakeFiles\\cmTC_7d8d0.dir\\CMakeCUDACompilerABI.cu.obj -MF CMakeFiles\\cmTC_7d8d0.dir\\CMakeCUDACompilerABI.cu.obj.d -x cu -c "C:\\Program Files\\Microsoft Visual Studio\\2022\\Professional\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\share\\cmake-3.28\\Modules\\CMakeCUDACompilerABI.cu" -o CMakeFiles\\cmTC_7d8d0.dir\\CMakeCUDACompilerABI.cu.obj -Xcompiler=-FdCMakeFiles\\cmTC_7d8d0.dir\\,-FS
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Professional/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe" -v cmTC_b068c
+        [1/2] C:\\PROGRA~1\\NVIDIA~2\\CUDA\\v12.3\\bin\\nvcc.exe -forward-unknown-to-host-compiler   -D_WINDOWS -Xcompiler=" /GR /EHsc"  -Xcompiler=" -Zi -Ob0 -Od /RTC1" "--generate-code=arch=compute_52,code=[compute_52,sm_52]" -Xcompiler=-MDd   -Xcompiler=-v -MD -MT CMakeFiles\\cmTC_b068c.dir\\CMakeCUDACompilerABI.cu.obj -MF CMakeFiles\\cmTC_b068c.dir\\CMakeCUDACompilerABI.cu.obj.d -x cu -c "C:\\Program Files\\Microsoft Visual Studio\\2022\\Professional\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\share\\cmake-3.28\\Modules\\CMakeCUDACompilerABI.cu" -o CMakeFiles\\cmTC_b068c.dir\\CMakeCUDACompilerABI.cu.obj -Xcompiler=-FdCMakeFiles\\cmTC_b068c.dir\\,-FS
         cl : Wiersz polecenia warning D9002 : ignorowanie nieznanej opcji „-v”
         CMakeCUDACompilerABI.cu
         cl : Wiersz polecenia warning D9002 : ignorowanie nieznanej opcji „-v”
         CMakeCUDACompilerABI.cu
         CMakeCUDACompilerABI.cu
         cl : Wiersz polecenia warning D9002 : ignorowanie nieznanej opcji „-v”
-        tmpxft_00002280_00000000-10_CMakeCUDACompilerABI.cudafe1.cpp
+        tmpxft_00005120_00000000-10_CMakeCUDACompilerABI.cudafe1.cpp
         C:\\Program Files\\Microsoft Visual Studio\\2022\\Professional\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\share\\cmake-3.28\\Modules\\CMakeCompilerCUDAArch.h(10): warning C4305: "return": obcięcie z "int" do "bool"\x0d
-        [2/2] C:\\Windows\\system32\\cmd.exe /C "cd . && "C:\\Program Files\\Microsoft Visual Studio\\2022\\Professional\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin\\cmake.exe" -E vs_link_exe --intdir=CMakeFiles\\cmTC_7d8d0.dir --rc=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100226~1.0\\x64\\rc.exe --mt=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100226~1.0\\x64\\mt.exe --manifests  -- C:\\PROGRA~1\\MIB055~1\\2022\\PROFES~1\\VC\\Tools\\MSVC\\1439~1.335\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\cmTC_7d8d0.dir\\CMakeCUDACompilerABI.cu.obj  /out:cmTC_7d8d0.exe /implib:cmTC_7d8d0.lib /pdb:cmTC_7d8d0.pdb /version:0.0 /machine:x64 -v /debug /INCREMENTAL  cudadevrt.lib  cudart_static.lib -LIBPATH:"C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.3/lib/x64"  && cd ."
+        [2/2] C:\\Windows\\system32\\cmd.exe /C "cd . && "C:\\Program Files\\Microsoft Visual Studio\\2022\\Professional\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin\\cmake.exe" -E vs_link_exe --intdir=CMakeFiles\\cmTC_b068c.dir --rc=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100226~1.0\\x64\\rc.exe --mt=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100226~1.0\\x64\\mt.exe --manifests  -- C:\\PROGRA~1\\MIB055~1\\2022\\PROFES~1\\VC\\Tools\\MSVC\\1439~1.335\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\cmTC_b068c.dir\\CMakeCUDACompilerABI.cu.obj  /out:cmTC_b068c.exe /implib:cmTC_b068c.lib /pdb:cmTC_b068c.pdb /version:0.0 /machine:x64 -v /debug /INCREMENTAL  cudadevrt.lib  cudart_static.lib -LIBPATH:"C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.3/lib/x64"  && cd ."
         
       exitCode: 0
   -
@@ -8231,19 +8262,19 @@ events:
     message: |
       Parsed CUDA implicit link information:
         link line regex: [^( *|.*[/\\])(link\\.exe|link\\.exe|lld-link|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
-        ignore line: [Change Dir: 'C:/Users/Sebastian/Desktop/Raytracing/Raytracer/out/build/x64-Debug/CMakeFiles/CMakeScratch/TryCompile-ug9jmp']
+        ignore line: [Change Dir: 'C:/Users/Sebastian/Desktop/Raytracing/Raytracer/out/build/x64-Debug/CMakeFiles/CMakeScratch/TryCompile-edr9bj']
         ignore line: []
-        ignore line: [Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Professional/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe" -v cmTC_7d8d0]
-        ignore line: [[1/2] C:\\PROGRA~1\\NVIDIA~2\\CUDA\\v12.3\\bin\\nvcc.exe -forward-unknown-to-host-compiler   -D_WINDOWS -Xcompiler=" /GR /EHsc"  -Xcompiler=" -Zi -Ob0 -Od /RTC1" "--generate-code=arch=compute_52 code=[compute_52 sm_52]" -Xcompiler=-MDd   -Xcompiler=-v -MD -MT CMakeFiles\\cmTC_7d8d0.dir\\CMakeCUDACompilerABI.cu.obj -MF CMakeFiles\\cmTC_7d8d0.dir\\CMakeCUDACompilerABI.cu.obj.d -x cu -c "C:\\Program Files\\Microsoft Visual Studio\\2022\\Professional\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\share\\cmake-3.28\\Modules\\CMakeCUDACompilerABI.cu" -o CMakeFiles\\cmTC_7d8d0.dir\\CMakeCUDACompilerABI.cu.obj -Xcompiler=-FdCMakeFiles\\cmTC_7d8d0.dir\\ -FS]
+        ignore line: [Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Professional/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe" -v cmTC_b068c]
+        ignore line: [[1/2] C:\\PROGRA~1\\NVIDIA~2\\CUDA\\v12.3\\bin\\nvcc.exe -forward-unknown-to-host-compiler   -D_WINDOWS -Xcompiler=" /GR /EHsc"  -Xcompiler=" -Zi -Ob0 -Od /RTC1" "--generate-code=arch=compute_52 code=[compute_52 sm_52]" -Xcompiler=-MDd   -Xcompiler=-v -MD -MT CMakeFiles\\cmTC_b068c.dir\\CMakeCUDACompilerABI.cu.obj -MF CMakeFiles\\cmTC_b068c.dir\\CMakeCUDACompilerABI.cu.obj.d -x cu -c "C:\\Program Files\\Microsoft Visual Studio\\2022\\Professional\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\share\\cmake-3.28\\Modules\\CMakeCUDACompilerABI.cu" -o CMakeFiles\\cmTC_b068c.dir\\CMakeCUDACompilerABI.cu.obj -Xcompiler=-FdCMakeFiles\\cmTC_b068c.dir\\ -FS]
         ignore line: [cl : Wiersz polecenia warning D9002 : ignorowanie nieznanej opcji „-v”]
         ignore line: [CMakeCUDACompilerABI.cu]
         ignore line: [cl : Wiersz polecenia warning D9002 : ignorowanie nieznanej opcji „-v”]
         ignore line: [CMakeCUDACompilerABI.cu]
         ignore line: [CMakeCUDACompilerABI.cu]
         ignore line: [cl : Wiersz polecenia warning D9002 : ignorowanie nieznanej opcji „-v”]
-        ignore line: [tmpxft_00002280_00000000-10_CMakeCUDACompilerABI.cudafe1.cpp]
+        ignore line: [tmpxft_00005120_00000000-10_CMakeCUDACompilerABI.cudafe1.cpp]
         ignore line: [C:\\Program Files\\Microsoft Visual Studio\\2022\\Professional\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\share\\cmake-3.28\\Modules\\CMakeCompilerCUDAArch.h(10): warning C4305: "return": obcięcie z "int" do "bool"\x0d]
-        ignore line: [[2/2] C:\\Windows\\system32\\cmd.exe /C "cd . && "C:\\Program Files\\Microsoft Visual Studio\\2022\\Professional\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin\\cmake.exe" -E vs_link_exe --intdir=CMakeFiles\\cmTC_7d8d0.dir --rc=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100226~1.0\\x64\\rc.exe --mt=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100226~1.0\\x64\\mt.exe --manifests  -- C:\\PROGRA~1\\MIB055~1\\2022\\PROFES~1\\VC\\Tools\\MSVC\\1439~1.335\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\cmTC_7d8d0.dir\\CMakeCUDACompilerABI.cu.obj  /out:cmTC_7d8d0.exe /implib:cmTC_7d8d0.lib /pdb:cmTC_7d8d0.pdb /version:0.0 /machine:x64 -v /debug /INCREMENTAL  cudadevrt.lib  cudart_static.lib -LIBPATH:"C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.3/lib/x64"  && cd ."]
+        ignore line: [[2/2] C:\\Windows\\system32\\cmd.exe /C "cd . && "C:\\Program Files\\Microsoft Visual Studio\\2022\\Professional\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin\\cmake.exe" -E vs_link_exe --intdir=CMakeFiles\\cmTC_b068c.dir --rc=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100226~1.0\\x64\\rc.exe --mt=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100226~1.0\\x64\\mt.exe --manifests  -- C:\\PROGRA~1\\MIB055~1\\2022\\PROFES~1\\VC\\Tools\\MSVC\\1439~1.335\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\cmTC_b068c.dir\\CMakeCUDACompilerABI.cu.obj  /out:cmTC_b068c.exe /implib:cmTC_b068c.lib /pdb:cmTC_b068c.pdb /version:0.0 /machine:x64 -v /debug /INCREMENTAL  cudadevrt.lib  cudart_static.lib -LIBPATH:"C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.3/lib/x64"  && cd ."]
         ignore line: []
         ignore line: []
         implicit libs: []
