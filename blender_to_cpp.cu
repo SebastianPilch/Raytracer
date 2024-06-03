@@ -213,16 +213,16 @@ int main() {
     //    }
     //}
 
-    //for (int i = 0; i < WIDTH; i++) 
-    //{
-    //    for (int j = 0; j < HEIGHT; j++) 
-    //    {
-    //        for (int f = 0; f < Face_NUM; f++) 
-    //        {
-    //              cout << "  " << Distances[(j * WIDTH * Face_NUM) + (i * Face_NUM) + f] << "  ";
-    //        }
-    //    }
-    //}
+    for (int i = 0; i < WIDTH; i++) 
+    {
+        for (int j = 0; j < HEIGHT; j++) 
+        {
+            for (int f = 0; f < Face_NUM; f++) 
+            {
+                  cout << "  " << Distances[(j * WIDTH * Face_NUM) + (i * Face_NUM) + f] << "  ";
+            }
+        }
+    }
 
 
 
