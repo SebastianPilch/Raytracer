@@ -11,7 +11,50 @@
 #include "ImportObj.cuh"
 #include "Ray.cuh"
 #include "Parllel_fun.cuh"
-//
+#include<cmath>
+
+
+
+
+void saveAsBMP(ray** img, int width, int height, const std::string& filename) {
+    std::ofstream file(filename, std::ios::out | std::ios::binary);
+
+    if (!file) {
+        std::cerr << "Cannot open file: " << filename << std::endl;
+        return;
+    }
+
+    int paddingSize = (4 - (width * 3) % 4) % 4; // Padding wymagany przez format BMP
+
+    // Nagłówek BMP
+    int filesize = 54 + (3 * width + paddingSize) * height;
+    char fileHeader[54] = { 'B', 'M', 0,0,0,0, 0,0, 0,0, 54,0,0,0, 40,0,0,0, static_cast<char>(width), static_cast<char>(width >> 8), static_cast<char>(width >> 16), static_cast<char>(width >> 24), static_cast<char>(height), static_cast<char>(height >> 8), static_cast<char>(height >> 16), static_cast<char>(height >> 24), 1,0, 24,0, 0,0,0,0, static_cast<char>(filesize), static_cast<char>(filesize >> 8), static_cast<char>(filesize >> 16), static_cast<char>(filesize >> 24), 0,0,0,0, 0,0,0,0 };
+
+    // Zapisanie nagłówka
+    file.write(fileHeader, 54);
+
+    // Zapisanie danych pikseli
+    for (int i = height - 1; i >= 0; i--) {
+        for (int j = 0; j < width; j++) {
+            float focal_len = 5.0f;
+            cout << focal_len / (sqrt(img[i][j].dir.x()* img[i][j].dir.x() + img[i][j].dir.y() * img[i][j].dir.y()) + 1) / 2 << "    ";
+            unsigned char color = static_cast<unsigned char>(focal_len / (sqrt(img[i][j].dir.x() * img[i][j].dir.x() + img[i][j].dir.y() * img[i][j].dir.y()))/4); // Skalowanie wartości z [0, 1] do [0, 255]
+            file.put(color);
+            file.put(color);
+            file.put(color);
+        }
+        cout << endl;
+
+        // Dodanie paddingu
+        for (int k = 0; k < paddingSize; k++) {
+            file.put(0);
+        }
+    }
+
+    file.close();
+}
+
+
 
 
 
@@ -213,20 +256,22 @@ int main() {
     //    }
     //}
 
-    for (int i = 0; i < WIDTH; i++) 
-    {
-        for (int j = 0; j < HEIGHT; j++) 
-        {
-            for (int f = 0; f < Face_NUM; f++) 
-            {
-                  cout << "  " << Distances[(j * WIDTH * Face_NUM) + (i * Face_NUM) + f] << "  ";
-            }
-        }
-    }
+    //for (int i = 0; i < WIDTH; i++) 
+    //{
+    //    for (int j = 0; j < HEIGHT; j++) 
+    //    {
+    //        for (int f = 0; f < Face_NUM; f++) 
+    //        {
+    //              cout << "  " << Distances[(j * WIDTH * Face_NUM) + (i * Face_NUM) + f] << "  ";
+    //        }
+    //    }
+    //}
 
 
 
 
+
+    saveAsBMP(h_ray, 400, 400, "Obraz_testowy.bmp");
     free(h_ray[0]);
     free(h_ray);
 
@@ -235,5 +280,4 @@ int main() {
     return 0;
 
 }
-
 

@@ -25,8 +25,6 @@ size_t split(const std::string& txt, std::vector<std::string>& strs, char ch)
 
     return strs.size();
 }
-
-
 Pointer_storage GetDataFromObj(int& Vertices_coords_size, int& Face_numer,int& Normals_size, string file_path)
 {
     ifstream plik(file_path);
@@ -233,6 +231,9 @@ Pointer_storage GetDataFromObj(int& Vertices_coords_size, int& Face_numer,int& N
             Planes_to_faces[index_f][1] = nor_y;
             Planes_to_faces[index_f][2] = nor_z;
             Planes_to_faces[index_f][3] = -(nor_x * x + nor_y * y + nor_z * z);
+
+            //cout << nor_x  <<  " " << x << " " << nor_y <<  " " << y <<  " " << nor_z << " " << z << endl;
+
             index_f++;
         }
     }
