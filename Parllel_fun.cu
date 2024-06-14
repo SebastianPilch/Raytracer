@@ -21,11 +21,42 @@ __global__ void Generate_rays(ray* viewport_rays, double focal_length, point3* c
     int i = blockIdx.x * blockDim.x + threadIdx.x;
     int j = blockIdx.y * blockDim.y + threadIdx.y;
     int f = blockIdx.z * blockDim.z + threadIdx.z;
-    if (f >= Face_NUM || i >= WIDTH || j >= HEIGHT) return;
-    vec3 viewport_upper_left = *camera_center - vec3(0, 0, focal_length) - VIEWPORT_U / 2 - VIEWPORT_V / 2;
-    vec3 pixel00_loc = viewport_upper_left + 0.5 * (DELTA_U + DELTA_V);
 
-    vec3 pixel_center = pixel00_loc + (i * DELTA_U) + (j * DELTA_V);
+    if (f >= Face_NUM || i >= WIDTH || j >= HEIGHT) return;
+
+
+    float aspect_ratio = float(WIDTH) / float(HEIGHT);
+    float viewport_height = 2.0;
+    float viewport_width = aspect_ratio * viewport_height;
+    float focal_dist = focal_length;
+
+    vec3 w = (*camera_center - *camera_focal) / ((*camera_center - *camera_focal).length());
+    vec3 u = (crossProduct_(vec3(0, 1, 0), w)) / ((crossProduct_(vec3(0, 1, 0), w)).length());
+    vec3 v = crossProduct_(w,u);
+
+    vec3 horizontal = u * viewport_width;
+    vec3 vertical = v * viewport_height;
+    vec3 lower_left_corner = *camera_center - horizontal / 2 - vertical / 2 - w * focal_dist;
+    float u_offset = float(i) / (WIDTH - 1);
+    float v_offset = float(j) / (HEIGHT - 1);
+    vec3 pixel_center = lower_left_corner + horizontal * u_offset + vertical * v_offset;
+
+
+
+
+
+
+
+
+
+
+
+    //vec3 viewport_upper_left = *camera_center - vec3(0, 0, focal_length) - VIEWPORT_U / 2 - VIEWPORT_V / 2;
+    //vec3 pixel00_loc = viewport_upper_left + 0.5 * (DELTA_U + DELTA_V);
+
+    //vec3 pixel_center = pixel00_loc + (i * DELTA_U) + (j * DELTA_V) + *camera_focal;
+
+
     vec3 ray_direction = pixel_center - *camera_center;
     ray UV_ray = ray(*camera_center, ray_direction);
     viewport_rays[j * HEIGHT + i] = ray(*camera_center, ray_direction);

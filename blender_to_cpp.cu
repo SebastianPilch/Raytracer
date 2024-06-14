@@ -234,8 +234,8 @@ int main() {
     cudaMemcpy(d_start_face_at_index, start_face_at_index, Face_NUM * sizeof(int), cudaMemcpyHostToDevice);
 
     double focal_length = 5.0;
-    point3 h_camera_center(0.0, 4.0, 25.0);
-    point3 h_camera_focal(-8.0, 0.0, 15.0);
+    point3 h_camera_center(25.0, 25.0, 25.0);
+    point3 h_camera_focal(-15,-15, -15);
     point3* d_camera_center;
     point3* d_camera_focal;
     ray** h_ray;
