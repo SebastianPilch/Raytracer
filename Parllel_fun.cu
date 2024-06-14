@@ -37,24 +37,15 @@ __global__ void Generate_rays(ray* viewport_rays, double focal_length, point3* c
     vec3 horizontal = u * viewport_width;
     vec3 vertical = v * viewport_height;
     vec3 lower_left_corner = *camera_center - horizontal / 2 - vertical / 2 - w * focal_dist;
+
     float u_offset = float(i) / (WIDTH - 1);
     float v_offset = float(j) / (HEIGHT - 1);
     vec3 pixel_center = lower_left_corner + horizontal * u_offset + vertical * v_offset;
 
+/*    vec3 viewport_upper_left = *camera_center - vec3(focal_length, focal_length, focal_length) - VIEWPORT_U / 2 - VIEWPORT_V / 2;
+    vec3 pixel00_loc = viewport_upper_left + 0.5 * (DELTA_U + DELTA_V);
 
-
-
-
-
-
-
-
-
-
-    //vec3 viewport_upper_left = *camera_center - vec3(0, 0, focal_length) - VIEWPORT_U / 2 - VIEWPORT_V / 2;
-    //vec3 pixel00_loc = viewport_upper_left + 0.5 * (DELTA_U + DELTA_V);
-
-    //vec3 pixel_center = pixel00_loc + (i * DELTA_U) + (j * DELTA_V) + *camera_focal;
+    vec3 pixel_center = pixel00_loc + (i * DELTA_U) + (j * DELTA_V) + *camera_focal;*/
 
 
     vec3 ray_direction = pixel_center - *camera_center;
@@ -100,8 +91,7 @@ __global__ void Generate_rays(ray* viewport_rays, double focal_length, point3* c
             (double)d_Vertices[3 * vertex_next + 2]
         );
 
-        
-
+        __syncthreads();
         edge = next_vertex - current_vertex;
         vec3 vp = intersection - current_vertex;
         vec3 n = crossProduct_(edge, vp);
@@ -109,6 +99,10 @@ __global__ void Generate_rays(ray* viewport_rays, double focal_length, point3* c
         if (dotProduct_(n, normal) < 0) 
         {
             Is_Hitten_correct = false;
+        }
+        if (current_vertex[0] == 0 && current_vertex[1] == 0 && current_vertex[2] == 0)
+        {
+            printf("%d", vertex_index);
         }
     }
     vec3 dis = *camera_center - intersection;

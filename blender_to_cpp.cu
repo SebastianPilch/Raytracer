@@ -140,17 +140,17 @@ int main() {
     cout << endl << endl << "Testowanie promieni";
 
     // wybór obiektu
-    int Vert_NUM = vert_num1;
-    int Face_NUM = face_num1;
-    int Normal_NUM = normal_num1;
-    Pointer_storage liczony_objekt = Kostka;
+    int Vert_NUM = vert_num3;
+    int Face_NUM = face_num3;
+    int Normal_NUM = normal_num3;
+    Pointer_storage liczony_objekt = pociety_walec;
     // // // //
 
     float** Planes = new float* [Face_NUM];
     Planes[0] = new float[Face_NUM * 4];
 
     float** Verticies = new float* [Vert_NUM];
-    Verticies[0] = new float[Vert_NUM * 3 * 4];
+    Verticies[0] = new float[Vert_NUM * 3 ];
 
     float** Normals = new float* [Normal_NUM];
     Normals[0] = new float[Normal_NUM * 3];
@@ -218,7 +218,7 @@ int main() {
     cudaMalloc(&d_Faces, Length_to_Allocate_Faces * sizeof(int));
     cudaMalloc(&d_Planes, 4 * Face_NUM * sizeof(float));
     cudaMalloc(&d_Normals, 3 * Normal_NUM * sizeof(float));
-    cudaMalloc(&d_Vertices, 3 * Normal_NUM * sizeof(float));
+    cudaMalloc(&d_Vertices, 3 * Vert_NUM * sizeof(float));
     cudaMalloc(&d_number_of_vertices_in_one_face, Face_NUM * sizeof(int));
     cudaMalloc(&d_normal_index_to_face, Face_NUM * sizeof(int));
     cudaMalloc(&d_start_face_at_index, Face_NUM * sizeof(int));
@@ -228,14 +228,14 @@ int main() {
     cudaMemcpy(d_Faces, Faces[0], Length_to_Allocate_Faces * sizeof(int), cudaMemcpyHostToDevice);
     cudaMemcpy(d_Planes, Planes[0], 4 * Face_NUM * sizeof(float), cudaMemcpyHostToDevice);
     cudaMemcpy(d_Normals, Normals[0], 3 * Face_NUM * sizeof(float), cudaMemcpyHostToDevice);
-    cudaMemcpy(d_Vertices, Verticies[0], 3 * Face_NUM * sizeof(float), cudaMemcpyHostToDevice);
+    cudaMemcpy(d_Vertices, Verticies[0], 3 * Vert_NUM * sizeof(float), cudaMemcpyHostToDevice);
     cudaMemcpy(d_number_of_vertices_in_one_face, number_of_vertices_in_one_face, Face_NUM * sizeof(int), cudaMemcpyHostToDevice);
     cudaMemcpy(d_normal_index_to_face, normal_index_to_face, Face_NUM * sizeof(int), cudaMemcpyHostToDevice);
     cudaMemcpy(d_start_face_at_index, start_face_at_index, Face_NUM * sizeof(int), cudaMemcpyHostToDevice);
 
-    double focal_length = 5.0;
+    double focal_length = 10;
     point3 h_camera_center(25.0, 25.0, 25.0);
-    point3 h_camera_focal(-15,-15, -15);
+    point3 h_camera_focal(-1.0,-1.0, -1.0);
     point3* d_camera_center;
     point3* d_camera_focal;
     ray** h_ray;
