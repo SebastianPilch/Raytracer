@@ -90,9 +90,9 @@ void saveAsBMP2(float* angles, int width, int height, const std::string& filenam
             float green = angles[(i * width + j) * 3 + 1];
             float blue = angles[(i * width + j) * 3 + 2];
 
-            unsigned char r = static_cast<unsigned char>(red * 255.0f);
-            unsigned char g = static_cast<unsigned char>(green * 255.0f);
-            unsigned char b = static_cast<unsigned char>(blue * 255.0f);
+            unsigned char r = static_cast<unsigned char>(red * 255.99f);
+            unsigned char g = static_cast<unsigned char>(green * 255.99f);
+            unsigned char b = static_cast<unsigned char>(blue * 255.99f);
 
             file.put(b); // Blue channel
             file.put(g); // Green channel
@@ -143,7 +143,7 @@ int main() {
     int Vert_NUM = vert_num1;
     int Face_NUM = face_num1;
     int Normal_NUM = normal_num1;
-    Pointer_storage liczony_objekt = Trojkatna_Kostka;
+    Pointer_storage liczony_objekt = Kostka;
     // // // //
 
     float** Planes = new float* [Face_NUM];
@@ -175,9 +175,10 @@ int main() {
     int current_index = 0;
     for (int i = 1; i < Face_NUM + 1; i++) {
         Faces[i] = Faces[0] + current_index + number_of_vertices_in_one_face[i - 1];
-        start_face_at_index[i] = current_index;
+        start_face_at_index[i-1] = current_index;
         current_index += number_of_vertices_in_one_face[i - 1];
         Planes[i] = Planes[0] + i * 4;
+        cout << i-1 << "  :  " << start_face_at_index[i-1] << endl;
     }
 
     for (int i = 1; i < Vert_NUM; i++) {
@@ -232,9 +233,9 @@ int main() {
     cudaMemcpy(d_normal_index_to_face, normal_index_to_face, Face_NUM * sizeof(int), cudaMemcpyHostToDevice);
     cudaMemcpy(d_start_face_at_index, start_face_at_index, Face_NUM * sizeof(int), cudaMemcpyHostToDevice);
 
-    double focal_length = 10.0;
-    point3 h_camera_center(0.0, 0.0, -25.0);
-    point3 h_camera_focal(0.0, 0.0, 0.0);
+    double focal_length = 5.0;
+    point3 h_camera_center(0.0, 4.0, 25.0);
+    point3 h_camera_focal(-8.0, 0.0, 15.0);
     point3* d_camera_center;
     point3* d_camera_focal;
     ray** h_ray;
@@ -257,11 +258,28 @@ int main() {
 
     Generate_rays << <gridDim, blockDim >> > (d_ray, focal_length, d_camera_center, d_camera_focal, d_normal_index_to_face, d_number_of_vertices_in_one_face,
         d_Faces, d_Vertices, d_Normals, d_Planes, d_start_face_at_index, Face_NUM, Vert_NUM, Normal_NUM, d_distances, d_closest_normals);
-
+    cudaDeviceSynchronize();
     cudaMemcpy(h_ray[0], d_ray, WIDTH * HEIGHT * sizeof(ray), cudaMemcpyDeviceToHost);
     cudaMemcpy(Distances, d_distances, WIDTH * HEIGHT * Face_NUM * sizeof(float), cudaMemcpyDeviceToHost);
-    cudaMemcpy(Planes[0], d_Planes, 3 * Face_NUM * sizeof(float), cudaMemcpyDeviceToHost);
+    //cudaMemcpy(Planes[0], d_Planes, 3 * Face_NUM * sizeof(float), cudaMemcpyDeviceToHost);
+
+    // dobór najbliższej ściany z wektora dystansów
+    const int BLOCK_SIZE_X = 16;
+    const int BLOCK_SIZE_Y = 16;
+    dim3 dimBlock(BLOCK_SIZE_X, BLOCK_SIZE_Y);
+    int gridSizeX = (WIDTH + BLOCK_SIZE_X - 1) / BLOCK_SIZE_X;
+    int gridSizeY = (HEIGHT + BLOCK_SIZE_Y - 1) / BLOCK_SIZE_Y;
+    dim3 dimGrid(gridSizeX, gridSizeY);
+
+    cudaMemcpy(d_distances, Distances, WIDTH * HEIGHT * Face_NUM * sizeof(float), cudaMemcpyHostToDevice);
+
+    Choose_closest <<< gridDim, blockDim >>> (d_distances, Face_NUM,d_closest_normals,d_Planes);
+    cudaDeviceSynchronize();
+
     cudaMemcpy(ClosestNormals, d_closest_normals, WIDTH * HEIGHT * Face_NUM * 3 * sizeof(float), cudaMemcpyDeviceToHost);
+
+
+
 
     cudaFree(d_ray);
     cudaFree(d_distances);

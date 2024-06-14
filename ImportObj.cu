@@ -209,7 +209,7 @@ Pointer_storage GetDataFromObj(int& Vertices_coords_size, int& Face_numer,int& N
                 Face_numer = newSize;
             }
             // przypisanie iloœci wierzcho³ków do œciany i stworzenie odpowiadaj¹cego tej d³ugoœci wektora w liœcie œcian:
-            vertices_in_one_face[index_f] = Splited_line.size() - 1;
+            vertices_in_one_face[index_f] = (int)(Splited_line.size()-1);
             vertices_to_faces[index_f] = new int[vertices_in_one_face[index_f]];
             //split po  "/" w obrêbie danych przypisanych do œciany  f wierzcho³ek/UV wierzcho³ka/normalna œciany
             for(int i = 0;i < vertices_in_one_face[index_f];i++)

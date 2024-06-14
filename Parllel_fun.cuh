@@ -20,4 +20,8 @@ __global__ void Generate_rays(ray* viewport_rays, double focal_length, point3* c
     int* d_Faces, float* d_Vertices, float* d_Normals, float* d_Planes, int* start_face_at_index,
     int Face_NUM, int Vertex_NUM, int Normal_NUM, float* d_distances, float* d_closest_normals);
 
+
+__global__ void Choose_closest(float* d_distances, int Face_NUM, float* d_closest_normals, float* d_Planes);
+
+
 #endif // PAR_FUN_H
