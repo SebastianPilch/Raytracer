@@ -58,6 +58,15 @@ build CMakeFiles\projekt.dir\ImportObj.cu.obj: CUDA_COMPILER__projekt_unscanned_
   TARGET_COMPILE_PDB = CMakeFiles\projekt.dir\
   TARGET_PDB = projekt.pdb
 
+build CMakeFiles\projekt.dir\Material.cu.obj: CUDA_COMPILER__projekt_unscanned_Debug C$:\Users\Sebastian\Desktop\Raytracing\Raytracer\Material.cu || cmake_object_order_depends_target_projekt
+  DEP_FILE = CMakeFiles\projekt.dir\Material.cu.obj.d
+  FLAGS = -D_WINDOWS -Xcompiler=" /GR /EHsc" -Xcompiler=" -Zi -Ob0 -Od /RTC1" -arch=all -Xcompiler=-MDd
+  INCLUDES = -IC:\Users\Sebastian\Desktop\Raytracing\Raytracer
+  OBJECT_DIR = CMakeFiles\projekt.dir
+  OBJECT_FILE_DIR = CMakeFiles\projekt.dir
+  TARGET_COMPILE_PDB = CMakeFiles\projekt.dir\
+  TARGET_PDB = projekt.pdb
+
 build CMakeFiles\projekt.dir\Parllel_fun.cu.obj: CUDA_COMPILER__projekt_unscanned_Debug C$:\Users\Sebastian\Desktop\Raytracing\Raytracer\Parllel_fun.cu || cmake_object_order_depends_target_projekt
   DEP_FILE = CMakeFiles\projekt.dir\Parllel_fun.cu.obj.d
   FLAGS = -D_WINDOWS -Xcompiler=" /GR /EHsc" -Xcompiler=" -Zi -Ob0 -Od /RTC1" -arch=all -Xcompiler=-MDd
@@ -102,7 +111,7 @@ build CMakeFiles\projekt.dir\vec3.cu.obj: CUDA_COMPILER__projekt_unscanned_Debug
 #############################################
 # Link the executable CMakeFiles\projekt.dir\cmake_device_link.obj
 
-build CMakeFiles\projekt.dir\cmake_device_link.obj: CUDA_EXECUTABLE_DEVICE_LINKER__projekt_Debug CMakeFiles\projekt.dir\ImportObj.cu.obj CMakeFiles\projekt.dir\Parllel_fun.cu.obj CMakeFiles\projekt.dir\Ray.cu.obj CMakeFiles\projekt.dir\blender_to_cpp.cu.obj CMakeFiles\projekt.dir\vec3.cu.obj | C$:\Program$ Files\NVIDIA$ GPU$ Computing$ Toolkit\CUDA\v12.3\lib\x64\cudart_static.lib C$:\Program$ Files\NVIDIA$ GPU$ Computing$ Toolkit\CUDA\v12.3\lib\x64\cuda.lib C$:\Program$ Files\NVIDIA$ GPU$ Computing$ Toolkit\CUDA\v12.3\lib\x64\cudadevrt.lib
+build CMakeFiles\projekt.dir\cmake_device_link.obj: CUDA_EXECUTABLE_DEVICE_LINKER__projekt_Debug CMakeFiles\projekt.dir\ImportObj.cu.obj CMakeFiles\projekt.dir\Material.cu.obj CMakeFiles\projekt.dir\Parllel_fun.cu.obj CMakeFiles\projekt.dir\Ray.cu.obj CMakeFiles\projekt.dir\blender_to_cpp.cu.obj CMakeFiles\projekt.dir\vec3.cu.obj | C$:\Program$ Files\NVIDIA$ GPU$ Computing$ Toolkit\CUDA\v12.3\lib\x64\cudart_static.lib C$:\Program$ Files\NVIDIA$ GPU$ Computing$ Toolkit\CUDA\v12.3\lib\x64\cuda.lib C$:\Program$ Files\NVIDIA$ GPU$ Computing$ Toolkit\CUDA\v12.3\lib\x64\cudadevrt.lib
   LANGUAGE_COMPILE_FLAGS = -D_WINDOWS -Xcompiler=" /GR /EHsc" -Xcompiler=" -Zi -Ob0 -Od /RTC1" -arch=all -Xcompiler=-MDd
   LINK_LIBRARIES = "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.3\lib\x64\cudart_static.lib" "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.3\lib\x64\cuda.lib" "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.3\lib\x64\cudadevrt.lib" cudadevrt.lib cudart_static.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib
   OBJECT_DIR = CMakeFiles\projekt.dir
@@ -118,7 +127,7 @@ build CMakeFiles\projekt.dir\cmake_device_link.obj: CUDA_EXECUTABLE_DEVICE_LINKE
 #############################################
 # Link the executable projekt.exe
 
-build projekt.exe: CUDA_EXECUTABLE_LINKER__projekt_Debug CMakeFiles\projekt.dir\ImportObj.cu.obj CMakeFiles\projekt.dir\Parllel_fun.cu.obj CMakeFiles\projekt.dir\Ray.cu.obj CMakeFiles\projekt.dir\blender_to_cpp.cu.obj CMakeFiles\projekt.dir\vec3.cu.obj CMakeFiles\projekt.dir\cmake_device_link.obj | C$:\Program$ Files\NVIDIA$ GPU$ Computing$ Toolkit\CUDA\v12.3\lib\x64\cudart_static.lib C$:\Program$ Files\NVIDIA$ GPU$ Computing$ Toolkit\CUDA\v12.3\lib\x64\cuda.lib C$:\Program$ Files\NVIDIA$ GPU$ Computing$ Toolkit\CUDA\v12.3\lib\x64\cudadevrt.lib
+build projekt.exe: CUDA_EXECUTABLE_LINKER__projekt_Debug CMakeFiles\projekt.dir\ImportObj.cu.obj CMakeFiles\projekt.dir\Material.cu.obj CMakeFiles\projekt.dir\Parllel_fun.cu.obj CMakeFiles\projekt.dir\Ray.cu.obj CMakeFiles\projekt.dir\blender_to_cpp.cu.obj CMakeFiles\projekt.dir\vec3.cu.obj CMakeFiles\projekt.dir\cmake_device_link.obj | C$:\Program$ Files\NVIDIA$ GPU$ Computing$ Toolkit\CUDA\v12.3\lib\x64\cudart_static.lib C$:\Program$ Files\NVIDIA$ GPU$ Computing$ Toolkit\CUDA\v12.3\lib\x64\cuda.lib C$:\Program$ Files\NVIDIA$ GPU$ Computing$ Toolkit\CUDA\v12.3\lib\x64\cudadevrt.lib
   FLAGS = -D_WINDOWS -Xcompiler=" /GR /EHsc" -Xcompiler=" -Zi -Ob0 -Od /RTC1" -arch=all -Xcompiler=-MDd
   LINK_FLAGS = /machine:x64 /debug /INCREMENTAL
   LINK_LIBRARIES = "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.3\lib\x64\cudart_static.lib"  "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.3\lib\x64\cuda.lib"  "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.3\lib\x64\cudadevrt.lib"  cudadevrt.lib  cudart_static.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib

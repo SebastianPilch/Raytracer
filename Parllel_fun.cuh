@@ -1,6 +1,6 @@
 #include "vec3.cuh"
 #include "Ray.cuh"
-
+#include "Material.cuh"
 #ifndef PAR_FUN_H
 #define PAR_FUN_H
 
@@ -21,7 +21,7 @@ __global__ void Generate_rays(ray* viewport_rays, double focal_length, point3* c
     int Face_NUM, int Vertex_NUM, int Normal_NUM, float* d_distances, float* d_closest_normals);
 
 
-__global__ void Choose_closest(float* d_distances, int Face_NUM, float* d_closest_normals, float* d_Planes);
+__global__ void Choose_closest(float* d_distances, int Face_NUM, float* d_closest_normals, float* d_Planes, Material* Mats, ray* rays);
 
 
 __device__ void matrixVectorMul(float* matrix, float* vector, float* result);

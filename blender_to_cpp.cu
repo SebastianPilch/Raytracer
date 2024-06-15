@@ -10,6 +10,7 @@
 #include "ImportObj.cuh"
 #include "Ray.cuh"
 #include "Parllel_fun.cuh"
+#include "Material.cuh"
 #include<cmath>
 
 void saveAsBMP(ray** img, int width, int height, const std::string& filename) {
@@ -126,7 +127,8 @@ int main() {
     int face_num3 = 1;
     int normal_num3 = 1;
 
-    Pointer_storage pociety_walec = GetDataFromObj(vert_num3, face_num3, normal_num3, "../../../helpers/walec_ale_kanciastyXD.obj");
+    //Pointer_storage pociety_walec = GetDataFromObj(vert_num3, face_num3, normal_num3, "../../../helpers/walec_ale_kanciastyXD.obj");
+    Pointer_storage pociety_walec = GetDataFromObj(vert_num3, face_num3, normal_num3, "../../../helpers/torus.obj");
 
     cout << endl << endl << "Kostka" << endl << endl;
 
@@ -214,6 +216,17 @@ int main() {
         }
     }
 
+
+    Material* Materials = new Material[3];
+    // jeden normalny, jeden z podkręconym shinines, jeden z opacity
+
+
+
+    Materials[0] = Material( 0.5f, 0.6f, 0.7f , 0.3f, 0.4f, 0.5f , 0.1f, 0.2f, 0.3f , 1.0f, 0.0f);
+    Materials[1] = Material(0.7f, 0.2f, 0.2f, 0.3f, 0.4f, 0.5f, 0.1f, 0.2f, 0.3f, 1.0f, 0.2f);
+    Materials[2] = Material(0.5f, 0.6f, 0.7f, 0.3f, 0.4f, 0.5f, 0.1f, 0.2f, 0.3f, 0.7f, 0.0f);
+
+
     int* d_Faces;
     int* d_number_of_vertices_in_one_face;
     int* d_normal_index_to_face;
@@ -223,6 +236,7 @@ int main() {
     float* d_Normals;
     float* d_Planes;
     float* d_closest_normals;
+    Material* d_Materials;
 
     cudaMalloc(&d_Faces, Length_to_Allocate_Faces * sizeof(int));
     cudaMalloc(&d_Planes, 4 * Face_NUM * sizeof(float));
@@ -243,6 +257,12 @@ int main() {
     cudaMemcpy(d_start_face_at_index, start_face_at_index, Face_NUM * sizeof(int), cudaMemcpyHostToDevice);
 
 
+
+
+
+    //  Tranformacja obiektu rotacja/skala/przesunięcie
+
+
     int threadsPerBlock = 256;
     int blocksPerGrid = (Vert_NUM + threadsPerBlock - 1) / threadsPerBlock;
     float TranslateX = 0.0f;
@@ -255,7 +275,6 @@ int main() {
     float scaleY = 1.0f;
     float scaleZ = 1.0f;
 
-    cout << endl << endl << "Ilość werzchołków = " << Vert_NUM << endl;
 
     Transform<<<blocksPerGrid, threadsPerBlock >>>(d_Vertices, Vert_NUM,  TranslateX,  TranslateY,  TranslateZ,  rotateX,  rotateY,  rotateZ,  scaleX,  scaleY,  scaleZ);
     cudaMemcpy(Verticies, d_Vertices, Vert_NUM * 3 * sizeof(float), cudaMemcpyDeviceToHost);
@@ -265,8 +284,14 @@ int main() {
     Update_normals_and_Planes << <blocksPerGrid, threadsPerBlock >> > (d_Vertices, d_Faces, d_Normals, d_Planes, d_number_of_vertices_in_one_face, d_normal_index_to_face, d_start_face_at_index,Face_NUM,Normal_NUM);
 
 
-
-
+    ///////////////////////////////////////////////
+    //
+    //  Wyznaczanie Promieni, uderzenia i dystanse
+    //
+    //
+    //
+    //
+    //////////////////////////////////////////////////
 
     double focal_length = 10;
     point3 h_camera_center(-25.0, -25.0, -25.0);
@@ -296,9 +321,16 @@ int main() {
     cudaDeviceSynchronize();
     cudaMemcpy(h_ray[0], d_ray, WIDTH * HEIGHT * sizeof(ray), cudaMemcpyDeviceToHost);
     cudaMemcpy(Distances, d_distances, WIDTH * HEIGHT * Face_NUM * sizeof(float), cudaMemcpyDeviceToHost);
-    //cudaMemcpy(Planes[0], d_Planes, 3 * Face_NUM * sizeof(float), cudaMemcpyDeviceToHost);
 
+
+    ///////////////////////////////////////////////
+    //
     // dobór najbliższej ściany z wektora dystansów
+    //
+    //
+    //
+    //
+    //////////////////////////////////////////////////
     const int BLOCK_SIZE_X = 16;
     const int BLOCK_SIZE_Y = 16;
     dim3 dimBlock(BLOCK_SIZE_X, BLOCK_SIZE_Y);
@@ -306,9 +338,12 @@ int main() {
     int gridSizeY = (HEIGHT + BLOCK_SIZE_Y - 1) / BLOCK_SIZE_Y;
     dim3 dimGrid(gridSizeX, gridSizeY);
 
+    cudaMalloc(&d_Materials,3 * sizeof(Material));
     cudaMemcpy(d_distances, Distances, WIDTH * HEIGHT * Face_NUM * sizeof(float), cudaMemcpyHostToDevice);
+    cudaMemcpy(d_Materials, Materials, 3 * sizeof(Material), cudaMemcpyHostToDevice);
 
-    Choose_closest <<< gridDim, blockDim >>> (d_distances, Face_NUM,d_closest_normals,d_Planes);
+
+    Choose_closest <<< gridDim, blockDim >>> (d_distances, Face_NUM,d_closest_normals,d_Planes,d_Materials,d_ray);
     cudaDeviceSynchronize();
 
     cudaMemcpy(ClosestNormals, d_closest_normals, WIDTH * HEIGHT * Face_NUM * 3 * sizeof(float), cudaMemcpyDeviceToHost);

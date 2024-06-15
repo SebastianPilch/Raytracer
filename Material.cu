@@ -1,4 +1,4 @@
-#include "material.cuh"
+#include "Material.cuh"
 
 __host__ __device__ Material::Material() {
     Diffuse[0] = 0.0f; Diffuse[1] = 0.0f; Diffuse[2] = 0.0f;
@@ -19,6 +19,7 @@ __host__ __device__ Material::Material(float d0, float d1, float d2,
     Specular[0] = clamp(s0, 0.0f, 1.0f);
     Specular[1] = clamp(s1, 0.0f, 1.0f);
     Specular[2] = clamp(s2, 0.0f, 1.0f);
+
 
     Ambient[0] = clamp(a0, 0.0f, 1.0f);
     Ambient[1] = clamp(a1, 0.0f, 1.0f);

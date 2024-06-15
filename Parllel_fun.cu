@@ -103,7 +103,7 @@ __global__ void Generate_rays(ray* viewport_rays, double focal_length, point3* c
         }
         if (current_vertex[0] == 0 && current_vertex[1] == 0 && current_vertex[2] == 0)
         {
-            printf("%d", vertex_index);
+            //printf("%d", vertex_index);
         }
     }
     vec3 dis = *camera_center - intersection;
@@ -125,7 +125,7 @@ __global__ void Generate_rays(ray* viewport_rays, double focal_length, point3* c
     __syncthreads();
 }
 
-__global__ void Choose_closest(float* d_distances,int Face_NUM, float* d_closest_normals, float* d_Planes)
+__global__ void Choose_closest(float* d_distances,int Face_NUM, float* d_closest_normals, float* d_Planes, Material* Mats, ray* rays)
 {
     int i = blockIdx.x * blockDim.x + threadIdx.x;
     int j = blockIdx.y * blockDim.y + threadIdx.y;
@@ -156,9 +156,29 @@ __global__ void Choose_closest(float* d_distances,int Face_NUM, float* d_closest
             float norm_length = sqrt(normal.x() * normal.x() + normal.y() * normal.y() + normal.z() * normal.z());
             normal = normal / norm_length;
 
-            d_closest_normals[(j * WIDTH + i) * 3 + 0] = (normal.x() + 1.0f) * 0.5f;
-            d_closest_normals[(j * WIDTH + i) * 3 + 1] = (normal.y() + 1.0f) * 0.5f;
-            d_closest_normals[(j * WIDTH + i) * 3 + 2] = (normal.z() + 1.0f) * 0.5f;
+
+            vec3 L = vec3(-5, -5, -5); // tu trzeba jakis wektor swiatla globalnego
+
+            vec3 reflection_vector = 2 * (normal * L) * normal - L;
+
+            color diffuse = vec3(Mats[1].Diffuse[0], Mats[1].Diffuse[1], Mats[1].Diffuse[2]);
+            color specular = vec3(Mats[1].Specular[0], Mats[1].Specular[1], Mats[1].Specular[2]);
+            color ambient = vec3(Mats[1].Ambient[0], Mats[1].Ambient[1], Mats[1].Ambient[2]);
+            float shininess = Mats[1].Shininess;
+            float alpha = Mats[1].Alpha;
+
+            color light_ambient = vec3(0.1f, 0.1f, 0.1f);
+            color light_diffuse = vec3(0.1f, 0.1f, 0.1f);
+            color light_specular = vec3(0.2f, 0.2f, 0.2f);
+            vec3 camera_vector = rays[j * WIDTH + i].dir;
+
+            color face_color = ambient * light_ambient + diffuse * light_diffuse * max(dotProduct_(normal, L), 0.0f) + specular * light_specular * pow(max(dotProduct_(reflection_vector, camera_vector), 0.0f), shininess) * alpha;
+            //face_color = diffuse * light_diffuse * max(dotProduct_(normal, L), 0.0f);
+            //printf("Color: %f, %f, %f   \n", Mats[0].Diffuse[0], Mats[0].Diffuse[1], Mats[0].Diffuse[2]);
+
+            d_closest_normals[(j * WIDTH + i) * 3 + 0] = face_color[0];
+            d_closest_normals[(j * WIDTH + i) * 3 + 1] = face_color[1];
+            d_closest_normals[(j * WIDTH + i) * 3 + 2] = face_color[2];
         }
         //printf("%f \n", d_distances[j * Face_NUM * WIDTH + i * Face_NUM + closest]);
     }
