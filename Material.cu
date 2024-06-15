@@ -26,7 +26,7 @@ __host__ __device__ Material::Material(float d0, float d1, float d2,
     Ambient[2] = clamp(a2, 0.0f, 1.0f);
 
     Alpha = clamp(alpha, 0.0f, 1.0f);
-    Shininess = clamp(shininess, 0.0f, 1.0f);
+    Shininess = shininess;
 }
 
 __host__ __device__ float Material::clamp(float value, float min, float max) {
