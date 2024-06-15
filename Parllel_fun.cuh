@@ -24,4 +24,15 @@ __global__ void Generate_rays(ray* viewport_rays, double focal_length, point3* c
 __global__ void Choose_closest(float* d_distances, int Face_NUM, float* d_closest_normals, float* d_Planes);
 
 
+__device__ void matrixVectorMul(float* matrix, float* vector, float* result);
+
+__global__ void Transform(float* Vertexes, int numVertices, float TranslateX, float TranslateY, float TranslateZ, float rotateX, float rotateY, float rotateZ, float scaleX,float scaleY,float scaleZ);
+
+
+__global__ void Update_normals_and_Planes(float* d_Vertices, int* d_Faces, float* d_Normals, float* d_Planes, int* d_number_of_vertices_in_one_face, int* d_normal_index_to_face, int* d_start_face_at_index, int Face_NUM, int Normals_NUM);
+
+
+
+
+
 #endif // PAR_FUN_H

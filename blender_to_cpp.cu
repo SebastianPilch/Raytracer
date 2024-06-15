@@ -129,6 +129,15 @@ int main() {
     Pointer_storage pociety_walec = GetDataFromObj(vert_num3, face_num3, normal_num3, "../../../helpers/walec_ale_kanciastyXD.obj");
 
     cout << endl << endl << "Kostka" << endl << endl;
+
+    cout << endl << endl << "Kostka" << endl << endl;
+    cout << endl << endl << "Kostka" << endl << endl;
+
+
+
+
+
+
     Print_Import_data(Kostka, vert_num1, normal_num1, face_num1);
 
     cout << endl << endl << "Sześcian pokrojony" << endl << endl;
@@ -233,9 +242,35 @@ int main() {
     cudaMemcpy(d_normal_index_to_face, normal_index_to_face, Face_NUM * sizeof(int), cudaMemcpyHostToDevice);
     cudaMemcpy(d_start_face_at_index, start_face_at_index, Face_NUM * sizeof(int), cudaMemcpyHostToDevice);
 
+
+    int threadsPerBlock = 256;
+    int blocksPerGrid = (Vert_NUM + threadsPerBlock - 1) / threadsPerBlock;
+    float TranslateX = 0.0f;
+    float TranslateY = 0.0f;
+    float TranslateZ = 0.0f;
+    float rotateX = 0.0f;
+    float rotateY = 23.0f;
+    float rotateZ = 23.0f;
+    float scaleX = 1.0f;
+    float scaleY = 1.0f;
+    float scaleZ = 1.0f;
+
+    cout << endl << endl << "Ilość werzchołków = " << Vert_NUM << endl;
+
+    Transform<<<blocksPerGrid, threadsPerBlock >>>(d_Vertices, Vert_NUM,  TranslateX,  TranslateY,  TranslateZ,  rotateX,  rotateY,  rotateZ,  scaleX,  scaleY,  scaleZ);
+    cudaMemcpy(Verticies, d_Vertices, Vert_NUM * 3 * sizeof(float), cudaMemcpyDeviceToHost);
+
+    threadsPerBlock = 256;
+    blocksPerGrid = (Face_NUM + threadsPerBlock - 1) / threadsPerBlock;
+    Update_normals_and_Planes << <blocksPerGrid, threadsPerBlock >> > (d_Vertices, d_Faces, d_Normals, d_Planes, d_number_of_vertices_in_one_face, d_normal_index_to_face, d_start_face_at_index,Face_NUM,Normal_NUM);
+
+
+
+
+
     double focal_length = 10;
-    point3 h_camera_center(25.0, 25.0, 25.0);
-    point3 h_camera_focal(-1.0,-1.0, -1.0);
+    point3 h_camera_center(-25.0, -25.0, -25.0);
+    point3 h_camera_focal(1.0,1.0, 1.0);
     point3* d_camera_center;
     point3* d_camera_focal;
     ray** h_ray;
@@ -277,9 +312,6 @@ int main() {
     cudaDeviceSynchronize();
 
     cudaMemcpy(ClosestNormals, d_closest_normals, WIDTH * HEIGHT * Face_NUM * 3 * sizeof(float), cudaMemcpyDeviceToHost);
-
-
-
 
     cudaFree(d_ray);
     cudaFree(d_distances);

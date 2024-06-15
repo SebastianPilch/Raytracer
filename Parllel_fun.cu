@@ -5,6 +5,7 @@
 #include "vec3.cuh"
 #include "Parllel_fun.cuh"
 #include "Ray.cuh"
+#include <cmath>
 
 using namespace std;
 #ifndef __CUDACC__ 
@@ -160,5 +161,84 @@ __global__ void Choose_closest(float* d_distances,int Face_NUM, float* d_closest
             d_closest_normals[(j * WIDTH + i) * 3 + 2] = (normal.z() + 1.0f) * 0.5f;
         }
         //printf("%f \n", d_distances[j * Face_NUM * WIDTH + i * Face_NUM + closest]);
+    }
+}
+
+__device__ void matrixVectorMul(float* matrix, float* vector, float* result) {
+    float x = vector[0];
+    float y = vector[1];
+    float z = vector[2];
+    result[0] = matrix[0] * x + matrix[4] * y + matrix[8] * z + matrix[12];
+    result[1] = matrix[1] * x + matrix[5] * y + matrix[9] * z + matrix[13];
+    result[2] = matrix[2] * x + matrix[6] * y + matrix[10] * z + matrix[14];
+}
+
+
+__global__ void Transform(float* Vertexes, int numVertices, float TranslateX, float TranslateY, float TranslateZ, float rotateX, float rotateY, float rotateZ, float scaleX, float scaleY, float scaleZ)
+{
+    int i = threadIdx.x + blockIdx.x * blockDim.x;
+    if (i < numVertices) 
+    {
+        float vertex[4] = { Vertexes[i * 3], Vertexes[i * 3 + 1], Vertexes[i * 3 + 2], 1.0f };
+        float result[4];
+        float transformationMatrix[16];
+
+        transformationMatrix[0] = scaleX * (cos(rotateY)* cos(rotateZ));
+        transformationMatrix[1] = scaleY * (cos(rotateZ) * sin(rotateX) * sin(rotateY) - cos(rotateX) * sin(rotateZ));
+        transformationMatrix[2] = scaleZ * (cos(rotateX) * cos(rotateZ) * sin(rotateY) + sin(rotateX) * sin(rotateZ));
+        transformationMatrix[3] = TranslateX;
+        transformationMatrix[4] = scaleX * (cos(rotateY) * sin(rotateZ));
+        transformationMatrix[5] = scaleY * (cos(rotateX) * cos(rotateZ) + sin(rotateX) * sin(rotateY) * sin(rotateZ));
+        transformationMatrix[6] = scaleZ * (cos(rotateX) * sin(rotateY) * sin(rotateZ) - cos(rotateZ) * sin(rotateX));
+        transformationMatrix[7] = TranslateY;
+        transformationMatrix[8] = scaleX * (-sin(rotateY));
+        transformationMatrix[9] = scaleY * (cos(rotateY) * sin(rotateX));
+        transformationMatrix[10] = scaleZ * (cos(rotateX) * cos(rotateY));
+        transformationMatrix[11] = TranslateZ;
+        transformationMatrix[12] = 0.0f;
+        transformationMatrix[13] = 0.0f;
+        transformationMatrix[14] = 0.0f;
+        transformationMatrix[15] = 1.0f;
+
+        matrixVectorMul(transformationMatrix, vertex, result);
+
+        Vertexes[i * 3] = result[0] + TranslateX;
+        Vertexes[i * 3 + 1] = result[1] + TranslateY;
+        Vertexes[i * 3 + 2] = result[2] + TranslateZ;
+
+    }
+}
+
+__global__ void Update_normals_and_Planes(float* d_Vertices, int* d_Faces, float* d_Normals, float* d_Planes, int* d_number_of_vertices_in_one_face, int* d_normal_index_to_face, int* d_start_face_at_index, int Face_NUM, int Normals_NUM)
+{
+    int i = threadIdx.x + blockIdx.x * blockDim.x;
+    if (i < Face_NUM) 
+    {
+        int modify_normal_idx = d_normal_index_to_face[i] - 1;
+
+        int Vertex_1_idx = d_Faces[d_start_face_at_index[i]] - 1;
+        int Vertex_2_idx = d_Faces[d_start_face_at_index[i]+1] - 1;
+        int Vertex_3_idx = d_Faces[d_start_face_at_index[i]+2] - 1;
+
+        point3 Vertex_1 = point3(d_Vertices[3* Vertex_1_idx], d_Vertices[3 * Vertex_1_idx + 1], d_Vertices[3 * Vertex_1_idx + 2]);
+        point3 Vertex_2 = point3(d_Vertices[3 * Vertex_2_idx], d_Vertices[3 * Vertex_2_idx + 1], d_Vertices[3 * Vertex_2_idx + 2]);
+        point3 Vertex_3 = point3(d_Vertices[3 * Vertex_3_idx], d_Vertices[3 * Vertex_3_idx + 1], d_Vertices[3 * Vertex_3_idx + 2]);
+
+        vec3 Vec_12 = vec3(Vertex_2[0] - Vertex_1[0], Vertex_2[1] - Vertex_1[1], Vertex_2[2] - Vertex_1[2]);
+        vec3 Vec_13 = vec3(Vertex_3[0] - Vertex_1[0], Vertex_3[1] - Vertex_1[1], Vertex_3[2] - Vertex_1[2]);
+
+        vec3 new_Norm =  crossProduct_(Vec_12, Vec_13);
+        Plane new_Plane = Plane(new_Norm,Vertex_1);
+
+        d_Planes[i * 4] = new_Plane.A;
+        d_Planes[i * 4+1] = new_Plane.B;
+        d_Planes[i * 4+2] = new_Plane.C;
+        d_Planes[i * 4+3] = new_Plane.D;
+
+        d_Normals[modify_normal_idx * 3] = new_Norm[0];
+        d_Normals[modify_normal_idx * 3 + 1] = new_Norm[1];
+        d_Normals[modify_normal_idx * 3 + 2] = new_Norm[2];
+
+
     }
 }
