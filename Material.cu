@@ -8,12 +8,22 @@ __host__ __device__ Material::Material() {
     Shininess = 0.0f;
 }
 
-__host__ __device__ Material::Material(const float diffuse[3], const float specular[3], const float ambient[3], float alpha, float shininess) {
-    for (int i = 0; i < 3; i++) {
-        Diffuse[i] = clamp(diffuse[i], 0.0f, 1.0f);
-        Specular[i] = clamp(specular[i], 0.0f, 1.0f);
-        Ambient[i] = clamp(ambient[i], 0.0f, 1.0f);
-    }
+__host__ __device__ Material::Material(float d0, float d1, float d2,
+                                       float s0, float s1, float s2,
+                                       float a0, float a1, float a2,
+                                       float alpha, float shininess) {
+    Diffuse[0] = clamp(d0, 0.0f, 1.0f);
+    Diffuse[1] = clamp(d1, 0.0f, 1.0f);
+    Diffuse[2] = clamp(d2, 0.0f, 1.0f);
+
+    Specular[0] = clamp(s0, 0.0f, 1.0f);
+    Specular[1] = clamp(s1, 0.0f, 1.0f);
+    Specular[2] = clamp(s2, 0.0f, 1.0f);
+
+    Ambient[0] = clamp(a0, 0.0f, 1.0f);
+    Ambient[1] = clamp(a1, 0.0f, 1.0f);
+    Ambient[2] = clamp(a2, 0.0f, 1.0f);
+
     Alpha = clamp(alpha, 0.0f, 1.0f);
     Shininess = clamp(shininess, 0.0f, 1.0f);
 }
