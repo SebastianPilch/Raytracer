@@ -32,7 +32,10 @@ __global__ void Transform(float* Vertexes, int numVertices, float TranslateX, fl
 __global__ void Update_normals_and_Planes(float* d_Vertices, int* d_Faces, float* d_Normals, float* d_Planes, int* d_number_of_vertices_in_one_face, int* d_normal_index_to_face, int* d_start_face_at_index, int Face_NUM, int Normals_NUM);
 
 
+__device__ int partition(float* data, int left, int right);
 
+__device__ void quickSort(float* data, int left, int right);
 
+__global__ void quickSortKernel(float* d_distances, int Face_NUM);
 
 #endif // PAR_FUN_H

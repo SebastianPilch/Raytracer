@@ -5,6 +5,8 @@
 #include "vec3.cuh"
 #include "Parllel_fun.cuh"
 #include "Ray.cuh"
+#include <cuda_runtime.h>
+#include <device_launch_parameters.h>
 #include <cmath>
 
 using namespace std;
@@ -129,9 +131,32 @@ __global__ void Choose_closest(float* d_distances,int Face_NUM, float* d_closest
 {
     int i = blockIdx.x * blockDim.x + threadIdx.x;
     int j = blockIdx.y * blockDim.y + threadIdx.y;
-    if (i < WIDTH && j < HEIGHT) {
+
+
+    if (i < WIDTH && j < HEIGHT) 
+    {
+        int Mat_idx = 2;
+
+        color diffuse = vec3(Mats[Mat_idx].Diffuse[0], Mats[Mat_idx].Diffuse[1], Mats[Mat_idx].Diffuse[2]);
+        color specular = vec3(Mats[Mat_idx].Specular[0], Mats[Mat_idx].Specular[1], Mats[Mat_idx].Specular[2]);
+        color ambient = vec3(Mats[Mat_idx].Ambient[0], Mats[Mat_idx].Ambient[1], Mats[Mat_idx].Ambient[2]);
+        float shininess = Mats[Mat_idx].Shininess;
+        float alpha = Mats[Mat_idx].Alpha;
+
+        alpha = 0.5f;
+
+
+        color light_ambient = vec3(0.1f, 0.1f, 0.1f);
+        color light_diffuse = vec3(0.1f, 0.1f, 0.1f);
+        color light_specular = vec3(0.2f, 0.2f, 0.2f);
+        vec3 camera_vector = rays[j * WIDTH + i].dir;
+
+        vec3 L = vec3(-5, -5, -5); // tu trzeba jakis wektor swiatla globalnego
+
+
         int closest = -1;
         float lowest_distance = INFINITY;
+        float far = -1.0f;
 
         for (int f = 0; f < Face_NUM; f++)
         {
@@ -140,6 +165,11 @@ __global__ void Choose_closest(float* d_distances,int Face_NUM, float* d_closest
                 closest = f;
                 lowest_distance = d_distances[j * Face_NUM * WIDTH + i * Face_NUM + f];
             }
+            if (d_distances[j * Face_NUM * WIDTH + i * Face_NUM + f] != INFINITY && d_distances[j * Face_NUM * WIDTH + i * Face_NUM + f] > far)
+            {
+                far = d_distances[j * Face_NUM * WIDTH + i * Face_NUM + f];
+            }
+
         }
 
         Plane plane = Plane((double)d_Planes[closest * 4], (double)d_Planes[closest * 4 + 1], (double)d_Planes[closest * 4 + 2], (double)d_Planes[closest * 4 + 3]);
@@ -152,39 +182,25 @@ __global__ void Choose_closest(float* d_distances,int Face_NUM, float* d_closest
         }
         else
         {
+
+
+
             vec3 normal = vec3((float)plane.A, (float)plane.B, (float)plane.C);
+
             float norm_length = sqrt(normal.x() * normal.x() + normal.y() * normal.y() + normal.z() * normal.z());
             normal = normal / norm_length;
-
-
-            vec3 L = vec3(-5, -5, -5); // tu trzeba jakis wektor swiatla globalnego
-
             vec3 reflection_vector = 2 * (normal * L) * normal - L;
-
-            color diffuse = vec3(Mats[1].Diffuse[0], Mats[1].Diffuse[1], Mats[1].Diffuse[2]);
-            color specular = vec3(Mats[1].Specular[0], Mats[1].Specular[1], Mats[1].Specular[2]);
-            color ambient = vec3(Mats[1].Ambient[0], Mats[1].Ambient[1], Mats[1].Ambient[2]);
-            float shininess = Mats[1].Shininess;
-            float alpha = Mats[1].Alpha;
-
-            color light_ambient = vec3(0.1f, 0.1f, 0.1f);
-            color light_diffuse = vec3(0.1f, 0.1f, 0.1f);
-            color light_specular = vec3(0.2f, 0.2f, 0.2f);
-            vec3 camera_vector = rays[j * WIDTH + i].dir;
-
-            color face_color = ambient * light_ambient + diffuse * light_diffuse * max(dotProduct_(normal, L), 0.0f) + specular * light_specular * pow(max(dotProduct_(reflection_vector, camera_vector), 0.0f), shininess) * alpha;
-            //face_color = diffuse * light_diffuse * max(dotProduct_(normal, L), 0.0f);
-            //printf("Color: %f, %f, %f   \n", Mats[0].Diffuse[0], Mats[0].Diffuse[1], Mats[0].Diffuse[2]);
-
+            color face_color = (ambient * light_ambient + diffuse * light_diffuse * abs(dotProduct_(normal, L)) + specular * light_specular * pow(abs(dotProduct_(reflection_vector / reflection_vector.length(), camera_vector / camera_vector.length())), shininess)) * alpha;
             d_closest_normals[(j * WIDTH + i) * 3 + 0] = face_color[0];
             d_closest_normals[(j * WIDTH + i) * 3 + 1] = face_color[1];
             d_closest_normals[(j * WIDTH + i) * 3 + 2] = face_color[2];
+
         }
-        //printf("%f \n", d_distances[j * Face_NUM * WIDTH + i * Face_NUM + closest]);
     }
 }
 
-__device__ void matrixVectorMul(float* matrix, float* vector, float* result) {
+__device__ void matrixVectorMul(float* matrix, float* vector, float* result) 
+{
     float x = vector[0];
     float y = vector[1];
     float z = vector[2];
@@ -262,3 +278,44 @@ __global__ void Update_normals_and_Planes(float* d_Vertices, int* d_Faces, float
 
     }
 }
+
+
+
+__device__ int partition(float* data, int left, int right) {
+    float pivot = data[right];
+    int i = left - 1;
+    for (int j = left; j < right; ++j) {
+        if (data[j] < pivot) {
+            ++i;
+            float temp = data[i];
+            data[i] = data[j];
+            data[j] = temp;
+        }
+    }
+    float temp = data[i + 1];
+    data[i + 1] = data[right];
+    data[right] = temp;
+    return i + 1;
+}
+
+__device__ void quickSort(float* data, int left, int right) {
+    if (left < right) {
+        int pi = partition(data, left, right);
+
+        quickSort(data, left, pi - 1);
+        quickSort(data, pi + 1, right);
+    }
+}
+
+__global__ void quickSortKernel(float* d_distances, int Face_NUM) {
+    int i_ind = blockIdx.x * blockDim.x + threadIdx.x;
+    int j_ind = blockIdx.y * blockDim.y + threadIdx.y;
+    
+    if (i_ind < WIDTH && j_ind < HEIGHT) 
+    {
+        int start = j_ind * Face_NUM * WIDTH + i_ind * Face_NUM;
+        int end = start + Face_NUM - 1;
+        quickSort(d_distances, start, end);
+    }
+}
+

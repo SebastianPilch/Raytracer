@@ -47,7 +47,7 @@ struct Pointer_storage
 
 size_t split(const string& txt, vector<string>& strs, char ch);
 
-Pointer_storage GetDataFromObj(int& Vertices_coords_size, int& Face_numer, int& Normals_size, string file_path);
+Pointer_storage GetDataFromObj(int& Vertices_coords_size, int& Face_numer, int& Normals_size, int& object_counter, string file_path);
 
 void Print_Import_data(Pointer_storage object, int ver_size, int nor_size, int Face_size);
 

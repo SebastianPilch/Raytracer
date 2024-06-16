@@ -25,7 +25,7 @@ size_t split(const std::string& txt, std::vector<std::string>& strs, char ch)
 
     return strs.size();
 }
-Pointer_storage GetDataFromObj(int& Vertices_coords_size, int& Face_numer,int& Normals_size, string file_path)
+Pointer_storage GetDataFromObj(int& Vertices_coords_size, int& Face_numer,int& Normals_size, int& object_counter, string file_path)
 {
     ifstream plik(file_path);
     if (!plik.is_open()) 
@@ -58,6 +58,11 @@ Pointer_storage GetDataFromObj(int& Vertices_coords_size, int& Face_numer,int& N
 
     int*  noramls_index_to_face = new int[Face_numer];
     int* vertices_in_one_face = new int[Face_numer];
+    int* Object_idx_to_vertex = new int[Vertices_coords_size];
+    int* Object_idx_to_face = new int[Face_numer];
+
+
+
 
 
     float** newVertices = nullptr;
@@ -67,40 +72,64 @@ Pointer_storage GetDataFromObj(int& Vertices_coords_size, int& Face_numer,int& N
 
     int* new_face_lengths = nullptr;
     int* new_normals_index_to_face = nullptr;
+    int* material_to_face = nullptr;
 
 
-    int index_v = 0;
+    int* new_Object_idx_to_vertex = nullptr;
+    int* new_Object_idx_to_face = nullptr;
+
+
+
     int index_f = 0;
     int index_n = 0;
+    int len_v = 0;
+
+    size_t newSize_V;
+    size_t newSize_F;
+
+
 
     while (getline(plik, linia)) 
     {
         split(linia, Splited_line, ' ');
+
+        if (Splited_line[0] == "o") 
+        {
+            object_counter++;
+        }
         if (Splited_line[0] == "v") {
-            if (index_v >= Vertices_coords_size){
-                size_t newSize = Vertices_coords_size * 2;
-                float** newVertices = new float* [newSize];
-                for (size_t i = 0; i < newSize; ++i) {
+            if (len_v >= Vertices_coords_size){
+                newSize_V = Vertices_coords_size * 2;
+                float** newVertices = new float* [newSize_V];
+                int* new_Object_idx_to_vertex = new int[newSize_V];
+                for (size_t i = 0; i < newSize_V; ++i) {
                     newVertices[i] = new float[3];
                 }
-                for (size_t i = 0; i < index_v; ++i) {
+                for (size_t i = 0; i < len_v; ++i) {
+                    new_Object_idx_to_vertex[i] = Object_idx_to_vertex[i];
                     for (size_t j = 0; j < 3; ++j) {
                         newVertices[i][j] = vertices[i][j];
                     }
                     delete[] vertices[i];
+
                 }
                 delete[] vertices;
+                delete[] Object_idx_to_vertex;
                 vertices = newVertices;
-                for (size_t i = 0; i < newSize;i++) {
+                Object_idx_to_vertex = new_Object_idx_to_vertex;
+                for (size_t i = 0; i < newSize_V;i++) {
                     vertices[i] = newVertices[i];
                 }
-                Vertices_coords_size = newSize;
+                Vertices_coords_size = newSize_V;
             }
-            vertices[index_v] = new float[3];
-            vertices[index_v][0] = (float)stof(Splited_line[1]);
-            vertices[index_v][1] = (float)stof(Splited_line[2]);
-            vertices[index_v][2] = (float)stof(Splited_line[3]);
-            index_v++;
+            vertices[len_v] = new float[3];
+            vertices[len_v][0] = (float)stof(Splited_line[1]);
+            vertices[len_v][1] = (float)stof(Splited_line[2]);
+            vertices[len_v][2] = (float)stof(Splited_line[3]);
+
+            Object_idx_to_vertex[len_v] = object_counter;
+
+            len_v++;
         }
 
 
@@ -143,23 +172,28 @@ Pointer_storage GetDataFromObj(int& Vertices_coords_size, int& Face_numer,int& N
         if (Splited_line[0] == "f")
         {
             if (index_f >= Face_numer) {
-                size_t newSize = Face_numer * 2;
+                newSize_F = Face_numer * 2;
                 
                 // alokacja nowego wektora przypisuj¹cego ile wierzcho³ków tworzy i-t¹ œcianê
-                int* new_face_lengths = new int[newSize];
-
+                int* new_face_lengths = new int[newSize_F];
+                int* new_Object_idx_to_face = new int[newSize_F];
                 for (size_t i = 0; i < index_f; i++) {
-                       new_face_lengths[i] = vertices_in_one_face[i];
+                    new_face_lengths[i] = vertices_in_one_face[i];
+                    new_Object_idx_to_face[i] = Object_idx_to_face[i];
                 }
                 delete[] vertices_in_one_face;
+                delete[] Object_idx_to_face;
+
                 vertices_in_one_face = new_face_lengths;
+                Object_idx_to_face = new_Object_idx_to_face;
+
                 // koniec alokacji
 
 
 
                 //alokacja nowego wektora przypisuj¹cego do indeksu œciany indeks jej nomalnej
 
-                int* new_normals_index_to_face = new int[newSize];
+                int* new_normals_index_to_face = new int[newSize_F];
                 for (size_t i = 0; i < index_f; i++) {
                     new_normals_index_to_face[i] = noramls_index_to_face[i];
                 }
@@ -170,7 +204,7 @@ Pointer_storage GetDataFromObj(int& Vertices_coords_size, int& Face_numer,int& N
 
 
                 //alokacja nowego wektora p³aszczyzn zawieraj¹cych œciany
-                float** NewPlanes = new float* [newSize];
+                float** NewPlanes = new float* [newSize_F];
                 for (size_t i = 0; i < index_f; i++) {
                     NewPlanes[i] = new float[4];
                 }
@@ -182,7 +216,7 @@ Pointer_storage GetDataFromObj(int& Vertices_coords_size, int& Face_numer,int& N
                 }
                 delete[] Planes_to_faces;
                 Planes_to_faces = NewPlanes;
-                for (size_t i = 0; i < newSize; i++) {
+                for (size_t i = 0; i < newSize_F; i++) {
                     Planes_to_faces[i] = NewPlanes[i];
                 }
                 //koniec alokacji
@@ -190,7 +224,7 @@ Pointer_storage GetDataFromObj(int& Vertices_coords_size, int& Face_numer,int& N
 
 
                 // alokacja nowego wektora przypisuj¹ca do indeksu œciany indeksy wierzcho³ków które j¹ twrz¹
-                int** newFaces = new int* [newSize];
+                int** newFaces = new int* [newSize_F];
                 for (size_t i = 0; i < index_f; i++) {
                     newFaces[i] = new int[vertices_in_one_face[i]];
                 }
@@ -202,11 +236,11 @@ Pointer_storage GetDataFromObj(int& Vertices_coords_size, int& Face_numer,int& N
                 }
                 delete[] vertices_to_faces;
                 vertices_to_faces = newFaces;
-                for (size_t i = 0; i < newSize; i++) {
+                for (size_t i = 0; i < newSize_F; i++) {
                     vertices_to_faces[i] = newFaces[i];
                 }
                 // koniec alokacji
-                Face_numer = newSize;
+                Face_numer = newSize_F;
             }
             // przypisanie iloœci wierzcho³ków do œciany i stworzenie odpowiadaj¹cego tej d³ugoœci wektora w liœcie œcian:
             vertices_in_one_face[index_f] = (int)(Splited_line.size()-1);
@@ -232,13 +266,15 @@ Pointer_storage GetDataFromObj(int& Vertices_coords_size, int& Face_numer,int& N
             Planes_to_faces[index_f][2] = nor_z;
             Planes_to_faces[index_f][3] = -(nor_x * x + nor_y * y + nor_z * z);
 
+            //Object_idx_to_face[index_f] = object_counter;
+
             //cout << nor_x  <<  " " << x << " " << nor_y <<  " " << y <<  " " << nor_z << " " << z << endl;
 
             index_f++;
         }
     }
 
-    Vertices_coords_size = index_v;
+    Vertices_coords_size = len_v;
     Face_numer = index_f;
     Normals_size = index_n;
 

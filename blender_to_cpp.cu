@@ -111,52 +111,80 @@ void saveAsBMP2(float* angles, int width, int height, const std::string& filenam
 
 
 int main() {
-    int vert_num1 = 3;
-    int face_num1 = 1;
-    int normal_num1 = 1;
 
-    Pointer_storage Kostka = GetDataFromObj(vert_num1, face_num1, normal_num1, "../../../helpers/untitled.obj");
+    ///////////////////////////////////////////////
+    //
+    //wczytanie obiektów .obj
+    //
+    //
+    //
+    //
+    //////////////////////////////////////////////////
 
-    int vert_num2 = 3;
-    int face_num2 = 1;
-    int normal_num2 = 1;
 
-    Pointer_storage Trojkatna_Kostka = GetDataFromObj(vert_num2, face_num2, normal_num2, "../../../helpers/Trojkatny_szescian.obj");
+    //int vert_num1 = 3;
+    //int face_num1 = 1;
+    //int normal_num1 = 1;
 
+    //Pointer_storage Kostka = GetDataFromObj(vert_num1, face_num1, normal_num1, "../../../helpers/untitled.obj");
+
+    //int vert_num2 = 3;
+    //int face_num2 = 1;
+    //int normal_num2 = 1;
+
+    //Pointer_storage Trojkatna_Kostka = GetDataFromObj(vert_num2, face_num2, normal_num2, "../../../helpers/Trojkatny_szescian.obj");
+    int object_couter = 0;
     int vert_num3 = 3;
     int face_num3 = 1;
     int normal_num3 = 1;
 
     //Pointer_storage pociety_walec = GetDataFromObj(vert_num3, face_num3, normal_num3, "../../../helpers/walec_ale_kanciastyXD.obj");
-    Pointer_storage pociety_walec = GetDataFromObj(vert_num3, face_num3, normal_num3, "../../../helpers/torus.obj");
+    Pointer_storage pociety_walec = GetDataFromObj(vert_num3, face_num3, normal_num3, object_couter, "../../../helpers/complete_scene.obj");
 
-    cout << endl << endl << "Kostka" << endl << endl;
+    //cout << endl << endl << "Kostka" << endl << endl;
 
-    cout << endl << endl << "Kostka" << endl << endl;
-    cout << endl << endl << "Kostka" << endl << endl;
-
-
+    //cout << endl << endl << "Kostka" << endl << endl;
+    //cout << endl << endl << "Kostka" << endl << endl;
 
 
 
 
-    Print_Import_data(Kostka, vert_num1, normal_num1, face_num1);
 
-    cout << endl << endl << "Sześcian pokrojony" << endl << endl;
-    Print_Import_data(Trojkatna_Kostka, vert_num2, normal_num2, face_num2);
 
-    cout << endl << endl << "zlosliwy przyklad kanciastego walca" << endl << endl;
-    Print_Import_data(pociety_walec, vert_num3, normal_num3, face_num3);
+    //Print_Import_data(Kostka, vert_num1, normal_num1, face_num1);
 
-    cout << endl << endl << "Testowanie promieni";
+    //cout << endl << endl << "Sześcian pokrojony" << endl << endl;
+    //Print_Import_data(Trojkatna_Kostka, vert_num2, normal_num2, face_num2);
 
-    // wybór obiektu
+    //cout << endl << endl << "zlosliwy przyklad kanciastego walca" << endl << endl;
+    //Print_Import_data(pociety_walec, vert_num3, normal_num3, face_num3);
+
+    //cout << endl << endl << "Testowanie promieni";
+
+
+
+
+
+    ///////////////////////////////////////////////
+    //
+    //wybór obiektu
+    //
+    //
+    //
+    //
+    //////////////////////////////////////////////////
     int Vert_NUM = vert_num3;
     int Face_NUM = face_num3;
     int Normal_NUM = normal_num3;
     Pointer_storage liczony_objekt = pociety_walec;
-    // // // //
-
+    ///////////////////////////////////////////////
+    //
+    //przepisanie wskaźników
+    //
+    //
+    //
+    //
+    //////////////////////////////////////////////////
     float** Planes = new float* [Face_NUM];
     Planes[0] = new float[Face_NUM * 4];
 
@@ -189,7 +217,7 @@ int main() {
         start_face_at_index[i-1] = current_index;
         current_index += number_of_vertices_in_one_face[i - 1];
         Planes[i] = Planes[0] + i * 4;
-        cout << i-1 << "  :  " << start_face_at_index[i-1] << endl;
+        //cout << i-1 << "  :  " << start_face_at_index[i-1] << endl;
     }
 
     for (int i = 1; i < Vert_NUM; i++) {
@@ -216,16 +244,26 @@ int main() {
         }
     }
 
-
+    ///////////////////////////////////////////////
+    //
+    //utworzenie materiałów
+    //
+    //
+    //
+    //
+    //////////////////////////////////////////////////
     Material* Materials = new Material[3];
-    // jeden normalny, jeden z podkręconym shinines, jeden z opacity
-
-
-
     Materials[0] = Material( 0.5f, 0.6f, 0.7f , 0.3f, 0.4f, 0.5f , 0.1f, 0.2f, 0.3f , 1.0f, 0.0f);
-    Materials[1] = Material(0.7f, 0.2f, 0.2f, 0.3f, 0.4f, 0.5f, 0.1f, 0.2f, 0.3f, 1.0f, 0.2f);
+    Materials[1] = Material(0.7f, 0.2f, 0.2f, 0.3f, 0.4f, 0.5f, 0.1f, 0.2f, 0.3f, 1.0f, 5.0f);
     Materials[2] = Material(0.5f, 0.6f, 0.7f, 0.3f, 0.4f, 0.5f, 0.1f, 0.2f, 0.3f, 0.7f, 0.0f);
-
+    ///////////////////////////////////////////////
+    //
+    //Alokacja i przekazanie danych do karty
+    //
+    //
+    //
+    //
+    //////////////////////////////////////////////////
 
     int* d_Faces;
     int* d_number_of_vertices_in_one_face;
@@ -256,12 +294,14 @@ int main() {
     cudaMemcpy(d_normal_index_to_face, normal_index_to_face, Face_NUM * sizeof(int), cudaMemcpyHostToDevice);
     cudaMemcpy(d_start_face_at_index, start_face_at_index, Face_NUM * sizeof(int), cudaMemcpyHostToDevice);
 
-
-
-
-
-    //  Tranformacja obiektu rotacja/skala/przesunięcie
-
+    ///////////////////////////////////////////////
+    //
+    //Tranformacja obiektu rotacja/skala/przesunięcie
+    //
+    //
+    //
+    //
+    //////////////////////////////////////////////////
 
     int threadsPerBlock = 256;
     int blocksPerGrid = (Vert_NUM + threadsPerBlock - 1) / threadsPerBlock;
@@ -277,11 +317,13 @@ int main() {
 
 
     Transform<<<blocksPerGrid, threadsPerBlock >>>(d_Vertices, Vert_NUM,  TranslateX,  TranslateY,  TranslateZ,  rotateX,  rotateY,  rotateZ,  scaleX,  scaleY,  scaleZ);
-    cudaMemcpy(Verticies, d_Vertices, Vert_NUM * 3 * sizeof(float), cudaMemcpyDeviceToHost);
+    //cudaMemcpy(Verticies, d_Vertices, Vert_NUM * 3 * sizeof(float), cudaMemcpyDeviceToHost);
+    cudaDeviceSynchronize();
 
     threadsPerBlock = 256;
     blocksPerGrid = (Face_NUM + threadsPerBlock - 1) / threadsPerBlock;
     Update_normals_and_Planes << <blocksPerGrid, threadsPerBlock >> > (d_Vertices, d_Faces, d_Normals, d_Planes, d_number_of_vertices_in_one_face, d_normal_index_to_face, d_start_face_at_index,Face_NUM,Normal_NUM);
+    cudaDeviceSynchronize();
 
 
     ///////////////////////////////////////////////
@@ -294,7 +336,7 @@ int main() {
     //////////////////////////////////////////////////
 
     double focal_length = 10;
-    point3 h_camera_center(-25.0, -25.0, -25.0);
+    point3 h_camera_center(45.0, 45.0, 45.0);
     point3 h_camera_focal(1.0,1.0, 1.0);
     point3* d_camera_center;
     point3* d_camera_focal;
@@ -319,6 +361,11 @@ int main() {
     Generate_rays << <gridDim, blockDim >> > (d_ray, focal_length, d_camera_center, d_camera_focal, d_normal_index_to_face, d_number_of_vertices_in_one_face,
         d_Faces, d_Vertices, d_Normals, d_Planes, d_start_face_at_index, Face_NUM, Vert_NUM, Normal_NUM, d_distances, d_closest_normals);
     cudaDeviceSynchronize();
+
+    cout << endl << "sort start" << endl;
+
+    //quickSortKernel << <gridDim, blockDim >> > (d_distances, Face_NUM);
+
     cudaMemcpy(h_ray[0], d_ray, WIDTH * HEIGHT * sizeof(ray), cudaMemcpyDeviceToHost);
     cudaMemcpy(Distances, d_distances, WIDTH * HEIGHT * Face_NUM * sizeof(float), cudaMemcpyDeviceToHost);
 
@@ -331,6 +378,7 @@ int main() {
     //
     //
     //////////////////////////////////////////////////
+
     const int BLOCK_SIZE_X = 16;
     const int BLOCK_SIZE_Y = 16;
     dim3 dimBlock(BLOCK_SIZE_X, BLOCK_SIZE_Y);
