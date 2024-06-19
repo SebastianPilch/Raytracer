@@ -139,8 +139,8 @@ int main() {
     int normal_num3 = 1;
 
     //Pointer_storage pociety_walec = GetDataFromObj(vert_num3, face_num3, normal_num3, "../../../helpers/walec_ale_kanciastyXD.obj");
-    Pointer_storage pociety_walec = GetDataFromObj(vert_num3, face_num3, normal_num3, object_couter, "../../../helpers/complete_scene.obj");
-
+    Pointer_storage pociety_walec = GetDataFromObj(vert_num3, face_num3, normal_num3, object_couter, "../../../helpers/scena_jeszce_raz.obj");
+    
     //cout << endl << endl << "Kostka" << endl << endl;
 
     //cout << endl << endl << "Kostka" << endl << endl;
@@ -176,6 +176,10 @@ int main() {
     int Vert_NUM = vert_num3;
     int Face_NUM = face_num3;
     int Normal_NUM = normal_num3;
+
+
+    cout << object_couter << endl;
+
     Pointer_storage liczony_objekt = pociety_walec;
     ///////////////////////////////////////////////
     //
@@ -199,7 +203,8 @@ int main() {
 
     int* number_of_vertices_in_one_face = liczony_objekt.Face_size;
     int* normal_index_to_face = liczony_objekt.Face_to_Normal;
-
+    int* Object_to_Face = liczony_objekt.Object_to_Face;
+    int* Object_to_Vertex = liczony_objekt.Object_to_Vertex;
     int* start_face_at_index = new int[Face_NUM];
 
     start_face_at_index[0] = 0;
@@ -217,6 +222,8 @@ int main() {
         start_face_at_index[i-1] = current_index;
         current_index += number_of_vertices_in_one_face[i - 1];
         Planes[i] = Planes[0] + i * 4;
+
+
         //cout << i-1 << "  :  " << start_face_at_index[i-1] << endl;
     }
 
@@ -228,7 +235,9 @@ int main() {
     }
     for (int i = 0; i < Face_NUM; i++) {
         for (int j = 0; j < 4; j++)
+        {
             Planes[i][j] = liczony_objekt.Planes[i][j];
+        }
     }
     for (int i = 0; i < Vert_NUM; i++) {
         for (int j = 0; j < 3; j++)
@@ -252,10 +261,12 @@ int main() {
     //
     //
     //////////////////////////////////////////////////
-    Material* Materials = new Material[3];
-    Materials[0] = Material( 0.5f, 0.6f, 0.7f , 0.3f, 0.4f, 0.5f , 0.1f, 0.2f, 0.3f , 1.0f, 0.0f);
-    Materials[1] = Material(0.7f, 0.2f, 0.2f, 0.3f, 0.4f, 0.5f, 0.1f, 0.2f, 0.3f, 1.0f, 5.0f);
-    Materials[2] = Material(0.5f, 0.6f, 0.7f, 0.3f, 0.4f, 0.5f, 0.1f, 0.2f, 0.3f, 0.7f, 0.0f);
+    Material* Materials = new Material[4];
+    Materials[0] = Material(0.3f, 0.3f, 0.3f, 0.3f, 0.3f, 0.3f, 0.3f, 0.3f, 0.3f, 0.99f, 1.5f);
+    Materials[1] = Material(0.3f, 0.3f, 0.3f, 0.3f, 0.3f, 0.3f, 0.3f, 0.3f, 0.3f, 0.99f, 1.5f);
+    Materials[2] = Material(0.3f, 0.3f, 0.3f, 0.3f, 0.3f, 0.3f, 0.3f, 0.3f, 0.3f, 0.99f, 1.5f);
+    Materials[3] = Material(0.3f, 0.3f, 0.3f, 0.3f, 0.3f, 0.3f, 0.3f, 0.3f, 0.3f, 0.99f, 1.5f);
+
     ///////////////////////////////////////////////
     //
     //Alokacja i przekazanie danych do karty
@@ -269,6 +280,8 @@ int main() {
     int* d_number_of_vertices_in_one_face;
     int* d_normal_index_to_face;
     int* d_start_face_at_index;
+    int* d_Object_to_Vertex;
+    int* d_Object_to_Face;
     float* d_distances;
     float* d_Vertices;
     float* d_Normals;
@@ -285,6 +298,9 @@ int main() {
     cudaMalloc(&d_start_face_at_index, Face_NUM * sizeof(int));
     cudaMalloc(&d_distances, WIDTH * HEIGHT * Face_NUM * sizeof(float));
     cudaMalloc(&d_closest_normals, WIDTH * HEIGHT * Face_NUM * 3 * sizeof(float));
+    cudaMalloc(&d_Object_to_Vertex, Vert_NUM * sizeof(int));
+    cudaMalloc(&d_Object_to_Face, Face_NUM * sizeof(int));
+
 
     cudaMemcpy(d_Faces, Faces[0], Length_to_Allocate_Faces * sizeof(int), cudaMemcpyHostToDevice);
     cudaMemcpy(d_Planes, Planes[0], 4 * Face_NUM * sizeof(float), cudaMemcpyHostToDevice);
@@ -293,7 +309,8 @@ int main() {
     cudaMemcpy(d_number_of_vertices_in_one_face, number_of_vertices_in_one_face, Face_NUM * sizeof(int), cudaMemcpyHostToDevice);
     cudaMemcpy(d_normal_index_to_face, normal_index_to_face, Face_NUM * sizeof(int), cudaMemcpyHostToDevice);
     cudaMemcpy(d_start_face_at_index, start_face_at_index, Face_NUM * sizeof(int), cudaMemcpyHostToDevice);
-
+    cudaMemcpy(d_Object_to_Vertex, Object_to_Vertex, Vert_NUM * sizeof(int), cudaMemcpyHostToDevice);
+    cudaMemcpy(d_Object_to_Face, Object_to_Face, Face_NUM * sizeof(int), cudaMemcpyHostToDevice);
     ///////////////////////////////////////////////
     //
     //Tranformacja obiektu rotacja/skala/przesunięcie
@@ -309,22 +326,31 @@ int main() {
     float TranslateY = 0.0f;
     float TranslateZ = 0.0f;
     float rotateX = 0.0f;
-    float rotateY = 23.0f;
-    float rotateZ = 23.0f;
+    float rotateY = 0.0f;
+    float rotateZ = 0.0f;
     float scaleX = 1.0f;
-    float scaleY = 1.0f;
-    float scaleZ = 1.0f;
+    float scaleY = -1.0f;
+    float scaleZ = -1.0f;
+
+    int index = 0;
+    Transform << <blocksPerGrid, threadsPerBlock >> > (d_Vertices, Vert_NUM, d_Object_to_Vertex, index, TranslateX, TranslateY, TranslateZ, rotateX, rotateY, rotateZ, scaleX, scaleY, scaleZ);
+    cudaDeviceSynchronize();
+     index = 1;
+    Transform<<<blocksPerGrid, threadsPerBlock >>>(d_Vertices, Vert_NUM, d_Object_to_Vertex,index  ,TranslateX,  TranslateY,  TranslateZ,  rotateX,  rotateY,  rotateZ,  scaleX,  scaleY,  scaleZ);
+    cudaDeviceSynchronize();
+     index = 2;
+    Transform << <blocksPerGrid, threadsPerBlock >> > (d_Vertices, Vert_NUM, d_Object_to_Vertex, index, TranslateX, TranslateY, TranslateZ, rotateX, rotateY, rotateZ, scaleX, scaleY, scaleZ);
+    cudaDeviceSynchronize();
+     index = 3;
 
 
-    Transform<<<blocksPerGrid, threadsPerBlock >>>(d_Vertices, Vert_NUM,  TranslateX,  TranslateY,  TranslateZ,  rotateX,  rotateY,  rotateZ,  scaleX,  scaleY,  scaleZ);
-    //cudaMemcpy(Verticies, d_Vertices, Vert_NUM * 3 * sizeof(float), cudaMemcpyDeviceToHost);
+    Transform << <blocksPerGrid, threadsPerBlock >> > (d_Vertices, Vert_NUM, d_Object_to_Vertex, index, TranslateX, TranslateY, TranslateZ, rotateX, rotateY, rotateZ, scaleX, scaleY, scaleZ);
     cudaDeviceSynchronize();
 
     threadsPerBlock = 256;
     blocksPerGrid = (Face_NUM + threadsPerBlock - 1) / threadsPerBlock;
-    Update_normals_and_Planes << <blocksPerGrid, threadsPerBlock >> > (d_Vertices, d_Faces, d_Normals, d_Planes, d_number_of_vertices_in_one_face, d_normal_index_to_face, d_start_face_at_index,Face_NUM,Normal_NUM);
+    Update_normals_and_Planes << <blocksPerGrid, threadsPerBlock >> > (d_Vertices,d_Faces, d_Object_to_Face, index, d_Normals, d_Planes, d_number_of_vertices_in_one_face, d_normal_index_to_face, d_start_face_at_index,Face_NUM,Normal_NUM);
     cudaDeviceSynchronize();
-
 
     ///////////////////////////////////////////////
     //
@@ -336,8 +362,8 @@ int main() {
     //////////////////////////////////////////////////
 
     double focal_length = 10;
-    point3 h_camera_center(45.0, 45.0, 45.0);
-    point3 h_camera_focal(1.0,1.0, 1.0);
+    point3 h_camera_center(120.0, -60.0, -50.0);
+    point3  h_camera_focal(60.0/2, -25.0/2, -25.0/2);
     point3* d_camera_center;
     point3* d_camera_focal;
     ray** h_ray;
@@ -386,12 +412,12 @@ int main() {
     int gridSizeY = (HEIGHT + BLOCK_SIZE_Y - 1) / BLOCK_SIZE_Y;
     dim3 dimGrid(gridSizeX, gridSizeY);
 
-    cudaMalloc(&d_Materials,3 * sizeof(Material));
+    cudaMalloc(&d_Materials, object_couter * sizeof(Material));
     cudaMemcpy(d_distances, Distances, WIDTH * HEIGHT * Face_NUM * sizeof(float), cudaMemcpyHostToDevice);
-    cudaMemcpy(d_Materials, Materials, 3 * sizeof(Material), cudaMemcpyHostToDevice);
+    cudaMemcpy(d_Materials, Materials, object_couter * sizeof(Material), cudaMemcpyHostToDevice);
 
 
-    Choose_closest <<< gridDim, blockDim >>> (d_distances, Face_NUM,d_closest_normals,d_Planes,d_Materials,d_ray);
+    Choose_closest <<< gridDim, blockDim >>> (d_distances, Face_NUM,d_closest_normals,d_Planes,d_Materials,d_ray, d_Object_to_Face);
     cudaDeviceSynchronize();
 
     cudaMemcpy(ClosestNormals, d_closest_normals, WIDTH * HEIGHT * Face_NUM * 3 * sizeof(float), cudaMemcpyDeviceToHost);

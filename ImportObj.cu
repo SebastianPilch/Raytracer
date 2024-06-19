@@ -127,7 +127,7 @@ Pointer_storage GetDataFromObj(int& Vertices_coords_size, int& Face_numer, int& 
             vertices[len_v][1] = (float)stof(Splited_line[2]);
             vertices[len_v][2] = (float)stof(Splited_line[3]);
 
-            Object_idx_to_vertex[len_v] = object_counter;
+            Object_idx_to_vertex[len_v] = object_counter - 1;
 
             len_v++;
         }
@@ -202,15 +202,14 @@ Pointer_storage GetDataFromObj(int& Vertices_coords_size, int& Face_numer, int& 
                 noramls_index_to_face = new_normals_index_to_face;
                 delete[] Planes_to_faces;
                 Planes_to_faces = NewPlanes;
-                for (size_t i = 0; i < newSize_F; i++) {
-                    Planes_to_faces[i] = NewPlanes[i];
-                }
-
                 delete[] vertices_to_faces;
                 vertices_to_faces = newFaces;
                 for (size_t i = 0; i < newSize_F; i++) {
+                    Planes_to_faces[i] = NewPlanes[i];
                     vertices_to_faces[i] = newFaces[i];
+
                 }
+
                 Face_numer = newSize_F;
             }
 
@@ -236,7 +235,7 @@ Pointer_storage GetDataFromObj(int& Vertices_coords_size, int& Face_numer, int& 
             Planes_to_faces[index_f][2] = nor_z;
             Planes_to_faces[index_f][3] = -(nor_x * x + nor_y * y + nor_z * z);
 
-            Object_idx_to_face[index_f] = object_counter;
+            Object_idx_to_face[index_f] = object_counter - 1;
 
             //cout << nor_x  <<  " " << x << " " << nor_y <<  " " << y <<  " " << nor_z << " " << z << endl;
 
@@ -257,8 +256,9 @@ Pointer_storage GetDataFromObj(int& Vertices_coords_size, int& Face_numer, int& 
     delete[] newPlanes;
     delete[] new_face_lengths;
     delete[] new_normals_index_to_face;
-
-    return Pointer_storage(vertices, faces_normals, vertices_to_faces, Planes_to_faces, vertices_in_one_face, noramls_index_to_face);
+    delete[] new_Object_idx_to_vertex;
+    delete[] new_Object_idx_to_face;
+    return Pointer_storage(vertices, faces_normals, vertices_to_faces, Planes_to_faces, vertices_in_one_face, noramls_index_to_face, Object_idx_to_vertex, Object_idx_to_face);
 }
 
 

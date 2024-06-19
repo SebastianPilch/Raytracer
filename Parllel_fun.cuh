@@ -21,15 +21,15 @@ __global__ void Generate_rays(ray* viewport_rays, double focal_length, point3* c
     int Face_NUM, int Vertex_NUM, int Normal_NUM, float* d_distances, float* d_closest_normals);
 
 
-__global__ void Choose_closest(float* d_distances, int Face_NUM, float* d_closest_normals, float* d_Planes, Material* Mats, ray* rays);
+__global__ void Choose_closest(float* d_distances, int Face_NUM, float* d_closest_normals, float* d_Planes, Material* Mats, ray* rays, int* Mats_to_face);
 
 
 __device__ void matrixVectorMul(float* matrix, float* vector, float* result);
 
-__global__ void Transform(float* Vertexes, int numVertices, float TranslateX, float TranslateY, float TranslateZ, float rotateX, float rotateY, float rotateZ, float scaleX,float scaleY,float scaleZ);
+__global__ void Transform(float* Vertexes, int numVertices,int* Object_to_Vertex,int index, float TranslateX, float TranslateY, float TranslateZ, float rotateX, float rotateY, float rotateZ, float scaleX,float scaleY,float scaleZ);
 
 
-__global__ void Update_normals_and_Planes(float* d_Vertices, int* d_Faces, float* d_Normals, float* d_Planes, int* d_number_of_vertices_in_one_face, int* d_normal_index_to_face, int* d_start_face_at_index, int Face_NUM, int Normals_NUM);
+__global__ void Update_normals_and_Planes(float* d_Vertices, int* d_Faces, int* Object_to_Face, int index, float* d_Normals, float* d_Planes, int* d_number_of_vertices_in_one_face, int* d_normal_index_to_face, int* d_start_face_at_index, int Face_NUM, int Normals_NUM);
 
 
 __device__ int partition(float* data, int left, int right);
