@@ -262,10 +262,29 @@ int main() {
     //
     //////////////////////////////////////////////////
     Material* Materials = new Material[4];
-    Materials[0] = Material(0.3f, 0.3f, 0.3f, 0.3f, 0.3f, 0.3f, 0.3f, 0.3f, 0.3f, 0.99f, 1.5f);
-    Materials[1] = Material(0.3f, 0.3f, 0.3f, 0.3f, 0.3f, 0.3f, 0.3f, 0.3f, 0.3f, 0.99f, 1.5f);
-    Materials[2] = Material(0.3f, 0.3f, 0.3f, 0.3f, 0.3f, 0.3f, 0.3f, 0.3f, 0.3f, 0.99f, 1.5f);
-    Materials[3] = Material(0.3f, 0.3f, 0.3f, 0.3f, 0.3f, 0.3f, 0.3f, 0.3f, 0.3f, 0.99f, 1.5f);
+    Materials[0] = Material(0.8f, 0.1f, 0.1f,   // diffuse (red)
+        0.9f, 0.6f, 0.6f,   // specular (light red)
+        0.3f, 0.1f, 0.1f,   // ambient (dark red)
+        1.0f,               // alpha
+        16.0f);             // shininess
+
+    Materials[1] = Material(0.1f, 0.8f, 0.1f,   // diffuse (green)
+        0.6f, 0.9f, 0.6f,   // specular (light green)
+        0.1f, 0.3f, 0.1f,   // ambient (dark green)
+        1.0f,               // alpha
+        16.0f);             // shininess
+
+    Materials[2] = Material(0.1f, 0.1f, 0.8f,   // diffuse (blue)
+        0.6f, 0.6f, 0.9f,   // specular (light blue)
+        0.1f, 0.1f, 0.3f,   // ambient (dark blue)
+        1.0f,               // alpha
+        16.0f);             // shininess
+
+    Materials[3] = Material(0.8f, 0.8f, 0.1f,   // diffuse (yellow)
+        0.9f, 0.9f, 0.6f,   // specular (light yellow)
+        0.3f, 0.3f, 0.1f,   // ambient (dark yellow)
+        1.0f,               // alpha
+        8.0f);              // shininess
 
     ///////////////////////////////////////////////
     //
