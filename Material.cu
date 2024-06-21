@@ -6,12 +6,14 @@ __host__ __device__ Material::Material() {
     Ambient[0] = 0.0f; Ambient[1] = 0.0f; Ambient[2] = 0.0f;
     Alpha = 1.0f;
     Shininess = 0.0f;
+    Reflectivity = 0.0f;
 }
 
 __host__ __device__ Material::Material(float d0, float d1, float d2,
                                        float s0, float s1, float s2,
                                        float a0, float a1, float a2,
-                                       float alpha, float shininess) {
+                                       float alpha, float shininess,
+                                       float reflectivity) {
     Diffuse[0] = clamp(d0, 0.0f, 1.0f);
     Diffuse[1] = clamp(d1, 0.0f, 1.0f);
     Diffuse[2] = clamp(d2, 0.0f, 1.0f);
@@ -27,6 +29,7 @@ __host__ __device__ Material::Material(float d0, float d1, float d2,
 
     Alpha = clamp(alpha, 0.0f, 1.0f);
     Shininess = shininess;
+    Reflectivity = reflectivity;
 }
 
 __host__ __device__ float Material::clamp(float value, float min, float max) {

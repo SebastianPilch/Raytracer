@@ -1,12 +1,12 @@
 # ninja log v5
-9	15366	7390432259064476	CMakeFiles/projekt.dir/Ray.cu.obj	f95258413eb10186
-4	13662	7405210934244940	CMakeFiles/projekt.dir/blender_to_cpp.cu.obj	cef71731806dcf81
-3	21421	7405209765952802	CMakeFiles/projekt.dir/Parllel_fun.cu.obj	f58fecb1b5df3144
-4	16287	7402726535092207	CMakeFiles/projekt.dir/ImportObj.cu.obj	5e2d9ac8a530670c
-15	16055	7390432265987262	CMakeFiles/projekt.dir/vec3.cu.obj	63768b01796125a1
-3	9856	7401691578731916	CMakeFiles/projekt.dir/Material.cu.obj	ab07c53863d27e83
-13663	15859	7405210956430621	CMakeFiles/projekt.dir/cmake_device_link.obj	32a5f032e825c354
-15860	15994	7405210957620635	projekt.exe	341be1f239882bc9
-7	15201	7405905040836539	CMakeFiles/projekt.dir/blender_to_cpp.cu.obj	cef71731806dcf81
-15241	17855	7405905067572652	CMakeFiles/projekt.dir/cmake_device_link.obj	32a5f032e825c354
-17855	18128	7405905070023836	projekt.exe	341be1f239882bc9
+6	6810	7406931037466263	CMakeFiles/projekt.dir/Material.cu.obj	fdbdde2f17096694
+10	10568	7406931075020711	CMakeFiles/projekt.dir/Ray.cu.obj	3dcb6e63367993ee
+3	10783	7406931077143925	CMakeFiles/projekt.dir/ImportObj.cu.obj	16de8880f0981b8e
+14	11132	7406931080677927	CMakeFiles/projekt.dir/vec3.cu.obj	f36648c699a9ca26
+8	15843	7406931127768869	CMakeFiles/projekt.dir/Parllel_fun.cu.obj	e6f715bbe915a566
+14	14684	7406931671900551	CMakeFiles/projekt.dir/Parllel_fun.cu.obj	e6f715bbe915a566
+13	6174	7406931963767696	CMakeFiles/projekt.dir/Material.cu.obj	fdbdde2f17096694
+18	9577	7406931997828532	CMakeFiles/projekt.dir/blender_to_cpp.cu.obj	2e4c2b1784355ea4
+16	14999	7406932052050080	CMakeFiles/projekt.dir/Parllel_fun.cu.obj	e6f715bbe915a566
+15000	16537	7406932067569408	CMakeFiles/projekt.dir/cmake_device_link.obj	c98559bbd9f370c2
+16537	17167	7406932073029479	projekt.exe	d19b35b6110bca27
