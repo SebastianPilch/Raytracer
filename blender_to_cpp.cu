@@ -199,7 +199,7 @@ int main() {
     Normals[0] = new float[Normal_NUM * 3];
 
     float* Distances = new float[WIDTH * HEIGHT * Face_NUM];
-    float* ClosestNormals = new float[WIDTH * HEIGHT * Face_NUM * 3];
+    float* Colors = new float[WIDTH * HEIGHT * 3];
 
     int* number_of_vertices_in_one_face = liczony_objekt.Face_size;
     int* normal_index_to_face = liczony_objekt.Face_to_Normal;
@@ -305,7 +305,7 @@ int main() {
     float* d_Vertices;
     float* d_Normals;
     float* d_Planes;
-    float* d_closest_normals;
+    float* d_closest_interesections;
     Material* d_Materials;
 
     cudaMalloc(&d_Faces, Length_to_Allocate_Faces * sizeof(int));
@@ -316,7 +316,7 @@ int main() {
     cudaMalloc(&d_normal_index_to_face, Face_NUM * sizeof(int));
     cudaMalloc(&d_start_face_at_index, Face_NUM * sizeof(int));
     cudaMalloc(&d_distances, WIDTH * HEIGHT * Face_NUM * sizeof(float));
-    cudaMalloc(&d_closest_normals, WIDTH * HEIGHT * Face_NUM * 3 * sizeof(float));
+    cudaMalloc(&d_closest_interesections, WIDTH * HEIGHT * Face_NUM * 3 * sizeof(float));
     cudaMalloc(&d_Object_to_Vertex, Vert_NUM * sizeof(int));
     cudaMalloc(&d_Object_to_Face, Face_NUM * sizeof(int));
 
@@ -358,9 +358,12 @@ int main() {
     Transform<<<blocksPerGrid, threadsPerBlock >>>(d_Vertices, Vert_NUM, d_Object_to_Vertex,index  ,TranslateX,  TranslateY,  TranslateZ,  rotateX,  rotateY,  rotateZ,  scaleX,  scaleY,  scaleZ);
     cudaDeviceSynchronize();
      index = 2;
+     TranslateX = 8.0f;
+
     Transform << <blocksPerGrid, threadsPerBlock >> > (d_Vertices, Vert_NUM, d_Object_to_Vertex, index, TranslateX, TranslateY, TranslateZ, rotateX, rotateY, rotateZ, scaleX, scaleY, scaleZ);
     cudaDeviceSynchronize();
      index = 3;
+     TranslateX = 0.0f;
 
 
     Transform << <blocksPerGrid, threadsPerBlock >> > (d_Vertices, Vert_NUM, d_Object_to_Vertex, index, TranslateX, TranslateY, TranslateZ, rotateX, rotateY, rotateZ, scaleX, scaleY, scaleZ);
@@ -374,9 +377,6 @@ int main() {
     ///////////////////////////////////////////////
     //
     //  Wyznaczanie Promieni, uderzenia i dystanse
-    //
-    //
-    //
     //
     //////////////////////////////////////////////////
 
@@ -398,18 +398,36 @@ int main() {
     cudaMemcpy(d_camera_center, &h_camera_center, sizeof(point3), cudaMemcpyHostToDevice);
     cudaMemcpy(d_camera_focal, &h_camera_focal, sizeof(point3), cudaMemcpyHostToDevice);
 
+
+
     dim3 blockDim(8, 8, 8);
     dim3 gridDim((WIDTH + blockDim.x - 1) / blockDim.x,
         (HEIGHT + blockDim.y - 1) / blockDim.y,
         (Face_NUM + blockDim.z - 1) / blockDim.z);
 
-    Generate_rays << <gridDim, blockDim >> > (d_ray, focal_length, d_camera_center, d_camera_focal, d_normal_index_to_face, d_number_of_vertices_in_one_face,
-        d_Faces, d_Vertices, d_Normals, d_Planes, d_start_face_at_index, Face_NUM, Vert_NUM, Normal_NUM, d_distances, d_closest_normals);
+    ///////////////////////////////////////////////
+    //
+    // wyznaczenie promieni
+    //
+    ///////////////////////////////////////////////
+    cudaMemcpy(d_ray, h_ray[0], WIDTH * HEIGHT * sizeof(ray), cudaMemcpyHostToDevice);
+
+
+    Generate_rays <<< gridDim, blockDim >>> (d_ray, focal_length, d_camera_center, d_camera_focal);
+    cudaDeviceSynchronize();
+
+    ///////////////////////////////////////////////
+    //
+    // wyznaczenie wektora dystansów
+    //
+    ///////////////////////////////////////////////
+
+    Generate_distances << <gridDim, blockDim >> > (d_ray, d_camera_center, d_normal_index_to_face, d_number_of_vertices_in_one_face,
+        d_Faces, d_Vertices, d_Normals, d_Planes, d_start_face_at_index, Face_NUM, Vert_NUM, Normal_NUM, d_distances, d_closest_interesections);
     cudaDeviceSynchronize();
 
     cout << endl << "sort start" << endl;
 
-    //quickSortKernel << <gridDim, blockDim >> > (d_distances, Face_NUM);
 
     cudaMemcpy(h_ray[0], d_ray, WIDTH * HEIGHT * sizeof(ray), cudaMemcpyDeviceToHost);
     cudaMemcpy(Distances, d_distances, WIDTH * HEIGHT * Face_NUM * sizeof(float), cudaMemcpyDeviceToHost);
@@ -419,10 +437,7 @@ int main() {
     //
     // dobór najbliższej ściany z wektora dystansów
     //
-    //
-    //
-    //
-    //////////////////////////////////////////////////
+    ////////////////////////////////////////////////
 
     const int BLOCK_SIZE_X = 16;
     const int BLOCK_SIZE_Y = 16;
@@ -431,28 +446,41 @@ int main() {
     int gridSizeY = (HEIGHT + BLOCK_SIZE_Y - 1) / BLOCK_SIZE_Y;
     dim3 dimGrid(gridSizeX, gridSizeY);
 
+    int* d_close_indexes;
+    float* d_colors;
+
     cudaMalloc(&d_Materials, object_couter * sizeof(Material));
+    cudaMalloc(&d_close_indexes, WIDTH * HEIGHT * sizeof(int));
+    cudaMalloc(&d_colors, WIDTH * HEIGHT * 3 * sizeof(float));
+
+
     cudaMemcpy(d_distances, Distances, WIDTH * HEIGHT * Face_NUM * sizeof(float), cudaMemcpyHostToDevice);
     cudaMemcpy(d_Materials, Materials, object_couter * sizeof(Material), cudaMemcpyHostToDevice);
 
-
-    Choose_closest <<< gridDim, blockDim >>> (d_distances, Face_NUM,d_closest_normals,d_Planes,d_Materials,d_ray, d_Object_to_Face);
+    Choose_closest <<< gridDim, blockDim >>> (d_distances, Face_NUM, d_colors, d_Planes, d_Materials, d_ray, d_Object_to_Face, d_close_indexes);
     cudaDeviceSynchronize();
 
-    cudaMemcpy(ClosestNormals, d_closest_normals, WIDTH * HEIGHT * Face_NUM * 3 * sizeof(float), cudaMemcpyDeviceToHost);
+    cudaMemcpy(Colors, d_colors, WIDTH * HEIGHT  * 3 * sizeof(float), cudaMemcpyDeviceToHost);
+
+    Update_rays <<< gridDim, blockDim >>> (d_ray, d_closest_interesections, d_close_indexes, d_normal_index_to_face, d_Normals);
+
+
+
+
+
 
     cudaFree(d_ray);
     cudaFree(d_distances);
     cudaFree(d_camera_center);
     cudaFree(d_camera_focal);
-    cudaFree(d_closest_normals);
+    cudaFree(d_closest_interesections);
 
     saveAsBMP(h_ray, WIDTH, HEIGHT, "result_image.bmp");
-    saveAsBMP2(ClosestNormals, WIDTH, HEIGHT, "normals_image.bmp");
+    saveAsBMP2(Colors, WIDTH, HEIGHT, "normals_image.bmp");
 
     free(h_ray[0]);
     free(h_ray);
-    delete[] ClosestNormals;
+    delete[] Colors;
 
     return 0;
 }

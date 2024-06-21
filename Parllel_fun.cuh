@@ -15,13 +15,17 @@
 #define DELTA_V VIEWPORT_V / HEIGHT
 
 
-__global__ void Generate_rays(ray* viewport_rays, double focal_length, point3* camera_center,
-    point3* camera_focal, int* d_normal_index_to_face, int* d_number_of_vertices_in_one_face,
+__global__ void Generate_rays(ray* viewport_rays, double focal_length, point3* camera_center, point3* camera_focal);
+
+__global__ void Update_rays(ray* viewport_rays, float* First_Intersections, int* Intersected_face_idx, int* d_normal_index_to_face, float* d_Normals);
+
+
+__global__ void Generate_distances(ray* viewport_rays, point3* camera_center, int* d_normal_index_to_face, int* d_number_of_vertices_in_one_face,
     int* d_Faces, float* d_Vertices, float* d_Normals, float* d_Planes, int* start_face_at_index,
-    int Face_NUM, int Vertex_NUM, int Normal_NUM, float* d_distances, float* d_closest_normals);
+    int Face_NUM, int Vertex_NUM, int Normal_NUM, float* d_distances, float* d_intersections);
 
 
-__global__ void Choose_closest(float* d_distances, int Face_NUM, float* d_closest_normals, float* d_Planes, Material* Mats, ray* rays, int* Mats_to_face);
+__global__ void Choose_closest(float* d_distances, int Face_NUM, float* d_colors, float* d_Planes, Material* Mats, ray* rays, int* Mats_to_face, int* Intersected_face_idx);
 
 
 __device__ void matrixVectorMul(float* matrix, float* vector, float* result);

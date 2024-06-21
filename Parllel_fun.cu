@@ -14,20 +14,12 @@ using namespace std;
 #define __CUDACC__
 #endif
 
-__global__ void Generate_rays(ray* viewport_rays, double focal_length, point3* camera_center,
-    point3* camera_focal, int* d_normal_index_to_face, int* d_number_of_vertices_in_one_face,
-    int* d_Faces, float* d_Vertices, float* d_Normals, float* d_Planes, int* start_face_at_index,
-    int Face_NUM, int Vertex_NUM, int Normal_NUM, float* d_distances, float* d_closest_angles) {
 
-
-
+__global__ void Generate_rays(ray* viewport_rays, double focal_length, point3* camera_center, point3* camera_focal) 
+{
     int i = blockIdx.x * blockDim.x + threadIdx.x;
     int j = blockIdx.y * blockDim.y + threadIdx.y;
-    int f = blockIdx.z * blockDim.z + threadIdx.z;
-
-    if (f >= Face_NUM || i >= WIDTH || j >= HEIGHT) return;
-
-
+    if (i >= WIDTH || j >= HEIGHT) return;
     float aspect_ratio = float(WIDTH) / float(HEIGHT);
     float viewport_height = 2.0;
     float viewport_width = aspect_ratio * viewport_height;
@@ -35,7 +27,7 @@ __global__ void Generate_rays(ray* viewport_rays, double focal_length, point3* c
 
     vec3 w = (*camera_center - *camera_focal) / ((*camera_center - *camera_focal).length());
     vec3 u = (crossProduct_(vec3(0, 1, 0), w)) / ((crossProduct_(vec3(0, 1, 0), w)).length());
-    vec3 v = crossProduct_(w,u);
+    vec3 v = crossProduct_(w, u);
 
     vec3 horizontal = u * viewport_width;
     vec3 vertical = v * viewport_height;
@@ -45,17 +37,47 @@ __global__ void Generate_rays(ray* viewport_rays, double focal_length, point3* c
     float v_offset = float(j) / (HEIGHT - 1);
     vec3 pixel_center = lower_left_corner + horizontal * u_offset + vertical * v_offset;
 
-/*    vec3 viewport_upper_left = *camera_center - vec3(focal_length, focal_length, focal_length) - VIEWPORT_U / 2 - VIEWPORT_V / 2;
-    vec3 pixel00_loc = viewport_upper_left + 0.5 * (DELTA_U + DELTA_V);
-
-    vec3 pixel_center = pixel00_loc + (i * DELTA_U) + (j * DELTA_V) + *camera_focal;*/
-
-
     vec3 ray_direction = pixel_center - *camera_center;
-    ray UV_ray = ray(*camera_center, ray_direction);
-    viewport_rays[j * HEIGHT + i] = ray(*camera_center, ray_direction);
 
+    viewport_rays[j * HEIGHT + i] = ray(*camera_center, ray_direction);
     __syncthreads();
+
+}
+
+__global__ void Update_rays(ray* viewport_rays, float* First_Intersections, int* Intersected_face_idx, int* d_normal_index_to_face, float* d_Normals)
+{
+        int i = blockIdx.x * blockDim.x + threadIdx.x;
+        int j = blockIdx.y * blockDim.y + threadIdx.y;
+
+        if (i >= WIDTH || j >= HEIGHT) return;
+
+        vec3 UV_ray_dir = viewport_rays[j * HEIGHT + i].dir;
+        int f = Intersected_face_idx[j * HEIGHT + i];
+        int normal_idx = d_normal_index_to_face[f] - 1;
+        vec3 normal = vec3(d_Normals[3 * f], d_Normals[3 * f + 1], d_Normals[3 * f + 2]);
+        vec3 ray_direction = UV_ray_dir - 2 * dotProduct_(normal, UV_ray_dir) * normal  ;
+
+        point3 pixel_center = vec3(First_Intersections[j * HEIGHT + i], First_Intersections[j * HEIGHT + i + 1], First_Intersections[j * HEIGHT + i + 2]);
+
+        viewport_rays[j * HEIGHT + i] = ray(pixel_center, ray_direction);
+        __syncthreads();
+
+}
+
+
+
+__global__ void Generate_distances(ray* viewport_rays,point3* camera_center, int* d_normal_index_to_face, int* d_number_of_vertices_in_one_face,
+    int* d_Faces, float* d_Vertices, float* d_Normals, float* d_Planes, int* start_face_at_index,
+    int Face_NUM, int Vertex_NUM, int Normal_NUM, float* d_distances, float* d_intersections) 
+{
+
+    int i = blockIdx.x * blockDim.x + threadIdx.x;
+    int j = blockIdx.y * blockDim.y + threadIdx.y;
+    int f = blockIdx.z * blockDim.z + threadIdx.z;
+
+    if (f >= Face_NUM || i >= WIDTH || j >= HEIGHT) return;
+
+    ray UV_ray = viewport_rays[j * HEIGHT + i];
 
     Plane plane = Plane((double)d_Planes[f * 4], (double)d_Planes[f * 4 + 1], (double)d_Planes[f * 4 + 2], (double)d_Planes[f * 4 + 3]);
     point3 intersection = UV_ray.findIntersection(plane);
@@ -65,6 +87,11 @@ __global__ void Generate_rays(ray* viewport_rays, double focal_length, point3* c
     {
         Is_Hitten_correct = false;
     }
+
+    d_intersections[j * Face_NUM * WIDTH + i * Face_NUM + f] = intersection[0];
+    d_intersections[j * Face_NUM * WIDTH + i * Face_NUM + f + 1] = intersection[1];
+    d_intersections[j * Face_NUM * WIDTH + i * Face_NUM + f + 2] = intersection[2];
+
 
     vec3 edge;
     size_t next_index;
@@ -127,7 +154,7 @@ __global__ void Generate_rays(ray* viewport_rays, double focal_length, point3* c
     __syncthreads();
 }
 
-__global__ void Choose_closest(float* d_distances,int Face_NUM, float* d_closest_normals, float* d_Planes, Material* Mats, ray* rays, int* Mats_to_face)
+__global__ void Choose_closest(float* d_distances,int Face_NUM, float* d_colors, float* d_Planes, Material* Mats, ray* rays, int* Mats_to_face, int* Intersected_face_idx)
 {
     int i = blockIdx.x * blockDim.x + threadIdx.x;
     int j = blockIdx.y * blockDim.y + threadIdx.y;
@@ -135,8 +162,6 @@ __global__ void Choose_closest(float* d_distances,int Face_NUM, float* d_closest
 
     if (i < WIDTH && j < HEIGHT) 
     {
-
-
 
         color light_ambient = vec3(0.2f, 0.2f, 0.2f);
         color light_diffuse = vec3(0.7f, 0.7f, 0.7f);
@@ -165,6 +190,8 @@ __global__ void Choose_closest(float* d_distances,int Face_NUM, float* d_closest
 
         }
 
+        Intersected_face_idx[j * WIDTH + i] = closest;
+
         int Mat_idx = Mats_to_face[closest] ;
 
         color diffuse = vec3(Mats[Mat_idx].Diffuse[0], Mats[Mat_idx].Diffuse[1], Mats[Mat_idx].Diffuse[2]);
@@ -177,9 +204,9 @@ __global__ void Choose_closest(float* d_distances,int Face_NUM, float* d_closest
 
         if (d_distances[j * Face_NUM * WIDTH + i * Face_NUM + closest] == INFINITY || d_distances[j * Face_NUM * WIDTH + i * Face_NUM + closest] < 0.0f)
         {
-            d_closest_normals[(j * WIDTH + i) * 3 + 0] = 0.0f;
-            d_closest_normals[(j * WIDTH + i) * 3 + 1] = 0.0f;
-            d_closest_normals[(j * WIDTH + i) * 3 + 2] = 0.0f;
+            d_colors[(j * WIDTH + i) * 3 + 0] = 0.0f;
+            d_colors[(j * WIDTH + i) * 3 + 1] = 0.0f;
+            d_colors[(j * WIDTH + i) * 3 + 2] = 0.0f;
         }
         else
         {
@@ -211,10 +238,10 @@ __global__ void Choose_closest(float* d_distances,int Face_NUM, float* d_closest
                 )
             };
 
-
-            d_closest_normals[(j * WIDTH + i) * 3 + 0] = face_color[0];
-            d_closest_normals[(j * WIDTH + i) * 3 + 1] = face_color[1];
-            d_closest_normals[(j * WIDTH + i) * 3 + 2] = face_color[2];
+            //printf("%f\n", face_color[0]);
+            d_colors[(j * WIDTH + i) * 3 + 0] = face_color[0];
+            d_colors[(j * WIDTH + i) * 3 + 1] = face_color[1];
+            d_colors[(j * WIDTH + i) * 3 + 2] = face_color[2];
 
         }
     }
