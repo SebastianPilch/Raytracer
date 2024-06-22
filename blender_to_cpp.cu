@@ -116,9 +116,6 @@ int main() {
     //
     //wczytanie obiektów .obj
     //
-    //
-    //
-    //
     //////////////////////////////////////////////////
 
 
@@ -163,14 +160,9 @@ int main() {
 
 
 
-
-
     ///////////////////////////////////////////////
     //
     //wybór obiektu
-    //
-    //
-    //
     //
     //////////////////////////////////////////////////
     int Vert_NUM = vert_num3;
@@ -185,9 +177,6 @@ int main() {
     //
     //przepisanie wskaźników
     //
-    //
-    //
-    //
     //////////////////////////////////////////////////
     float** Planes = new float* [Face_NUM];
     Planes[0] = new float[Face_NUM * 4];
@@ -200,13 +189,14 @@ int main() {
 
     float* Distances = new float[WIDTH * HEIGHT * Face_NUM];
     float* Colors = new float[WIDTH * HEIGHT * 3];
+    float* shadows = new float[WIDTH * HEIGHT * 3];
 
     int* number_of_vertices_in_one_face = liczony_objekt.Face_size;
     int* normal_index_to_face = liczony_objekt.Face_to_Normal;
     int* Object_to_Face = liczony_objekt.Object_to_Face;
     int* Object_to_Vertex = liczony_objekt.Object_to_Vertex;
     int* start_face_at_index = new int[Face_NUM];
-
+    float* Intersections = new float[WIDTH * HEIGHT * 3];
     start_face_at_index[0] = 0;
     int Length_to_Allocate_Faces = 0;
     for (int i = 0; i < Face_NUM; i++) {
@@ -256,9 +246,6 @@ int main() {
     ///////////////////////////////////////////////
     //
     //utworzenie materiałów
-    //
-    //
-    //
     //
     //////////////////////////////////////////////////
     Material* Materials = new Material[4];
@@ -310,6 +297,7 @@ int main() {
     float* d_Normals;
     float* d_Planes;
     float* d_closest_interesections;
+    float* d_shadows;
     Material* d_Materials;
 
     cudaMalloc(&d_Faces, Length_to_Allocate_Faces * sizeof(int));
@@ -323,6 +311,7 @@ int main() {
     cudaMalloc(&d_closest_interesections, WIDTH * HEIGHT * 3 * sizeof(float));
     cudaMalloc(&d_Object_to_Vertex, Vert_NUM * sizeof(int));
     cudaMalloc(&d_Object_to_Face, Face_NUM * sizeof(int));
+    cudaMalloc(&d_shadows, WIDTH* HEIGHT * 3 * sizeof(float));
 
 
     cudaMemcpy(d_Faces, Faces[0], Length_to_Allocate_Faces * sizeof(int), cudaMemcpyHostToDevice);
@@ -334,12 +323,10 @@ int main() {
     cudaMemcpy(d_start_face_at_index, start_face_at_index, Face_NUM * sizeof(int), cudaMemcpyHostToDevice);
     cudaMemcpy(d_Object_to_Vertex, Object_to_Vertex, Vert_NUM * sizeof(int), cudaMemcpyHostToDevice);
     cudaMemcpy(d_Object_to_Face, Object_to_Face, Face_NUM * sizeof(int), cudaMemcpyHostToDevice);
+
     ///////////////////////////////////////////////
     //
     //Tranformacja obiektu rotacja/skala/przesunięcie
-    //
-    //
-    //
     //
     //////////////////////////////////////////////////
 
@@ -359,23 +346,16 @@ int main() {
     Transform << <blocksPerGrid, threadsPerBlock >> > (d_Vertices, Vert_NUM, d_Object_to_Vertex, index, TranslateX, TranslateY, TranslateZ, rotateX, rotateY, rotateZ, scaleX, scaleY, scaleZ);
     cudaDeviceSynchronize();
     index = 1;
-    scaleX = 2.0f;
-    scaleY = -2.0f;
-    scaleZ = -2.0f;
+    TranslateZ = 5.0f;
 
     Transform << <blocksPerGrid, threadsPerBlock >> > (d_Vertices, Vert_NUM, d_Object_to_Vertex, index, TranslateX, TranslateY, TranslateZ, rotateX, rotateY, rotateZ, scaleX, scaleY, scaleZ);
     cudaDeviceSynchronize();
     index = 2;
-    scaleX = 1.0f;
-    scaleY = -1.0f;
-    scaleZ = -1.0f;
-    TranslateX = 8.0f;
+    TranslateZ = 0.0f;
 
-    Transform << <blocksPerGrid, threadsPerBlock >> > (d_Vertices, Vert_NUM, d_Object_to_Vertex, index, TranslateX, TranslateY, TranslateZ, rotateX, rotateY, rotateZ, scaleX, scaleY, scaleZ);
+    Transform <<< blocksPerGrid, threadsPerBlock >> > (d_Vertices, Vert_NUM, d_Object_to_Vertex, index, TranslateX, TranslateY, TranslateZ, rotateX, rotateY, rotateZ, scaleX, scaleY, scaleZ);
     cudaDeviceSynchronize();
     index = 3;
-    TranslateX = 0.0f;
-
 
     Transform << <blocksPerGrid, threadsPerBlock >> > (d_Vertices, Vert_NUM, d_Object_to_Vertex, index, TranslateX, TranslateY, TranslateZ, rotateX, rotateY, rotateZ, scaleX, scaleY, scaleZ);
     cudaDeviceSynchronize();
@@ -424,7 +404,7 @@ int main() {
     cudaMemcpy(d_ray, h_ray[0], WIDTH * HEIGHT * sizeof(ray), cudaMemcpyHostToDevice);
 
 
-    Generate_rays << < gridDim, blockDim >> > (d_ray, focal_length, d_camera_center, d_camera_focal);
+    Generate_rays <<< gridDim, blockDim >>> (d_ray, focal_length, d_camera_center, d_camera_focal);
     cudaDeviceSynchronize();
 
     ///////////////////////////////////////////////
@@ -438,8 +418,6 @@ int main() {
     cudaDeviceSynchronize();
     reflecions += 1;
 
-    cout << endl << "sort start" << endl;
-
 
     cudaMemcpy(h_ray[0], d_ray, WIDTH * HEIGHT * sizeof(ray), cudaMemcpyDeviceToHost);
     cudaMemcpy(Distances, d_distances, WIDTH * HEIGHT * Face_NUM * sizeof(float), cudaMemcpyDeviceToHost);
@@ -451,12 +429,12 @@ int main() {
     //
     ////////////////////////////////////////////////
 
-    const int BLOCK_SIZE_X = 16;
-    const int BLOCK_SIZE_Y = 16;
-    dim3 dimBlock(BLOCK_SIZE_X, BLOCK_SIZE_Y);
-    int gridSizeX = (WIDTH + BLOCK_SIZE_X - 1) / BLOCK_SIZE_X;
-    int gridSizeY = (HEIGHT + BLOCK_SIZE_Y - 1) / BLOCK_SIZE_Y;
-    dim3 dimGrid(gridSizeX, gridSizeY);
+    //const int BLOCK_SIZE_X = 16;
+    //const int BLOCK_SIZE_Y = 16;
+    //dim3 dimBlock(BLOCK_SIZE_X, BLOCK_SIZE_Y);
+    //int gridSizeX = (WIDTH + BLOCK_SIZE_X - 1) / BLOCK_SIZE_X;
+    //int gridSizeY = (HEIGHT + BLOCK_SIZE_Y - 1) / BLOCK_SIZE_Y;
+    //dim3 dimGrid(gridSizeX, gridSizeY);
 
     int* d_close_indexes;
     float* d_colors;
@@ -469,44 +447,69 @@ int main() {
     cudaMemcpy(d_distances, Distances, WIDTH * HEIGHT * Face_NUM * sizeof(float), cudaMemcpyHostToDevice);
     cudaMemcpy(d_Materials, Materials, object_couter * sizeof(Material), cudaMemcpyHostToDevice);
 
-    Choose_closest << < gridDim, blockDim >> > (d_distances, Face_NUM, d_colors, d_Planes, d_Materials, d_ray, d_Object_to_Face, d_close_indexes,d_closest_interesections);
+    Choose_closest << < gridDim, blockDim >> > (d_distances, Face_NUM, d_colors, d_Planes, d_Materials, d_ray, d_Object_to_Face, d_close_indexes, d_closest_interesections);
+    cudaMemcpy(Intersections, d_closest_interesections, WIDTH * HEIGHT * 3 * sizeof(float), cudaMemcpyDeviceToHost);
+
     cudaDeviceSynchronize();
 
     cudaMemcpy(Colors, d_colors, WIDTH * HEIGHT * 3 * sizeof(float), cudaMemcpyDeviceToHost);
+
+    saveAsBMP2(Colors, WIDTH, HEIGHT, "normals_image.bmp");
+
+
+    cudaMemcpy(d_closest_interesections, Intersections, WIDTH * HEIGHT * 3 * sizeof(float), cudaMemcpyHostToDevice);
+
+    Add_shadows <<< gridDim, blockDim >> > (d_closest_interesections, d_shadows, d_normal_index_to_face, d_number_of_vertices_in_one_face, d_Faces, d_Vertices, d_Normals, d_Planes, d_start_face_at_index, Face_NUM, Vert_NUM, Normal_NUM);
+    cudaDeviceSynchronize();
+
+    cudaMemcpy(shadows, d_shadows, WIDTH * HEIGHT * 3 * sizeof(float), cudaMemcpyDeviceToHost);
+
+
+    saveAsBMP2(shadows, WIDTH, HEIGHT, "shadowed_scene_image.bmp");
+
+    for (int i = 0; i < WIDTH * HEIGHT * 3; i++)
+    {
+        if (shadows[i] >= 1)
+        {
+            Colors[i] -= 0.1f;
+            if (Colors[i] < 0) { Colors[i] = 0.0f; }
+        }
+
+    }
+    saveAsBMP2(Colors, WIDTH, HEIGHT, "shadowed_scene_image.bmp");
+
 
     ///////////////////////////////////////////////
     //
     // druga iteracja promieni
     //
     ////////////////////////////////////////////////
-
-    cout << d_closest_interesections << endl;
-
     Update_rays << < gridDim, blockDim >> > (d_ray, d_closest_interesections, d_close_indexes, d_normal_index_to_face, d_Normals);
     cudaDeviceSynchronize();
 
-    Generate_distances << < gridDim, blockDim >> > (d_ray,d_camera_center, d_closest_interesections, d_normal_index_to_face, d_number_of_vertices_in_one_face,
+    cudaMemcpy(h_ray[0], d_ray, WIDTH* HEIGHT * sizeof(ray), cudaMemcpyDeviceToHost);
+    cudaMemcpy(d_ray, h_ray[0], WIDTH* HEIGHT * sizeof(ray), cudaMemcpyHostToDevice);
+
+
+
+    Generate_distances << < gridDim, blockDim >> > (d_ray, d_camera_center, d_closest_interesections, d_normal_index_to_face, d_number_of_vertices_in_one_face,
         d_Faces, d_Vertices, d_Normals, d_Planes, d_start_face_at_index, Face_NUM, Vert_NUM, Normal_NUM, d_distances, reflecions);
     cudaDeviceSynchronize();
     reflecions += 1;
 
-    cudaMemcpy(h_ray[0], d_ray, WIDTH * HEIGHT * sizeof(ray), cudaMemcpyDeviceToHost);
-    cudaMemcpy(Distances, d_distances, WIDTH * HEIGHT * Face_NUM * sizeof(float), cudaMemcpyDeviceToHost);
+    cudaMemcpy(h_ray[0], d_ray, WIDTH* HEIGHT * sizeof(ray), cudaMemcpyDeviceToHost);
+    cudaMemcpy(Distances, d_distances, WIDTH* HEIGHT* Face_NUM * sizeof(float), cudaMemcpyDeviceToHost);
 
-    cudaMemcpy(d_distances, Distances, WIDTH * HEIGHT * Face_NUM * sizeof(float), cudaMemcpyHostToDevice);
+    cudaMemcpy(d_distances, Distances, WIDTH* HEIGHT* Face_NUM * sizeof(float), cudaMemcpyHostToDevice);
     cudaMemcpy(d_Materials, Materials, object_couter * sizeof(Material), cudaMemcpyHostToDevice);
+    cudaMemcpy(d_ray, h_ray[0], WIDTH* HEIGHT * sizeof(ray), cudaMemcpyHostToDevice);
 
-    Choose_closest << < dimGrid, dimBlock >> > (d_distances, Face_NUM, d_colors, d_Planes, d_Materials, d_ray, d_Object_to_Face, d_close_indexes, d_closest_interesections);
+    Choose_closest << <gridDim, blockDim >> > (d_distances, Face_NUM, d_colors, d_Planes, d_Materials, d_ray, d_Object_to_Face, d_close_indexes, d_closest_interesections);
     cudaDeviceSynchronize();
 
-    saveAsBMP2(Colors, WIDTH, HEIGHT, "normals_image.bmp");
 
     cudaMemcpy(Colors, d_colors, WIDTH * HEIGHT * 3 * sizeof(float), cudaMemcpyDeviceToHost);
-
     saveAsBMP2(Colors, WIDTH, HEIGHT, "reflected_image.bmp");
-
-
-
 
 
     cudaFree(d_ray);
@@ -515,12 +518,9 @@ int main() {
     cudaFree(d_camera_focal);
     cudaFree(d_closest_interesections);
 
-    saveAsBMP(h_ray, WIDTH, HEIGHT, "result_image.bmp");
-
     free(h_ray[0]);
     free(h_ray);
     delete[] Colors;
 
     return 0;
 }
-

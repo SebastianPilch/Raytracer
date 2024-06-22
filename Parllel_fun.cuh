@@ -35,6 +35,7 @@ __global__ void Transform(float* Vertexes, int numVertices,int* Object_to_Vertex
 
 __global__ void Update_normals_and_Planes(float* d_Vertices, int* d_Faces, int* Object_to_Face, int index, float* d_Normals, float* d_Planes, int* d_number_of_vertices_in_one_face, int* d_normal_index_to_face, int* d_start_face_at_index, int Face_NUM, int Normals_NUM);
 
+__global__ void Add_shadows(float* d_intersections, float* d_shadows, int* d_normal_index_to_face, int* d_number_of_vertices_in_one_face,int* d_Faces, float* d_Vertices, float* d_Normals, float* d_Planes, int* start_face_at_index,int Face_NUM, int Vertex_NUM, int Normal_NUM);
 
 __device__ int partition(float* data, int left, int right);
 

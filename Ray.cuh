@@ -5,6 +5,20 @@
 #include "vec3.cuh"
 using namespace std;
 
+
+struct inter_ 
+{
+    double t;
+    point3 intersection;
+
+    __host__ __device__ inter_() : t(0), intersection() {}
+    __host__ __device__ inter_(double t, point3 intersection) : t(t), intersection(intersection) {}
+
+};
+
+
+
+
 class ray {
 public:
     __host__ __device__ ray();
@@ -12,7 +26,7 @@ public:
     __host__ __device__ const point3& origin() { return orig; };
     __host__ __device__ const vec3& direction() { return dir; };
     __host__ __device__ point3 at(double t) const;
-    __host__ __device__ point3 findIntersection(const Plane& plane) const;
+    __host__ __device__ inter_ findIntersection(const Plane& plane) const;
     point3 orig;
     vec3 dir;
 };
