@@ -309,16 +309,14 @@ __global__ void Add_shadows(float* d_intersections, float* d_shadows, int* d_nor
 
     if (i < WIDTH && j < HEIGHT && f < Face_NUM)
     {
-        d_shadows[(j * WIDTH + i) * 3] = 0;
-        d_shadows[(j * WIDTH + i) * 3 + 1] = 0;
-        d_shadows[(j * WIDTH + i) * 3 + 2] = 0;
-        __syncthreads();
+
 
         //if (d_intersections[(j * WIDTH + i) * 3] == INFINITY || d_intersections[(j * WIDTH + i) * 3 + 1] == INFINITY || d_intersections[(j * WIDTH + i) * 3 + 2] == INFINITY)
         //{
         //    return;
         //}
-        ray Reverse_Light = ray(vec3(d_intersections[(j * WIDTH + i) * 3], d_intersections[(j * WIDTH + i) * 3 + 1], d_intersections[(j * WIDTH + i) * 3 + 2]), vec3(-1, -1, -1));
+        ray Reverse_Light = ray(point3(d_intersections[(j * WIDTH + i) * 3], d_intersections[(j * WIDTH + i) * 3 + 1], d_intersections[(j * WIDTH + i) * 3 + 2]), vec3(-1,-1, -1));
+
         bool Is_Hitten_correct = true;
         Plane plane = Plane((double)d_Planes[f * 4], (double)d_Planes[f * 4 + 1], (double)d_Planes[f * 4 + 2], (double)d_Planes[f * 4 + 3]);
         inter_ inter_data = Reverse_Light.findIntersection(plane);
@@ -330,7 +328,7 @@ __global__ void Add_shadows(float* d_intersections, float* d_shadows, int* d_nor
         {
             Is_Hitten_correct = false;
         }
-
+        //printf("%f , %f , %f \n", d_intersections[(j * WIDTH + i) * 3], d_intersections[(j * WIDTH + i) * 3 + 1], d_intersections[(j * WIDTH + i) * 3 + 2]);
 
         vec3 edge;
         size_t next_index;
@@ -372,7 +370,7 @@ __global__ void Add_shadows(float* d_intersections, float* d_shadows, int* d_nor
         }
 
 
-        if(Is_Hitten_correct && t > 0)
+        if(Is_Hitten_correct && t > 0 )
         {
             d_shadows[(j * WIDTH + i)*3] = 1;
             d_shadows[(j * WIDTH + i)*3 + 1] = 1;
