@@ -206,7 +206,7 @@ __global__ void Choose_closest(float* d_distances,int Face_NUM, float* d_colors,
         color light_specular = vec3(1.0f, 1.0f, 1.0f);
         vec3 camera_vector = rays[j * WIDTH + i].dir;
 
-        vec3 L = vec3(-15, -15, -15); // tu trzeba jakis wektor swiatla globalnego
+        vec3 L = vec3(-10, 12, 15); // tu trzeba jakis wektor swiatla globalnego
         //L = L / L.length();
 
 
@@ -262,29 +262,38 @@ __global__ void Choose_closest(float* d_distances,int Face_NUM, float* d_colors,
         float alpha = Mats[Mat_idx].Alpha;
 
 
+
             vec3 normal = vec3((float)plane.A, (float)plane.B, (float)plane.C);
-            //color face_color;
-            normal = normal / normal.length();
-            vec3 reflection_vector = L - 2 * dotProduct_(normal, L) * normal;
+            normal = - normal / normal.length();
+
+            L = L / L.length();
+            vec3 reflection_vector = 2 * dotProduct_(normal, L) * normal - L;
+            reflection_vector = reflection_vector / reflection_vector.length();
+            camera_vector = camera_vector / camera_vector.length();
+
             color face_color = {
-                ambient[0] * light_ambient[0] +
                 alpha * (
-                    diffuse[0] * light_diffuse[0] * max(0.0f, dotProduct_(normal, L) / L.length()) +
-                    specular[0] * light_specular[0] * pow(max(0.0f, - dotProduct_(reflection_vector, camera_vector) / (reflection_vector.length() * camera_vector.length())), shininess)
+                    ambient[0] * light_ambient[0] +
+                    diffuse[0] * light_diffuse[0] * max(0.0f, dotProduct_(normal, L)) +
+                    specular[0] * light_specular[0] * pow(max(0.0f, dotProduct_(reflection_vector, camera_vector)), shininess)
                 ),
 
-                ambient[1] * light_ambient[1] +
                 alpha * (
-                    diffuse[1] * light_diffuse[1] * max(0.0f, dotProduct_(normal, L) / L.length()) +
-                    specular[1] * light_specular[1] * pow(max(0.0f, - dotProduct_(reflection_vector, camera_vector) / (reflection_vector.length() * camera_vector.length())), shininess)
+                    ambient[1] * light_ambient[1] +
+                    diffuse[1] * light_diffuse[1] * max(0.0f, dotProduct_(normal, L)) +
+                    specular[1] * light_specular[1] * pow(max(0.0f, dotProduct_(reflection_vector, camera_vector)), shininess)
                 ),
 
-                ambient[2] * light_ambient[2] +
                 alpha * (
-                    diffuse[2] * light_diffuse[2] * max(0.0f, dotProduct_(normal, L) / L.length()) +
-                    specular[2] * light_specular[2] * pow(max(0.0f, - dotProduct_(reflection_vector, camera_vector) / (reflection_vector.length() * camera_vector.length())), shininess)
+                    ambient[2] * light_ambient[2] +
+                    diffuse[2] * light_diffuse[2] * max(0.0f, dotProduct_(normal, L)) +
+                    specular[2] * light_specular[2] * pow(max(0.0f, dotProduct_(reflection_vector, camera_vector)), shininess)
                 )
             };
+
+            face_color[0] = min(1.0f, max(0.0f, face_color[0]));
+            face_color[1] = min(1.0f, max(0.0f, face_color[1]));
+            face_color[2] = min(1.0f, max(0.0f, face_color[2]));
 
                 //printf("%f\n", face_color[0]);
             d_colors[(j * WIDTH + i) * 3 + 0] = face_color[0];
