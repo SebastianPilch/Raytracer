@@ -11,12 +11,12 @@ double negativeInfinity = -INFINITY;
 __host__ __device__ ray::ray() {};
 __host__ __device__ ray::ray(const point3& origin, const vec3& direction) : orig(origin), dir(direction) {};
 __host__ __device__ point3 ray:: at(double t) const { return this->dir*t + this->orig; }
-__host__ __device__ point3 ray::findIntersection(const Plane& plane) const
+__host__ __device__ inter_ ray::findIntersection(const Plane& plane) const
 {
 double t = -(plane.A * this->orig.x() + plane.B * this->orig.y() + plane.C * this->orig.z() + plane.D) /
     (plane.A * this->dir.x() + plane.B * this->dir.y() + plane.C * this->dir.z());
     point3 intersection(at(t));
-    return intersection;
+    return inter_(t, intersection);
 }
 
 __host__ __device__ std::ostream& operator<<(std::ostream& out, const ray& r) {

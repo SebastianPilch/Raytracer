@@ -21,7 +21,9 @@ __global__ void Generate_rays(ray* viewport_rays, double focal_length, point3* c
     int j = blockIdx.y * blockDim.y + threadIdx.y;
     int z = blockIdx.z * blockDim.z + threadIdx.z;
 
-    if (i >= WIDTH || j >= HEIGHT || z != 0) return;
+    if (i >= WIDTH || j >= HEIGHT || z != 0) {
+        return;
+    }
 
     float aspect_ratio = float(WIDTH) / float(HEIGHT);
     float viewport_height = 2.0;
@@ -54,21 +56,29 @@ __global__ void Update_rays(ray* viewport_rays, float* First_Intersections, int*
         int j = blockIdx.y * blockDim.y + threadIdx.y;
         int z = blockIdx.z * blockDim.z + threadIdx.z;
 
-        if (i >= WIDTH || j >= HEIGHT || z != 0) return;
+        if (i >= WIDTH || j >= HEIGHT || z != 0) 
+        {
+            return;
+        } 
+
 
         vec3 UV_ray_dir = viewport_rays[j * WIDTH + i].dir;
         int f = Intersected_face_idx[j * WIDTH + i];
-        int normal_idx = d_normal_index_to_face[f] - 1;
-        vec3 normal = vec3(d_Normals[3 * f], d_Normals[3 * f + 1], d_Normals[3 * f + 2]);
+        if (f == -1) 
+        {
+            return;
+        }
+        int normal_idx = d_normal_index_to_face[f];
+        vec3 normal = vec3(d_Normals[3 * normal_idx], d_Normals[3 * normal_idx + 1], d_Normals[3 * normal_idx + 2]);
         normal = normal / normal.length();
         UV_ray_dir = UV_ray_dir / UV_ray_dir.length();
         vec3 ray_direction = UV_ray_dir - 2 * dotProduct_(normal, UV_ray_dir) * normal ;
 
-        point3 pixel_center = vec3(First_Intersections[j * WIDTH + i], First_Intersections[j * WIDTH + i + 1], First_Intersections[j * WIDTH + i + 2]);
+        point3 pixel_center = vec3(First_Intersections[(j * WIDTH + i) * 3], First_Intersections[(j * WIDTH + i) * 3 + 1], First_Intersections[(j * WIDTH + i) * 3 + 2]);
 
         viewport_rays[j * WIDTH + i] = ray(pixel_center, ray_direction);
 
-       printf("%f , %f , %f \n", First_Intersections[j * WIDTH + i], First_Intersections[j * WIDTH + i+1], First_Intersections[j * WIDTH + i+2]);
+       //printf("%f , %f , %f \n", First_Intersections[j * WIDTH + i], First_Intersections[j * WIDTH + i+1], First_Intersections[j * WIDTH + i+2]);
 
 
         __syncthreads();
@@ -86,25 +96,18 @@ __global__ void Generate_distances(ray* viewport_rays,point3* camera_center, flo
     int j = blockIdx.y * blockDim.y + threadIdx.y;
     int f = blockIdx.z * blockDim.z + threadIdx.z;
 
-    if (f >= Face_NUM || i >= WIDTH || j >= HEIGHT) return;
+    if (f >= Face_NUM || i >= WIDTH || j >= HEIGHT) 
+    {
+        return;
+    }
     bool Is_Hitten_correct = true;
 
     ray UV_ray = viewport_rays[j * HEIGHT + i];
-    if (isnan(UV_ray.orig[0]) || isnan(UV_ray.orig[1]) || isnan(UV_ray.orig[2]) ||
-        isnan(UV_ray.dir[0]) || isnan(UV_ray.dir[1]) || isnan(UV_ray.dir[2]))
-    {
-        Is_Hitten_correct = false;
 
-    }
     Plane plane = Plane((double)d_Planes[f * 4], (double)d_Planes[f * 4 + 1], (double)d_Planes[f * 4 + 2], (double)d_Planes[f * 4 + 3]);
-    point3 intersection = UV_ray.findIntersection(plane);
-    if (intersection[0] == INFINITY || intersection[0] == -INFINITY || intersection[1] == INFINITY ||
-        intersection[1] == -INFINITY || intersection[2] == INFINITY || intersection[2] == -INFINITY)
-    {
-        Is_Hitten_correct = false;
-    }
-
-
+    inter_ inter_data = UV_ray.findIntersection(plane);
+    point3 intersection = inter_data.intersection;
+    double t = inter_data.t;
 
 
     vec3 edge;
@@ -153,13 +156,21 @@ __global__ void Generate_distances(ray* viewport_rays,point3* camera_center, flo
     if (reflections == 0) 
     {
         dis = *camera_center - intersection;
-
     }
     else 
     {
-        point3 last_inter = vec3(d_intersections[j * WIDTH + i], d_intersections[j * WIDTH + i + 1], d_intersections[j * WIDTH + i + 2]);
+        point3 last_inter = vec3(d_intersections[(j * WIDTH + i) * 3], d_intersections[(j * WIDTH + i) * 3 + 1], d_intersections[(j * WIDTH + i)*3 + 2]);
         dis = last_inter - intersection;
+
     }
+
+    if (intersection[0] == INFINITY || intersection[0] == -INFINITY || intersection[1] == INFINITY ||
+        intersection[1] == -INFINITY || intersection[2] == INFINITY || intersection[2] == -INFINITY || t < 0)
+    {
+        Is_Hitten_correct = false;
+    }
+
+
 
     if (!Is_Hitten_correct)
     {
@@ -185,25 +196,17 @@ __global__ void Choose_closest(float* d_distances,int Face_NUM, float* d_colors,
     int z = blockIdx.z * blockDim.z + threadIdx.z;
     
 
-    if (i < WIDTH && j < HEIGHT && z == 0)
+    if (i < WIDTH && j < HEIGHT && z == 1)
     {
         ray UV_ray = rays[j * WIDTH + i];
 
-    if (isnan(UV_ray.orig[0]) || isnan(UV_ray.orig[1]) || isnan(UV_ray.orig[2]) ||
-        isnan(UV_ray.dir[0]) || isnan(UV_ray.dir[1]) || isnan(UV_ray.dir[2]))
-        {
-            d_colors[(j * WIDTH + i) * 3 + 0] = 0.5f;
-            d_colors[(j * WIDTH + i) * 3 + 1] = 0.5f;
-            d_colors[(j * WIDTH + i) * 3 + 2] = 0.5f;
-            return;
 
-         }
         color light_ambient = vec3(0.2f, 0.2f, 0.2f);
         color light_diffuse = vec3(0.7f, 0.7f, 0.7f);
         color light_specular = vec3(1.0f, 1.0f, 1.0f);
         vec3 camera_vector = rays[j * WIDTH + i].dir;
 
-        vec3 L = vec3(-15, -15, -15); // tu trzeba jakis wektor swiatla globalnego
+        vec3 L = vec3(-10, 12, 15); // tu trzeba jakis wektor swiatla globalnego
         //L = L / L.length();
 
 
@@ -213,7 +216,7 @@ __global__ void Choose_closest(float* d_distances,int Face_NUM, float* d_colors,
 
         for (int f = 0; f < Face_NUM; f++)
         {
-            if (d_distances[j * Face_NUM * WIDTH + i * Face_NUM + f] < lowest_distance)
+            if (d_distances[j * Face_NUM * WIDTH + i * Face_NUM + f] < lowest_distance && f != Intersected_face_idx[(j * WIDTH + i)])
             {
                 closest = f;
                 lowest_distance = d_distances[j * Face_NUM * WIDTH + i * Face_NUM + f];
@@ -221,15 +224,30 @@ __global__ void Choose_closest(float* d_distances,int Face_NUM, float* d_colors,
 
 
         }
+        if (lowest_distance == INFINITY || closest == -1)
+        {
+            d_colors[(j * WIDTH + i) * 3 + 0] = 0.5f;
+            d_colors[(j * WIDTH + i) * 3 + 1] = 0.5f;
+            d_colors[(j * WIDTH + i) * 3 + 2] = 0.5f;
 
+            //printf("Indeks: %d, a f: %d\n", j * WIDTH + i, z);
+
+            d_intersections[(j * WIDTH + i)*3] = INFINITY;
+            d_intersections[(j * WIDTH + i) * 3 + 1] = INFINITY;
+            d_intersections[(j * WIDTH + i) * 3 + 2] = INFINITY;
+
+            return;
+        }
         Plane plane = Plane((double)d_Planes[closest * 4], (double)d_Planes[closest * 4 + 1], (double)d_Planes[closest * 4 + 2], (double)d_Planes[closest * 4 + 3]);
-        point3 intersection = UV_ray.findIntersection(plane);
+        inter_ inter_data  = UV_ray.findIntersection(plane);
+        point3 intersection = inter_data.intersection;
+        double t = inter_data.t;
 
 
 
-        d_intersections[j * WIDTH + i] = intersection[0];
-        d_intersections[j * WIDTH + i + 1] = intersection[1];
-        d_intersections[j * WIDTH + i + 2] = intersection[2];
+        d_intersections[(j * WIDTH + i) * 3] = intersection[0];
+        d_intersections[(j * WIDTH + i) * 3 + 1] = intersection[1];
+        d_intersections[(j * WIDTH + i) * 3 + 2] = intersection[2];
         //printf("%f , %f , %f \n", d_intersections[j * WIDTH + i], d_intersections[j * WIDTH + i+1], d_intersections[j * WIDTH + i+2]);
 
 
@@ -243,48 +261,150 @@ __global__ void Choose_closest(float* d_distances,int Face_NUM, float* d_colors,
         float shininess = Mats[Mat_idx].Shininess;
         float alpha = Mats[Mat_idx].Alpha;
 
-        if (lowest_distance == INFINITY || closest == -1)
-        {
-            d_colors[(j * WIDTH + i) * 3 + 0] = 0.5f;
-            d_colors[(j * WIDTH + i) * 3 + 1] = 0.5f;
-            d_colors[(j * WIDTH + i) * 3 + 2] = 0.5f;
-            return;
-        }
-        else
-        {
+
+
             vec3 normal = vec3((float)plane.A, (float)plane.B, (float)plane.C);
-            //color face_color;
-            normal = normal / normal.length();
+            normal = - normal / normal.length();
+
+            L = L / L.length();
             vec3 reflection_vector = 2 * dotProduct_(normal, L) * normal - L;
+            reflection_vector = reflection_vector / reflection_vector.length();
+            camera_vector = camera_vector / camera_vector.length();
+
             color face_color = {
-                ambient[0] * light_ambient[0] +
                 alpha * (
-                    diffuse[0] * light_diffuse[0] * max(0.0f, dotProduct_(normal, L) / L.length()) +
-                    specular[0] * light_specular[0] * pow(max(0.0f, -dotProduct_(reflection_vector, camera_vector) / (reflection_vector.length() * camera_vector.length())), shininess)
+                    ambient[0] * light_ambient[0] +
+                    diffuse[0] * light_diffuse[0] * max(0.0f, dotProduct_(normal, L)) +
+                    specular[0] * light_specular[0] * pow(max(0.0f, dotProduct_(reflection_vector, camera_vector)), shininess)
                 ),
 
-                ambient[1] * light_ambient[1] +
                 alpha * (
-                    diffuse[1] * light_diffuse[1] * max(0.0f, dotProduct_(normal, L) / L.length()) +
-                    specular[1] * light_specular[1] * pow(max(0.0f, -dotProduct_(reflection_vector, camera_vector) / (reflection_vector.length() * camera_vector.length())), shininess)
+                    ambient[1] * light_ambient[1] +
+                    diffuse[1] * light_diffuse[1] * max(0.0f, dotProduct_(normal, L)) +
+                    specular[1] * light_specular[1] * pow(max(0.0f, dotProduct_(reflection_vector, camera_vector)), shininess)
                 ),
 
-                ambient[2] * light_ambient[2] +
                 alpha * (
-                    diffuse[2] * light_diffuse[2] * max(0.0f, dotProduct_(normal, L) / L.length()) +
-                    specular[2] * light_specular[2] * pow(max(0.0f, -dotProduct_(reflection_vector, camera_vector) / (reflection_vector.length() * camera_vector.length())), shininess)
+                    ambient[2] * light_ambient[2] +
+                    diffuse[2] * light_diffuse[2] * max(0.0f, dotProduct_(normal, L)) +
+                    specular[2] * light_specular[2] * pow(max(0.0f, dotProduct_(reflection_vector, camera_vector)), shininess)
                 )
             };
+
+            face_color[0] = min(1.0f, max(0.0f, face_color[0]));
+            face_color[1] = min(1.0f, max(0.0f, face_color[1]));
+            face_color[2] = min(1.0f, max(0.0f, face_color[2]));
 
                 //printf("%f\n", face_color[0]);
             d_colors[(j * WIDTH + i) * 3 + 0] = face_color[0];
             d_colors[(j * WIDTH + i) * 3 + 1] = face_color[1];
             d_colors[(j * WIDTH + i) * 3 + 2] = face_color[2];
-        }
+
 
 
     }
 }
+
+
+
+
+__global__ void Add_shadows(float* d_intersections, float* d_shadows, int* d_normal_index_to_face, int* d_number_of_vertices_in_one_face, int* d_Faces, float* d_Vertices, float* d_Normals, float* d_Planes, int* start_face_at_index, int Face_NUM, int Vertex_NUM, int Normal_NUM)
+{
+    int i = blockIdx.x * blockDim.x + threadIdx.x;
+    int j = blockIdx.y * blockDim.y + threadIdx.y;
+    int f = blockIdx.z * blockDim.z + threadIdx.z;
+
+
+
+    if (i < WIDTH && j < HEIGHT && f < Face_NUM)
+    {
+
+
+        //if (d_intersections[(j * WIDTH + i) * 3] == INFINITY || d_intersections[(j * WIDTH + i) * 3 + 1] == INFINITY || d_intersections[(j * WIDTH + i) * 3 + 2] == INFINITY)
+        //{
+        //    return;
+        //}
+        ray Reverse_Light = ray(point3(d_intersections[(j * WIDTH + i) * 3], d_intersections[(j * WIDTH + i) * 3 + 1], d_intersections[(j * WIDTH + i) * 3 + 2]), vec3(-1,-1, -1));
+
+        bool Is_Hitten_correct = true;
+        Plane plane = Plane((double)d_Planes[f * 4], (double)d_Planes[f * 4 + 1], (double)d_Planes[f * 4 + 2], (double)d_Planes[f * 4 + 3]);
+        inter_ inter_data = Reverse_Light.findIntersection(plane);
+        point3 intersection = inter_data.intersection;
+        double t = inter_data.t;
+
+        if (intersection[0] == INFINITY || intersection[0] == -INFINITY || intersection[1] == INFINITY ||
+            intersection[1] == -INFINITY || intersection[2] == INFINITY || intersection[2] == -INFINITY)
+        {
+            Is_Hitten_correct = false;
+        }
+        //printf("%f , %f , %f \n", d_intersections[(j * WIDTH + i) * 3], d_intersections[(j * WIDTH + i) * 3 + 1], d_intersections[(j * WIDTH + i) * 3 + 2]);
+
+        vec3 edge;
+        size_t next_index;
+        for (size_t idx = start_face_at_index[f]; idx < start_face_at_index[f] + d_number_of_vertices_in_one_face[f]; ++idx)
+        {
+            size_t next_index;
+            if (idx + 1 >= start_face_at_index[f] + d_number_of_vertices_in_one_face[f])
+            {
+                next_index = start_face_at_index[f];
+            }
+            else
+            {
+                next_index = idx + 1;
+            }
+            int vertex_index = d_Faces[idx] - 1;
+            int vertex_next = d_Faces[next_index] - 1;
+
+            point3 current_vertex = point3(
+                (double)d_Vertices[3 * vertex_index],
+                (double)d_Vertices[3 * vertex_index + 1],
+                (double)d_Vertices[3 * vertex_index + 2]
+            );
+
+            point3 next_vertex = point3(
+                (double)d_Vertices[3 * vertex_next],
+                (double)d_Vertices[3 * vertex_next + 1],
+                (double)d_Vertices[3 * vertex_next + 2]
+            );
+
+            __syncthreads();
+            edge = next_vertex - current_vertex;
+            vec3 vp = intersection - current_vertex;
+            vec3 n = crossProduct_(edge, vp);
+            vec3 normal = vec3(plane.A, plane.B, plane.C);
+            if (dotProduct_(n, normal) < 0)
+            {
+                Is_Hitten_correct = false;
+            }
+        }
+
+
+        if(Is_Hitten_correct && t > 0 )
+        {
+            d_shadows[(j * WIDTH + i)*3] = 1;
+            d_shadows[(j * WIDTH + i)*3 + 1] = 1;
+            d_shadows[(j * WIDTH + i)*3 + 2] = 1;
+
+        }
+
+
+        __syncthreads();
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 __device__ void matrixVectorMul(float* matrix, float* vector, float* result) 
 {
@@ -365,6 +485,28 @@ __global__ void Update_normals_and_Planes(float* d_Vertices, int* d_Faces, int* 
             d_Normals[modify_normal_idx * 3 + 2] = new_Norm[2];
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

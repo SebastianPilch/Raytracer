@@ -11,103 +11,8 @@
 #include "Ray.cuh"
 #include "Parllel_fun.cuh"
 #include "Material.cuh"
+#include "SaveAsBMP.cuh"
 #include<cmath>
-
-void saveAsBMP(ray** img, int width, int height, const std::string& filename) {
-    std::ofstream file(filename, std::ios::out | std::ios::binary);
-
-    if (!file) {
-        std::cerr << "Cannot open file: " << filename << std::endl;
-        return;
-    }
-
-    int paddingSize = (4 - (width * 3) % 4) % 4; // Padding required by BMP format
-
-    // BMP header
-    int filesize = 54 + (3 * width + paddingSize) * height;
-    char fileHeader[54] = { 'B', 'M', 0,0,0,0, 0,0, 0,0, 54,0,0,0, 40,0,0,0, static_cast<char>(width), static_cast<char>(width >> 8), static_cast<char>(width >> 16), static_cast<char>(width >> 24), static_cast<char>(height), static_cast<char>(height >> 8), static_cast<char>(height >> 16), static_cast<char>(height >> 24), 1,0, 24,0, 0,0,0,0, static_cast<char>(filesize), static_cast<char>(filesize >> 8), static_cast<char>(filesize >> 16), static_cast<char>(filesize >> 24), 0,0,0,0, 0,0,0,0 };
-
-    // Write header
-    file.write(fileHeader, 54);
-
-    // Write pixel data
-    for (int i = height - 1; i >= 0; i--) {
-        for (int j = 0; j < width; j++) {
-            float focal_len = 5.0f;
-            unsigned char color = static_cast<unsigned char>(focal_len / (sqrt(img[i][j].dir.x() * img[i][j].dir.x() + img[i][j].dir.y() * img[i][j].dir.y())) / 4); // Scale value from [0, 1] to [0, 255]
-            file.put(color);
-            file.put(color);
-            file.put(color);
-        }
-
-        // Add padding
-        for (int k = 0; k < paddingSize; k++) {
-            file.put(0);
-        }
-    }
-
-    file.close();
-}
-
-
-void saveAsBMP2(float* angles, int width, int height, const std::string& filename) {
-    std::ofstream file(filename, std::ios::out | std::ios::binary);
-
-    if (!file) {
-        std::cerr << "Cannot open file: " << filename << std::endl;
-        return;
-    }
-
-    int paddingSize = (4 - (width * 3) % 4) % 4; // Padding required by BMP format
-
-    // BMP header
-    int filesize = 54 + (3 * width + paddingSize) * height;
-    char fileHeader[54] = {
-        'B', 'M',                         // Signature
-        static_cast<char>(filesize), static_cast<char>(filesize >> 8), static_cast<char>(filesize >> 16), static_cast<char>(filesize >> 24), // File size
-        0,0, 0,0,                         // Reserved
-        54,0,0,0,                         // File offset to pixel array
-        40,0,0,0,                         // DIB header size
-        static_cast<char>(width), static_cast<char>(width >> 8), static_cast<char>(width >> 16), static_cast<char>(width >> 24), // Width
-        static_cast<char>(height), static_cast<char>(height >> 8), static_cast<char>(height >> 16), static_cast<char>(height >> 24), // Height
-        1,0,                              // Planes
-        24,0,                             // Bits per pixel
-        0,0,0,0,                          // Compression
-        0,0,0,0,                          // Image size (can be 0 for uncompressed)
-        0,0,0,0,                          // X pixels per meter (unused)
-        0,0,0,0,                          // Y pixels per meter (unused)
-        0,0,0,0,                          // Total colors (0 means default)
-        0,0,0,0                           // Important colors (0 means all are important)
-    };
-
-    // Write header
-    file.write(fileHeader, 54);
-
-    // Write pixel data
-    for (int i = height - 1; i >= 0; i--) {
-        for (int j = 0; j < width; j++) {
-            // Retrieve RGB values from angles array
-            float red = angles[(i * width + j) * 3 + 0];
-            float green = angles[(i * width + j) * 3 + 1];
-            float blue = angles[(i * width + j) * 3 + 2];
-
-            unsigned char r = static_cast<unsigned char>(red * 255.99f);
-            unsigned char g = static_cast<unsigned char>(green * 255.99f);
-            unsigned char b = static_cast<unsigned char>(blue * 255.99f);
-
-            file.put(b); // Blue channel
-            file.put(g); // Green channel
-            file.put(r); // Red channel
-        }
-
-        // Add padding
-        for (int k = 0; k < paddingSize; k++) {
-            file.put(0);
-        }
-    }
-
-    file.close();
-}
 
 
 int main() {
@@ -115,9 +20,6 @@ int main() {
     ///////////////////////////////////////////////
     //
     //wczytanie obiektów .obj
-    //
-    //
-    //
     //
     //////////////////////////////////////////////////
 
@@ -163,14 +65,9 @@ int main() {
 
 
 
-
-
     ///////////////////////////////////////////////
     //
     //wybór obiektu
-    //
-    //
-    //
     //
     //////////////////////////////////////////////////
     int Vert_NUM = vert_num3;
@@ -185,9 +82,6 @@ int main() {
     //
     //przepisanie wskaźników
     //
-    //
-    //
-    //
     //////////////////////////////////////////////////
     float** Planes = new float* [Face_NUM];
     Planes[0] = new float[Face_NUM * 4];
@@ -200,13 +94,14 @@ int main() {
 
     float* Distances = new float[WIDTH * HEIGHT * Face_NUM];
     float* Colors = new float[WIDTH * HEIGHT * 3];
+    float* shadows = new float[WIDTH * HEIGHT * 3];
 
     int* number_of_vertices_in_one_face = liczony_objekt.Face_size;
     int* normal_index_to_face = liczony_objekt.Face_to_Normal;
     int* Object_to_Face = liczony_objekt.Object_to_Face;
     int* Object_to_Vertex = liczony_objekt.Object_to_Vertex;
     int* start_face_at_index = new int[Face_NUM];
-
+    float* Intersections = new float[WIDTH * HEIGHT * 3];
     start_face_at_index[0] = 0;
     int Length_to_Allocate_Faces = 0;
     for (int i = 0; i < Face_NUM; i++) {
@@ -257,37 +152,34 @@ int main() {
     //
     //utworzenie materiałów
     //
-    //
-    //
-    //
     //////////////////////////////////////////////////
     Material* Materials = new Material[4];
     Materials[0] = Material(0.8f, 0.1f, 0.1f,   // diffuse (red)
         0.9f, 0.6f, 0.6f,   // specular (light red)
         0.3f, 0.1f, 0.1f,   // ambient (dark red)
         1.0f,               // alpha
-        16.0f,  	        // shininess  
+        4.0f,  	        // shininess  
         0.5f);             // reflectivity
 
     Materials[1] = Material(0.1f, 0.8f, 0.1f,   // diffuse (green)
         0.6f, 0.9f, 0.6f,   // specular (light green)
         0.1f, 0.3f, 0.1f,   // ambient (dark green)
         1.0f,               // alpha
-        16.0f,  	        // shininess  
+        4.0f,  	        // shininess  
         0.5f);             // reflectivity
 
     Materials[2] = Material(0.1f, 0.1f, 0.8f,   // diffuse (blue)
-        0.6f, 0.6f, 0.9f,   // specular (light blue)
+        0.9f, 0.9f, 0.9f,   // specular (light blue)
         0.1f, 0.1f, 0.3f,   // ambient (dark blue)
         1.0f,               // alpha
-        16.0f,  	        // shininess  
+        4.0f,  	        // shininess  
         0.5f);             // reflectivity
 
     Materials[3] = Material(0.8f, 0.8f, 0.1f,   // diffuse (yellow)
         0.9f, 0.9f, 0.6f,   // specular (light yellow)
         0.3f, 0.3f, 0.1f,   // ambient (dark yellow)
         1.0f,               // alpha
-        8.0f,  	        // shininess  
+        4.0f,  	        // shininess  
         0.5f);             // reflectivity
 
     ///////////////////////////////////////////////
@@ -310,6 +202,7 @@ int main() {
     float* d_Normals;
     float* d_Planes;
     float* d_closest_interesections;
+    float* d_shadows;
     Material* d_Materials;
 
     cudaMalloc(&d_Faces, Length_to_Allocate_Faces * sizeof(int));
@@ -323,6 +216,7 @@ int main() {
     cudaMalloc(&d_closest_interesections, WIDTH * HEIGHT * 3 * sizeof(float));
     cudaMalloc(&d_Object_to_Vertex, Vert_NUM * sizeof(int));
     cudaMalloc(&d_Object_to_Face, Face_NUM * sizeof(int));
+    cudaMalloc(&d_shadows, WIDTH* HEIGHT * 3 * sizeof(float));
 
 
     cudaMemcpy(d_Faces, Faces[0], Length_to_Allocate_Faces * sizeof(int), cudaMemcpyHostToDevice);
@@ -334,12 +228,10 @@ int main() {
     cudaMemcpy(d_start_face_at_index, start_face_at_index, Face_NUM * sizeof(int), cudaMemcpyHostToDevice);
     cudaMemcpy(d_Object_to_Vertex, Object_to_Vertex, Vert_NUM * sizeof(int), cudaMemcpyHostToDevice);
     cudaMemcpy(d_Object_to_Face, Object_to_Face, Face_NUM * sizeof(int), cudaMemcpyHostToDevice);
+
     ///////////////////////////////////////////////
     //
     //Tranformacja obiektu rotacja/skala/przesunięcie
-    //
-    //
-    //
     //
     //////////////////////////////////////////////////
 
@@ -359,23 +251,19 @@ int main() {
     Transform << <blocksPerGrid, threadsPerBlock >> > (d_Vertices, Vert_NUM, d_Object_to_Vertex, index, TranslateX, TranslateY, TranslateZ, rotateX, rotateY, rotateZ, scaleX, scaleY, scaleZ);
     cudaDeviceSynchronize();
     index = 1;
-    scaleX = 2.0f;
-    scaleY = -2.0f;
-    scaleZ = -2.0f;
+    TranslateZ = 5.0f;
+    TranslateY = 0.3f;
+
 
     Transform << <blocksPerGrid, threadsPerBlock >> > (d_Vertices, Vert_NUM, d_Object_to_Vertex, index, TranslateX, TranslateY, TranslateZ, rotateX, rotateY, rotateZ, scaleX, scaleY, scaleZ);
     cudaDeviceSynchronize();
     index = 2;
-    scaleX = 1.0f;
-    scaleY = -1.0f;
-    scaleZ = -1.0f;
-    TranslateX = 8.0f;
+    TranslateZ = 0.0f;
 
-    Transform << <blocksPerGrid, threadsPerBlock >> > (d_Vertices, Vert_NUM, d_Object_to_Vertex, index, TranslateX, TranslateY, TranslateZ, rotateX, rotateY, rotateZ, scaleX, scaleY, scaleZ);
+    Transform <<< blocksPerGrid, threadsPerBlock >> > (d_Vertices, Vert_NUM, d_Object_to_Vertex, index, TranslateX, TranslateY, TranslateZ, rotateX, rotateY, rotateZ, scaleX, scaleY, scaleZ);
     cudaDeviceSynchronize();
     index = 3;
-    TranslateX = 0.0f;
-
+    TranslateY = -1.0f;
 
     Transform << <blocksPerGrid, threadsPerBlock >> > (d_Vertices, Vert_NUM, d_Object_to_Vertex, index, TranslateX, TranslateY, TranslateZ, rotateX, rotateY, rotateZ, scaleX, scaleY, scaleZ);
     cudaDeviceSynchronize();
@@ -424,7 +312,7 @@ int main() {
     cudaMemcpy(d_ray, h_ray[0], WIDTH * HEIGHT * sizeof(ray), cudaMemcpyHostToDevice);
 
 
-    Generate_rays << < gridDim, blockDim >> > (d_ray, focal_length, d_camera_center, d_camera_focal);
+    Generate_rays <<< gridDim, blockDim >>> (d_ray, focal_length, d_camera_center, d_camera_focal);
     cudaDeviceSynchronize();
 
     ///////////////////////////////////////////////
@@ -438,11 +326,7 @@ int main() {
     cudaDeviceSynchronize();
     reflecions += 1;
 
-    cout << endl << "sort start" << endl;
 
-
-    cudaMemcpy(h_ray[0], d_ray, WIDTH * HEIGHT * sizeof(ray), cudaMemcpyDeviceToHost);
-    cudaMemcpy(Distances, d_distances, WIDTH * HEIGHT * Face_NUM * sizeof(float), cudaMemcpyDeviceToHost);
 
 
     ///////////////////////////////////////////////
@@ -451,12 +335,6 @@ int main() {
     //
     ////////////////////////////////////////////////
 
-    const int BLOCK_SIZE_X = 16;
-    const int BLOCK_SIZE_Y = 16;
-    dim3 dimBlock(BLOCK_SIZE_X, BLOCK_SIZE_Y);
-    int gridSizeX = (WIDTH + BLOCK_SIZE_X - 1) / BLOCK_SIZE_X;
-    int gridSizeY = (HEIGHT + BLOCK_SIZE_Y - 1) / BLOCK_SIZE_Y;
-    dim3 dimGrid(gridSizeX, gridSizeY);
 
     int* d_close_indexes;
     float* d_colors;
@@ -466,47 +344,64 @@ int main() {
     cudaMalloc(&d_colors, WIDTH * HEIGHT * 3 * sizeof(float));
 
 
-    cudaMemcpy(d_distances, Distances, WIDTH * HEIGHT * Face_NUM * sizeof(float), cudaMemcpyHostToDevice);
     cudaMemcpy(d_Materials, Materials, object_couter * sizeof(Material), cudaMemcpyHostToDevice);
 
-    Choose_closest << < gridDim, blockDim >> > (d_distances, Face_NUM, d_colors, d_Planes, d_Materials, d_ray, d_Object_to_Face, d_close_indexes,d_closest_interesections);
+    Choose_closest <<< gridDim, blockDim >>> (d_distances, Face_NUM, d_colors, d_Planes, d_Materials, d_ray, d_Object_to_Face, d_close_indexes, d_closest_interesections);
     cudaDeviceSynchronize();
 
     cudaMemcpy(Colors, d_colors, WIDTH * HEIGHT * 3 * sizeof(float), cudaMemcpyDeviceToHost);
+
+    saveAsBMP(Colors, WIDTH, HEIGHT, "normals_image.bmp");
+    ///////////////////////////////////////////////
+    //
+    // Dodanie cienia
+    //
+    ////////////////////////////////////////////////
+
+
+    Add_shadows <<< gridDim, blockDim >> > (d_closest_interesections, d_shadows, d_normal_index_to_face, d_number_of_vertices_in_one_face, d_Faces, d_Vertices, d_Normals, d_Planes, d_start_face_at_index, Face_NUM, Vert_NUM, Normal_NUM);
+    cudaDeviceSynchronize();
+
+    cudaMemcpy(shadows, d_shadows, WIDTH * HEIGHT * 3 * sizeof(float), cudaMemcpyDeviceToHost);
+
+
+    saveAsBMP(shadows, WIDTH, HEIGHT, "shadowes_image.bmp");
+
+    for (int i = 0; i < WIDTH * HEIGHT * 3; i++)
+    {
+        if (shadows[i] >= 1)
+        {
+            Colors[i] -= 0.1f;
+            if (Colors[i] < 0) { Colors[i] = 0.0f; }
+        }
+
+    }
+    saveAsBMP(Colors, WIDTH, HEIGHT, "shadowed_scene_image.bmp");
+
 
     ///////////////////////////////////////////////
     //
     // druga iteracja promieni
     //
     ////////////////////////////////////////////////
-
-    cout << d_closest_interesections << endl;
-
-    Update_rays << < gridDim, blockDim >> > (d_ray, d_closest_interesections, d_close_indexes, d_normal_index_to_face, d_Normals);
+    Update_rays << < gridDim, blockDim >>> (d_ray, d_closest_interesections, d_close_indexes, d_normal_index_to_face, d_Normals);
     cudaDeviceSynchronize();
 
-    Generate_distances << < gridDim, blockDim >> > (d_ray,d_camera_center, d_closest_interesections, d_normal_index_to_face, d_number_of_vertices_in_one_face,
+
+    Generate_distances << < gridDim, blockDim >> > (d_ray, d_camera_center, d_closest_interesections, d_normal_index_to_face, d_number_of_vertices_in_one_face,
         d_Faces, d_Vertices, d_Normals, d_Planes, d_start_face_at_index, Face_NUM, Vert_NUM, Normal_NUM, d_distances, reflecions);
     cudaDeviceSynchronize();
     reflecions += 1;
 
-    cudaMemcpy(h_ray[0], d_ray, WIDTH * HEIGHT * sizeof(ray), cudaMemcpyDeviceToHost);
-    cudaMemcpy(Distances, d_distances, WIDTH * HEIGHT * Face_NUM * sizeof(float), cudaMemcpyDeviceToHost);
 
-    cudaMemcpy(d_distances, Distances, WIDTH * HEIGHT * Face_NUM * sizeof(float), cudaMemcpyHostToDevice);
     cudaMemcpy(d_Materials, Materials, object_couter * sizeof(Material), cudaMemcpyHostToDevice);
 
-    Choose_closest << < dimGrid, dimBlock >> > (d_distances, Face_NUM, d_colors, d_Planes, d_Materials, d_ray, d_Object_to_Face, d_close_indexes, d_closest_interesections);
+    Choose_closest << <gridDim, blockDim >> > (d_distances, Face_NUM, d_colors, d_Planes, d_Materials, d_ray, d_Object_to_Face, d_close_indexes, d_closest_interesections);
     cudaDeviceSynchronize();
 
-    saveAsBMP2(Colors, WIDTH, HEIGHT, "normals_image.bmp");
 
     cudaMemcpy(Colors, d_colors, WIDTH * HEIGHT * 3 * sizeof(float), cudaMemcpyDeviceToHost);
-
-    saveAsBMP2(Colors, WIDTH, HEIGHT, "reflected_image.bmp");
-
-
-
+    saveAsBMP(Colors, WIDTH, HEIGHT, "reflected_image.bmp");
 
 
     cudaFree(d_ray);
@@ -515,12 +410,9 @@ int main() {
     cudaFree(d_camera_focal);
     cudaFree(d_closest_interesections);
 
-    saveAsBMP(h_ray, WIDTH, HEIGHT, "result_image.bmp");
-
     free(h_ray[0]);
     free(h_ray);
     delete[] Colors;
 
     return 0;
 }
-
