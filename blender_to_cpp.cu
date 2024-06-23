@@ -41,7 +41,7 @@ int main() {
     int normal_num3 = 1;
 
     //Pointer_storage pociety_walec = GetDataFromObj(vert_num3, face_num3, normal_num3, "../../../helpers/walec_ale_kanciastyXD.obj");
-    Pointer_storage pociety_walec = GetDataFromObj(vert_num3, face_num3, normal_num3, object_couter, "../../../helpers/scena_jeszce_raz.obj");
+    Pointer_storage pociety_walec = GetDataFromObj(vert_num3, face_num3, normal_num3, object_couter, "../../../helpers/Studia_z_budownictwa_budujemy_mosty.obj");
 
     //cout << endl << endl << "Kostka" << endl << endl;
 
@@ -92,14 +92,17 @@ int main() {
     float** Normals = new float* [Normal_NUM];
     Normals[0] = new float[Normal_NUM * 3];
 
-    float* Distances = new float[WIDTH * HEIGHT * Face_NUM];
-    float* Colors = new float[WIDTH * HEIGHT * 3];
-    float* shadows = new float[WIDTH * HEIGHT * 3];
+
 
     int* number_of_vertices_in_one_face = liczony_objekt.Face_size;
     int* normal_index_to_face = liczony_objekt.Face_to_Normal;
     int* Object_to_Face = liczony_objekt.Object_to_Face;
     int* Object_to_Vertex = liczony_objekt.Object_to_Vertex;
+
+    float* Distances = new float[WIDTH * HEIGHT * Face_NUM];
+    float* Colors = new float[WIDTH * HEIGHT * 3];
+    float* shadows = new float[WIDTH * HEIGHT * 3];
+
     int* start_face_at_index = new int[Face_NUM];
     float* Intersections = new float[WIDTH * HEIGHT * 3];
     start_face_at_index[0] = 0;
@@ -153,41 +156,53 @@ int main() {
     //utworzenie materiałów
     //
     //////////////////////////////////////////////////
-    Material* Materials = new Material[4];
-    Materials[0] = Material(0.8f, 0.1f, 0.1f,   // diffuse (red)
-        0.9f, 0.6f, 0.6f,   // specular (light red)
-        0.3f, 0.1f, 0.1f,   // ambient (dark red)
-        1.0f,               // alpha
-        4.0f,  	        // shininess  
-        0.5f);             // reflectivity
+    Material* Materials = new Material[5];
 
-    Materials[1] = Material(0.1f, 0.8f, 0.1f,   // diffuse (green)
-        0.6f, 0.9f, 0.6f,   // specular (light green)
-        0.1f, 0.3f, 0.1f,   // ambient (dark green)
+    Materials[0] = Material(0.6f, 0.8f, 0.3f,   // diffuse (bright green)
+        0.7f, 0.9f, 0.4f,   // specular (light green)
+        0.3f, 0.4f, 0.2f,   // ambient (dark green)
         1.0f,               // alpha
-        4.0f,  	        // shininess  
-        0.5f);             // reflectivity
+        4.0f,              // shininess  
+        0.0f);             // reflectivity
 
-    Materials[2] = Material(0.1f, 0.1f, 0.8f,   // diffuse (blue)
-        0.9f, 0.9f, 0.9f,   // specular (light blue)
-        0.1f, 0.1f, 0.3f,   // ambient (dark blue)
+    //woda
+
+    Materials[4] = Material(0.3f, 0.6f, 0.8f,   // diffuse (light blue)
+        0.5f, 0.7f, 0.9f,   // specular (light blue)
+        0.2f, 0.3f, 0.4f,   // ambient (dark blue)
         1.0f,               // alpha
-        4.0f,  	        // shininess  
-        0.5f);             // reflectivity
+        4.0f,              // shininess  
+        0.3f);             // reflectivity
 
-    Materials[3] = Material(0.8f, 0.8f, 0.1f,   // diffuse (yellow)
-        0.9f, 0.9f, 0.6f,   // specular (light yellow)
-        0.3f, 0.3f, 0.1f,   // ambient (dark yellow)
+    //pnie
+
+    Materials[3] = Material(0.5f, 0.3f, 0.1f,   // diffuse (brown)
+        0.6f, 0.4f, 0.2f,   // specular (light brown)
+        0.3f, 0.2f, 0.1f,   // ambient (dark brown)
         1.0f,               // alpha
-        4.0f,  	        // shininess  
-        0.5f);             // reflectivity
+        4.0f,              // shininess  
+        0.0f);             // reflectivity
 
+    //drzewa
+
+    Materials[2] = Material(0.1f, 0.4f, 0.1f,   // diffuse (dark green)
+        0.2f, 0.5f, 0.2f,   // specular (light green)
+        0.05f, 0.2f, 0.05f, // ambient (very dark green)
+        1.0f,               // alpha
+        4.0f,              // shininess  
+        0.0f);             // reflectivity
+
+    //most
+
+    Materials[1] = Material(0.6f, 0.6f, 0.6f,   // diffuse (metallic grey)
+        0.8f, 0.8f, 0.8f,   // specular (bright grey)
+        0.3f, 0.3f, 0.3f,   // ambient (dark grey)
+        1.0f,               // alpha
+        4.0f,              // shininess  
+        0.3f);             // reflectivity
     ///////////////////////////////////////////////
     //
     //Alokacja i przekazanie danych do karty
-    //
-    //
-    //
     //
     //////////////////////////////////////////////////
 
@@ -237,37 +252,31 @@ int main() {
 
     int threadsPerBlock = 256;
     int blocksPerGrid = (Vert_NUM + threadsPerBlock - 1) / threadsPerBlock;
-    float TranslateX = 0.0f;
+    float TranslateX = 13.0f;
     float TranslateY = 0.0f;
-    float TranslateZ = 0.0f;
+    float TranslateZ = -6.0f;
     float rotateX = 0.0f;
-    float rotateY = 0.0f;
+    float rotateY = 135.0f;
     float rotateZ = 0.0f;
-    float scaleX = 1.0f;
-    float scaleY = -1.0f;
-    float scaleZ = -1.0f;
+    float scaleX = 1.5f;
+    float scaleY = -1.5f;
+    float scaleZ = -1.5f;
 
     int index = 0;
     Transform << <blocksPerGrid, threadsPerBlock >> > (d_Vertices, Vert_NUM, d_Object_to_Vertex, index, TranslateX, TranslateY, TranslateZ, rotateX, rotateY, rotateZ, scaleX, scaleY, scaleZ);
     cudaDeviceSynchronize();
     index = 1;
-    TranslateZ = 5.0f;
-    TranslateY = 0.3f;
-
-
     Transform << <blocksPerGrid, threadsPerBlock >> > (d_Vertices, Vert_NUM, d_Object_to_Vertex, index, TranslateX, TranslateY, TranslateZ, rotateX, rotateY, rotateZ, scaleX, scaleY, scaleZ);
     cudaDeviceSynchronize();
     index = 2;
-    TranslateZ = 0.0f;
-
     Transform <<< blocksPerGrid, threadsPerBlock >> > (d_Vertices, Vert_NUM, d_Object_to_Vertex, index, TranslateX, TranslateY, TranslateZ, rotateX, rotateY, rotateZ, scaleX, scaleY, scaleZ);
     cudaDeviceSynchronize();
     index = 3;
-    TranslateY = -1.0f;
-
     Transform << <blocksPerGrid, threadsPerBlock >> > (d_Vertices, Vert_NUM, d_Object_to_Vertex, index, TranslateX, TranslateY, TranslateZ, rotateX, rotateY, rotateZ, scaleX, scaleY, scaleZ);
     cudaDeviceSynchronize();
-
+    index = 4;
+    Transform << <blocksPerGrid, threadsPerBlock >> > (d_Vertices, Vert_NUM, d_Object_to_Vertex, index, TranslateX, TranslateY, TranslateZ, rotateX, rotateY, rotateZ, scaleX, scaleY, scaleZ);
+    cudaDeviceSynchronize();
     threadsPerBlock = 256;
     blocksPerGrid = (Face_NUM + threadsPerBlock - 1) / threadsPerBlock;
     Update_normals_and_Planes << <blocksPerGrid, threadsPerBlock >> > (d_Vertices, d_Faces, d_Object_to_Face, index, d_Normals, d_Planes, d_number_of_vertices_in_one_face, d_normal_index_to_face, d_start_face_at_index, Face_NUM, Normal_NUM);
@@ -280,10 +289,12 @@ int main() {
     //////////////////////////////////////////////////
     int reflecions = 0;
     double focal_length = 10;
-    point3 h_camera_center(120.0, -60.0, -50.0);
-    point3  h_camera_focal(60.0 / 2, -25.0 / 2, -25.0 / 2);
+    point3 h_camera_center(120.0, -70.0, -70.0);
+    point3  h_camera_focal(120.0 / 2, -70.0 / 2, -70.0 / 2);
+    vec3 world_light_dir = vec3(-0.7,1,1);
     point3* d_camera_center;
     point3* d_camera_focal;
+    vec3* d_world_light_dir;
     ray** h_ray;
     ray* d_ray;
     h_ray = (ray**)malloc(HEIGHT * sizeof(ray*));
@@ -294,8 +305,11 @@ int main() {
     cudaMalloc(&d_ray, WIDTH * HEIGHT * sizeof(ray));
     cudaMalloc((void**)&d_camera_center, sizeof(point3));
     cudaMalloc((void**)&d_camera_focal, sizeof(point3));
+    cudaMalloc((void**)&d_world_light_dir, sizeof(vec3));
+
     cudaMemcpy(d_camera_center, &h_camera_center, sizeof(point3), cudaMemcpyHostToDevice);
     cudaMemcpy(d_camera_focal, &h_camera_focal, sizeof(point3), cudaMemcpyHostToDevice);
+    cudaMemcpy(d_world_light_dir, &world_light_dir, sizeof(point3), cudaMemcpyHostToDevice);
 
 
 
@@ -346,10 +360,13 @@ int main() {
 
     cudaMemcpy(d_Materials, Materials, object_couter * sizeof(Material), cudaMemcpyHostToDevice);
 
-    Choose_closest <<< gridDim, blockDim >>> (d_distances, Face_NUM, d_colors, d_Planes, d_Materials, d_ray, d_Object_to_Face, d_close_indexes, d_closest_interesections);
+    Choose_closest <<< gridDim, blockDim >>> (d_distances, Face_NUM, d_colors, d_Planes, d_Materials, d_ray, d_Object_to_Face, d_close_indexes, d_closest_interesections, d_world_light_dir);
     cudaDeviceSynchronize();
 
+    int* Reflected_surface = new int[WIDTH * HEIGHT];
+
     cudaMemcpy(Colors, d_colors, WIDTH * HEIGHT * 3 * sizeof(float), cudaMemcpyDeviceToHost);
+    cudaMemcpy(Reflected_surface, d_close_indexes, WIDTH * HEIGHT * sizeof(int), cudaMemcpyDeviceToHost);
 
     saveAsBMP(Colors, WIDTH, HEIGHT, "normals_image.bmp");
     ///////////////////////////////////////////////
@@ -359,7 +376,7 @@ int main() {
     ////////////////////////////////////////////////
 
 
-    Add_shadows <<< gridDim, blockDim >> > (d_closest_interesections, d_shadows, d_normal_index_to_face, d_number_of_vertices_in_one_face, d_Faces, d_Vertices, d_Normals, d_Planes, d_start_face_at_index, Face_NUM, Vert_NUM, Normal_NUM);
+    Add_shadows <<< gridDim, blockDim >> > (d_closest_interesections, d_shadows, d_normal_index_to_face, d_number_of_vertices_in_one_face, d_Faces, d_Vertices, d_Normals, d_Planes, d_start_face_at_index, Face_NUM, Vert_NUM, Normal_NUM, d_world_light_dir);
     cudaDeviceSynchronize();
 
     cudaMemcpy(shadows, d_shadows, WIDTH * HEIGHT * 3 * sizeof(float), cudaMemcpyDeviceToHost);
@@ -367,16 +384,7 @@ int main() {
 
     saveAsBMP(shadows, WIDTH, HEIGHT, "shadowes_image.bmp");
 
-    for (int i = 0; i < WIDTH * HEIGHT * 3; i++)
-    {
-        if (shadows[i] >= 1)
-        {
-            Colors[i] -= 0.1f;
-            if (Colors[i] < 0) { Colors[i] = 0.0f; }
-        }
 
-    }
-    saveAsBMP(Colors, WIDTH, HEIGHT, "shadowed_scene_image.bmp");
 
 
     ///////////////////////////////////////////////
@@ -396,12 +404,38 @@ int main() {
 
     cudaMemcpy(d_Materials, Materials, object_couter * sizeof(Material), cudaMemcpyHostToDevice);
 
-    Choose_closest << <gridDim, blockDim >> > (d_distances, Face_NUM, d_colors, d_Planes, d_Materials, d_ray, d_Object_to_Face, d_close_indexes, d_closest_interesections);
+    Choose_closest << <gridDim, blockDim >> > (d_distances, Face_NUM, d_colors, d_Planes, d_Materials, d_ray, d_Object_to_Face, d_close_indexes, d_closest_interesections, d_world_light_dir);
     cudaDeviceSynchronize();
 
 
-    cudaMemcpy(Colors, d_colors, WIDTH * HEIGHT * 3 * sizeof(float), cudaMemcpyDeviceToHost);
-    saveAsBMP(Colors, WIDTH, HEIGHT, "reflected_image.bmp");
+    float* Reflections = new float[WIDTH * HEIGHT * 3];
+
+    cudaMemcpy(Reflections, d_colors, WIDTH * HEIGHT * 3 * sizeof(float), cudaMemcpyDeviceToHost);
+    saveAsBMP(Reflections, WIDTH, HEIGHT, "reflected_image.bmp");
+
+
+    cout << "skłądanie obrazów" << endl;
+
+    for (int i = 0; i < WIDTH * HEIGHT; i++)
+    {
+        Material Mat;
+        Mat = Materials[Object_to_Face[Reflected_surface[i]]];
+        Reflections[i * 3] = Mat.Reflectivity * Reflections[i * 3] + Colors[i*3]* (1 - Mat.Reflectivity);
+        Reflections[i * 3 +1] = Mat.Reflectivity * Reflections[i * 3 + 1] + Colors[i * 3 + 1] * (1 - Mat.Reflectivity);
+        Reflections[i * 3 + 2] = Mat.Reflectivity * Reflections[i * 3 + 2] + Colors[i * 3 + 2] * (1 - Mat.Reflectivity);
+        if (Reflections[i * 3] > 1) { Reflections[i * 3] = 1.0f; }
+        if (Reflections[i * 3] < 0) { Reflections[i * 3] = 0.0f; }
+        if (Reflections[i * 3 + 1] > 1) { Reflections[i * 3 + 1] = 1.0f; }
+        if (Reflections[i * 3 + 1] < 0) { Reflections[i * 3 + 1] = 0.0f; }
+        if (Reflections[i * 3 + 2] > 1) { Reflections[i * 3 + 2] = 1.0f; }
+        if (Reflections[i * 3 + 2] < 0) { Reflections[i * 3 + 2] = 0.0f; }
+        if (shadows[i * 3] >= 1){ Reflections[i * 3] -= 0.1f;if (Reflections[i * 3] < 0) { Reflections[i * 3] = 0.0f; }}
+        if (shadows[i * 3 + 1] >= 1) { Reflections[i * 3 + 1] -= 0.1f; if (Reflections[i * 3 + 1] < 0) { Reflections[i * 3 + 1] = 0.0f; } }
+        if (shadows[i * 3 + 2] >= 1) { Reflections[i * 3 + 2] -= 0.1f; if (Reflections[i * 3 + 2] < 0) { Reflections[i * 3 + 2] = 0.0f; } }
+
+
+    }
+    saveAsBMP(Reflections, WIDTH, HEIGHT, "Complete_image.bmp");
 
 
     cudaFree(d_ray);

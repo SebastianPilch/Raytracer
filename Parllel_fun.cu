@@ -68,11 +68,21 @@ __global__ void Update_rays(ray* viewport_rays, float* First_Intersections, int*
         {
             return;
         }
-        int normal_idx = d_normal_index_to_face[f];
-        vec3 normal = vec3(d_Normals[3 * normal_idx], d_Normals[3 * normal_idx + 1], d_Normals[3 * normal_idx + 2]);
+        int normal_idx = d_normal_index_to_face[f]-1;
+
+
+        vec3 normal;
+        normal = vec3(d_Normals[3 * normal_idx], d_Normals[3 * normal_idx + 1], d_Normals[3 * normal_idx + 2]);
         normal = normal / normal.length();
         UV_ray_dir = UV_ray_dir / UV_ray_dir.length();
-        vec3 ray_direction = UV_ray_dir - 2 * dotProduct_(normal, UV_ray_dir) * normal ;
+        float in_out = dotProduct_(normal, UV_ray_dir);
+
+        if (in_out < 0) {
+            normal = -normal;
+            in_out = -in_out;
+        }
+
+        vec3 ray_direction = UV_ray_dir - 2 * in_out * normal;
 
         point3 pixel_center = vec3(First_Intersections[(j * WIDTH + i) * 3], First_Intersections[(j * WIDTH + i) * 3 + 1], First_Intersections[(j * WIDTH + i) * 3 + 2]);
 
@@ -189,7 +199,7 @@ __global__ void Generate_distances(ray* viewport_rays,point3* camera_center, flo
     __syncthreads();
 }
 
-__global__ void Choose_closest(float* d_distances,int Face_NUM, float* d_colors, float* d_Planes, Material* Mats, ray* rays, int* Mats_to_face, int* Intersected_face_idx, float* d_intersections)
+__global__ void Choose_closest(float* d_distances,int Face_NUM, float* d_colors, float* d_Planes, Material* Mats, ray* rays, int* Mats_to_face, int* Intersected_face_idx, float* d_intersections, vec3* Light_dir)
 {
     int i = blockIdx.x * blockDim.x + threadIdx.x;
     int j = blockIdx.y * blockDim.y + threadIdx.y;
@@ -206,7 +216,7 @@ __global__ void Choose_closest(float* d_distances,int Face_NUM, float* d_colors,
         color light_specular = vec3(1.0f, 1.0f, 1.0f);
         vec3 camera_vector = rays[j * WIDTH + i].dir;
 
-        vec3 L = vec3(-10, 12, 15); // tu trzeba jakis wektor swiatla globalnego
+        vec3 L = *Light_dir; // tu trzeba jakis wektor swiatla globalnego
         //L = L / L.length();
 
 
@@ -265,7 +275,6 @@ __global__ void Choose_closest(float* d_distances,int Face_NUM, float* d_colors,
 
             vec3 normal = vec3((float)plane.A, (float)plane.B, (float)plane.C);
             normal = - normal / normal.length();
-
             L = L / L.length();
             vec3 reflection_vector = 2 * dotProduct_(normal, L) * normal - L;
             reflection_vector = reflection_vector / reflection_vector.length();
@@ -308,7 +317,7 @@ __global__ void Choose_closest(float* d_distances,int Face_NUM, float* d_colors,
 
 
 
-__global__ void Add_shadows(float* d_intersections, float* d_shadows, int* d_normal_index_to_face, int* d_number_of_vertices_in_one_face, int* d_Faces, float* d_Vertices, float* d_Normals, float* d_Planes, int* start_face_at_index, int Face_NUM, int Vertex_NUM, int Normal_NUM)
+__global__ void Add_shadows(float* d_intersections, float* d_shadows, int* d_normal_index_to_face, int* d_number_of_vertices_in_one_face, int* d_Faces, float* d_Vertices, float* d_Normals, float* d_Planes, int* start_face_at_index, int Face_NUM, int Vertex_NUM, int Normal_NUM, vec3* Light_dir)
 {
     int i = blockIdx.x * blockDim.x + threadIdx.x;
     int j = blockIdx.y * blockDim.y + threadIdx.y;
@@ -320,11 +329,11 @@ __global__ void Add_shadows(float* d_intersections, float* d_shadows, int* d_nor
     {
 
 
-        //if (d_intersections[(j * WIDTH + i) * 3] == INFINITY || d_intersections[(j * WIDTH + i) * 3 + 1] == INFINITY || d_intersections[(j * WIDTH + i) * 3 + 2] == INFINITY)
-        //{
-        //    return;
-        //}
-        ray Reverse_Light = ray(point3(d_intersections[(j * WIDTH + i) * 3], d_intersections[(j * WIDTH + i) * 3 + 1], d_intersections[(j * WIDTH + i) * 3 + 2]), vec3(-1,-1, -1));
+        if (d_intersections[(j * WIDTH + i) * 3] == INFINITY || d_intersections[(j * WIDTH + i) * 3 + 1] == INFINITY || d_intersections[(j * WIDTH + i) * 3 + 2] == INFINITY)
+        {
+            return;
+        }
+        ray Reverse_Light = ray(point3(d_intersections[(j * WIDTH + i) * 3], d_intersections[(j * WIDTH + i) * 3 + 1], d_intersections[(j * WIDTH + i) * 3 + 2]), -(*Light_dir));
 
         bool Is_Hitten_correct = true;
         Plane plane = Plane((double)d_Planes[f * 4], (double)d_Planes[f * 4 + 1], (double)d_Planes[f * 4 + 2], (double)d_Planes[f * 4 + 3]);
@@ -332,11 +341,11 @@ __global__ void Add_shadows(float* d_intersections, float* d_shadows, int* d_nor
         point3 intersection = inter_data.intersection;
         double t = inter_data.t;
 
-        if (intersection[0] == INFINITY || intersection[0] == -INFINITY || intersection[1] == INFINITY ||
-            intersection[1] == -INFINITY || intersection[2] == INFINITY || intersection[2] == -INFINITY)
-        {
-            Is_Hitten_correct = false;
-        }
+        //if (intersection[0] == INFINITY || intersection[0] == -INFINITY || intersection[1] == INFINITY ||
+        //    intersection[1] == -INFINITY || intersection[2] == INFINITY || intersection[2] == -INFINITY)
+        //{
+        //    Is_Hitten_correct = false;
+        //}
         //printf("%f , %f , %f \n", d_intersections[(j * WIDTH + i) * 3], d_intersections[(j * WIDTH + i) * 3 + 1], d_intersections[(j * WIDTH + i) * 3 + 2]);
 
         vec3 edge;
@@ -485,66 +494,3 @@ __global__ void Update_normals_and_Planes(float* d_Vertices, int* d_Faces, int* 
             d_Normals[modify_normal_idx * 3 + 2] = new_Norm[2];
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-__device__ int partition(float* data, int left, int right) {
-    float pivot = data[right];
-    int i = left - 1;
-    for (int j = left; j < right; ++j) {
-        if (data[j] < pivot) {
-            ++i;
-            float temp = data[i];
-            data[i] = data[j];
-            data[j] = temp;
-        }
-    }
-    float temp = data[i + 1];
-    data[i + 1] = data[right];
-    data[right] = temp;
-    return i + 1;
-}
-
-__device__ void quickSort(float* data, int left, int right) {
-    if (left < right) {
-        int pi = partition(data, left, right);
-
-        quickSort(data, left, pi - 1);
-        quickSort(data, pi + 1, right);
-    }
-}
-
-__global__ void quickSortKernel(float* d_distances, int Face_NUM) {
-    int i_ind = blockIdx.x * blockDim.x + threadIdx.x;
-    int j_ind = blockIdx.y * blockDim.y + threadIdx.y;
-    
-    if (i_ind < WIDTH && j_ind < HEIGHT) 
-    {
-        int start = j_ind * Face_NUM * WIDTH + i_ind * Face_NUM;
-        int end = start + Face_NUM - 1;
-        quickSort(d_distances, start, end);
-    }
-}
-
