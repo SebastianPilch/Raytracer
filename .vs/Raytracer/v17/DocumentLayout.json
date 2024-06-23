@@ -3,16 +3,50 @@
   "WorkspaceRootPath": "C:\\Users\\Sebastian\\Desktop\\Raytracing\\Raytracer\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Sebastian\\Desktop\\Raytracing\\Raytracer\\blender_to_cpp.cu||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:blender_to_cpp.cu||{8B382828-6202-11D1-8870-0000F87579D2}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Sebastian\\Desktop\\Raytracing\\Raytracer\\main.cu||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:main.cu||{8B382828-6202-11D1-8870-0000F87579D2}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Sebastian\\Desktop\\Raytracing\\Raytracer\\Parllel_fun.cuh||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Parllel_fun.cuh||{8B382828-6202-11D1-8870-0000F87579D2}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Sebastian\\Desktop\\Raytracing\\Raytracer\\Parallel_functions.cu||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Parallel_functions.cu||{8B382828-6202-11D1-8870-0000F87579D2}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Sebastian\\Desktop\\Raytracing\\Raytracer\\Parllel_fun.cu||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Parllel_fun.cu||{8B382828-6202-11D1-8870-0000F87579D2}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Sebastian\\Desktop\\Raytracing\\Raytracer\\ImportObj.cu||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:ImportObj.cu||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Sebastian\\Desktop\\Raytracing\\Raytracer\\Material.cu||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Material.cu||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Sebastian\\Desktop\\Raytracing\\Raytracer\\vec3.cu||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:vec3.cu||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Sebastian\\Desktop\\Raytracing\\Raytracer\\Ray.cu||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Ray.cu||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Sebastian\\Desktop\\Raytracing\\Raytracer\\SaveAsBMP.cuh||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:SaveAsBMP.cuh||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Sebastian\\Desktop\\Raytracing\\Raytracer\\SaveAsBMP.cu||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:SaveAsBMP.cu||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.3\\include\\cuda_runtime.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Program Files\\Microsoft Visual Studio\\2022\\Professional\\VC\\Tools\\MSVC\\14.39.33519\\crt\\src\\vcruntime\\throw_bad_alloc.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Sebastian\\Desktop\\Raytracing\\Raytracer\\parallel_functions.cuh||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:parallel_functions.cuh||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Sebastian\\Desktop\\Raytracing\\Raytracer\\CMakeLists.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:CMakeLists.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,43 +56,152 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 11,
           "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "Parllel_fun.cu",
-              "DocumentMoniker": "C:\\Users\\Sebastian\\Desktop\\Raytracing\\Raytracer\\Parllel_fun.cu",
-              "RelativeDocumentMoniker": "Parllel_fun.cu",
-              "ToolTip": "C:\\Users\\Sebastian\\Desktop\\Raytracing\\Raytracer\\Parllel_fun.cu",
-              "RelativeToolTip": "Parllel_fun.cu",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAADMAAAAAAAAA",
+              "Title": "ImportObj.cu",
+              "DocumentMoniker": "C:\\Users\\Sebastian\\Desktop\\Raytracing\\Raytracer\\ImportObj.cu",
+              "RelativeDocumentMoniker": "ImportObj.cu",
+              "ToolTip": "C:\\Users\\Sebastian\\Desktop\\Raytracing\\Raytracer\\ImportObj.cu",
+              "RelativeToolTip": "ImportObj.cu",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgBAAAmAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2024-06-23T20:50:22.937Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Parallel_functions.cu",
+              "DocumentMoniker": "C:\\Users\\Sebastian\\Desktop\\Raytracing\\Raytracer\\Parallel_functions.cu",
+              "RelativeDocumentMoniker": "Parallel_functions.cu",
+              "ToolTip": "C:\\Users\\Sebastian\\Desktop\\Raytracing\\Raytracer\\Parallel_functions.cu",
+              "RelativeToolTip": "Parallel_functions.cu",
+              "ViewState": "AQIAAAYAAAAAAAAAAAAAADYBAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
               "WhenOpened": "2024-06-23T15:56:43.471Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Parllel_fun.cuh",
-              "DocumentMoniker": "C:\\Users\\Sebastian\\Desktop\\Raytracing\\Raytracer\\Parllel_fun.cuh",
-              "RelativeDocumentMoniker": "Parllel_fun.cuh",
-              "ToolTip": "C:\\Users\\Sebastian\\Desktop\\Raytracing\\Raytracer\\Parllel_fun.cuh",
-              "RelativeToolTip": "Parllel_fun.cuh",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2024-06-22T09:08:06.496Z",
+              "DocumentIndex": 11,
+              "Title": "CMakeLists.txt",
+              "DocumentMoniker": "C:\\Users\\Sebastian\\Desktop\\Raytracing\\Raytracer\\CMakeLists.txt",
+              "RelativeDocumentMoniker": "CMakeLists.txt",
+              "ToolTip": "C:\\Users\\Sebastian\\Desktop\\Raytracing\\Raytracer\\CMakeLists.txt",
+              "RelativeToolTip": "CMakeLists.txt",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
+              "WhenOpened": "2024-06-23T20:35:36.265Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Material.cu",
+              "DocumentMoniker": "C:\\Users\\Sebastian\\Desktop\\Raytracing\\Raytracer\\Material.cu",
+              "RelativeDocumentMoniker": "Material.cu",
+              "ToolTip": "C:\\Users\\Sebastian\\Desktop\\Raytracing\\Raytracer\\Material.cu",
+              "RelativeToolTip": "Material.cu",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAACcAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2024-06-23T20:31:59.744Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "vec3.cu",
+              "DocumentMoniker": "C:\\Users\\Sebastian\\Desktop\\Raytracing\\Raytracer\\vec3.cu",
+              "RelativeDocumentMoniker": "vec3.cu",
+              "ToolTip": "C:\\Users\\Sebastian\\Desktop\\Raytracing\\Raytracer\\vec3.cu",
+              "RelativeToolTip": "vec3.cu",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2024-06-23T20:31:56.422Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "SaveAsBMP.cuh",
+              "DocumentMoniker": "C:\\Users\\Sebastian\\Desktop\\Raytracing\\Raytracer\\SaveAsBMP.cuh",
+              "RelativeDocumentMoniker": "SaveAsBMP.cuh",
+              "ToolTip": "C:\\Users\\Sebastian\\Desktop\\Raytracing\\Raytracer\\SaveAsBMP.cuh",
+              "RelativeToolTip": "SaveAsBMP.cuh",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2024-06-23T20:31:52.319Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "SaveAsBMP.cu",
+              "DocumentMoniker": "C:\\Users\\Sebastian\\Desktop\\Raytracing\\Raytracer\\SaveAsBMP.cu",
+              "RelativeDocumentMoniker": "SaveAsBMP.cu",
+              "ToolTip": "C:\\Users\\Sebastian\\Desktop\\Raytracing\\Raytracer\\SaveAsBMP.cu",
+              "RelativeToolTip": "SaveAsBMP.cu",
+              "ViewState": "AQIAABgAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2024-06-23T20:31:47.013Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Ray.cu",
+              "DocumentMoniker": "C:\\Users\\Sebastian\\Desktop\\Raytracing\\Raytracer\\Ray.cu",
+              "RelativeDocumentMoniker": "Ray.cu",
+              "ToolTip": "C:\\Users\\Sebastian\\Desktop\\Raytracing\\Raytracer\\Ray.cu",
+              "RelativeToolTip": "Ray.cu",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA4AAAABAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2024-06-22T21:07:53.146Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "throw_bad_alloc.cpp",
+              "DocumentMoniker": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Professional\\VC\\Tools\\MSVC\\14.39.33519\\crt\\src\\vcruntime\\throw_bad_alloc.cpp",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\Program Files\\Microsoft Visual Studio\\2022\\Professional\\VC\\Tools\\MSVC\\14.39.33519\\crt\\src\\vcruntime\\throw_bad_alloc.cpp",
+              "ToolTip": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Professional\\VC\\Tools\\MSVC\\14.39.33519\\crt\\src\\vcruntime\\throw_bad_alloc.cpp",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\Program Files\\Microsoft Visual Studio\\2022\\Professional\\VC\\Tools\\MSVC\\14.39.33519\\crt\\src\\vcruntime\\throw_bad_alloc.cpp",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAACgAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-06-23T20:13:37.32Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "cuda_runtime.h",
+              "DocumentMoniker": "C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.3\\include\\cuda_runtime.h",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.3\\include\\cuda_runtime.h",
+              "ToolTip": "C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.3\\include\\cuda_runtime.h",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.3\\include\\cuda_runtime.h",
+              "ViewState": "AQIAAN8CAAAAAAAAAAAwwP4CAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-06-23T19:24:33.736Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Parallel_functions.cuh",
+              "DocumentMoniker": "C:\\Users\\Sebastian\\Desktop\\Raytracing\\Raytracer\\Parallel_functions.cuh",
+              "RelativeDocumentMoniker": "Parallel_functions.cuh",
+              "ToolTip": "C:\\Users\\Sebastian\\Desktop\\Raytracing\\Raytracer\\Parallel_functions.cuh",
+              "RelativeToolTip": "Parallel_functions.cuh",
+              "ViewState": "AQIAABIAAAAAAAAAAAAAABIAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2024-06-22T09:08:06.496Z"
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "blender_to_cpp.cu",
-              "DocumentMoniker": "C:\\Users\\Sebastian\\Desktop\\Raytracing\\Raytracer\\blender_to_cpp.cu",
-              "RelativeDocumentMoniker": "blender_to_cpp.cu",
-              "ToolTip": "C:\\Users\\Sebastian\\Desktop\\Raytracing\\Raytracer\\blender_to_cpp.cu",
-              "RelativeToolTip": "blender_to_cpp.cu",
-              "ViewState": "AQIAAJsAAAAAAAAAAAAEwK8AAAAAAAAA",
+              "Title": "main.cu",
+              "DocumentMoniker": "C:\\Users\\Sebastian\\Desktop\\Raytracing\\Raytracer\\main.cu",
+              "RelativeDocumentMoniker": "main.cu",
+              "ToolTip": "C:\\Users\\Sebastian\\Desktop\\Raytracing\\Raytracer\\main.cu",
+              "RelativeToolTip": "main.cu",
+              "ViewState": "AQIAAIwBAAAAAAAAAAAAAJoBAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
               "WhenOpened": "2024-06-23T13:30:06.795Z",
               "EditorCaption": ""

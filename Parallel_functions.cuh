@@ -5,8 +5,8 @@
 #define PAR_FUN_H
 
 
-#define WIDTH 400
-#define HEIGHT 400
+#define WIDTH 650
+#define HEIGHT 650
 #define VIEWPORT_HEIGHT  2.0
 #define VIEWPORT_WIDTH VIEWPORT_HEIGHT * (double)(WIDTH / HEIGHT)
 #define VIEWPORT_U vec3(VIEWPORT_WIDTH, 0, 0)

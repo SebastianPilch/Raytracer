@@ -9,7 +9,7 @@
 #include "vec3.cuh"
 #include "ImportObj.cuh"
 #include "Ray.cuh"
-#include "Parllel_fun.cuh"
+#include "Parallel_functions.cuh"
 #include "Material.cuh"
 #include "SaveAsBMP.cuh"
 #include<cmath>
@@ -23,46 +23,12 @@ int main() {
     //
     //////////////////////////////////////////////////
 
-
-    //int vert_num1 = 3;
-    //int face_num1 = 1;
-    //int normal_num1 = 1;
-
-    //Pointer_storage Kostka = GetDataFromObj(vert_num1, face_num1, normal_num1, "../../../helpers/untitled.obj");
-
-    //int vert_num2 = 3;
-    //int face_num2 = 1;
-    //int normal_num2 = 1;
-
-    //Pointer_storage Trojkatna_Kostka = GetDataFromObj(vert_num2, face_num2, normal_num2, "../../../helpers/Trojkatny_szescian.obj");
     int object_couter = 0;
     int vert_num3 = 3;
     int face_num3 = 1;
     int normal_num3 = 1;
 
-    //Pointer_storage pociety_walec = GetDataFromObj(vert_num3, face_num3, normal_num3, "../../../helpers/walec_ale_kanciastyXD.obj");
-    Pointer_storage pociety_walec = GetDataFromObj(vert_num3, face_num3, normal_num3, object_couter, "../../../helpers/Studia_z_budownictwa_budujemy_mosty.obj");
-
-    //cout << endl << endl << "Kostka" << endl << endl;
-
-    //cout << endl << endl << "Kostka" << endl << endl;
-    //cout << endl << endl << "Kostka" << endl << endl;
-
-
-
-
-
-
-    //Print_Import_data(Kostka, vert_num1, normal_num1, face_num1);
-
-    //cout << endl << endl << "Sześcian pokrojony" << endl << endl;
-    //Print_Import_data(Trojkatna_Kostka, vert_num2, normal_num2, face_num2);
-
-    //cout << endl << endl << "zlosliwy przyklad kanciastego walca" << endl << endl;
-    //Print_Import_data(pociety_walec, vert_num3, normal_num3, face_num3);
-
-    //cout << endl << endl << "Testowanie promieni";
-
+    Pointer_storage pociety_walec = GetDataFromObj(vert_num3, face_num3, normal_num3, object_couter, "../../../helpers/Studia_z_budownictwa_budujemy_mosty_2.obj");
 
 
     ///////////////////////////////////////////////
@@ -156,9 +122,9 @@ int main() {
     //utworzenie materiałów
     //
     //////////////////////////////////////////////////
-    Material* Materials = new Material[5];
-
-    Materials[0] = Material(0.6f, 0.8f, 0.3f,   // diffuse (bright green)
+    Material* Materials = new Material[object_couter];
+    //trawa
+    Materials[5] = Material(0.6f, 0.8f, 0.3f,   // diffuse (bright green)
         0.7f, 0.9f, 0.4f,   // specular (light green)
         0.3f, 0.4f, 0.2f,   // ambient (dark green)
         1.0f,               // alpha
@@ -167,7 +133,7 @@ int main() {
 
     //woda
 
-    Materials[4] = Material(0.3f, 0.6f, 0.8f,   // diffuse (light blue)
+    Materials[2] = Material(0.3f, 0.6f, 0.8f,   // diffuse (light blue)
         0.5f, 0.7f, 0.9f,   // specular (light blue)
         0.2f, 0.3f, 0.4f,   // ambient (dark blue)
         1.0f,               // alpha
@@ -176,7 +142,7 @@ int main() {
 
     //pnie
 
-    Materials[3] = Material(0.5f, 0.3f, 0.1f,   // diffuse (brown)
+    Materials[4] = Material(0.5f, 0.3f, 0.1f,   // diffuse (brown)
         0.6f, 0.4f, 0.2f,   // specular (light brown)
         0.3f, 0.2f, 0.1f,   // ambient (dark brown)
         1.0f,               // alpha
@@ -185,7 +151,7 @@ int main() {
 
     //drzewa
 
-    Materials[2] = Material(0.1f, 0.4f, 0.1f,   // diffuse (dark green)
+    Materials[3] = Material(0.1f, 0.4f, 0.1f,   // diffuse (dark green)
         0.2f, 0.5f, 0.2f,   // specular (light green)
         0.05f, 0.2f, 0.05f, // ambient (very dark green)
         1.0f,               // alpha
@@ -199,7 +165,14 @@ int main() {
         0.3f, 0.3f, 0.3f,   // ambient (dark grey)
         1.0f,               // alpha
         4.0f,              // shininess  
-        0.3f);             // reflectivity
+        0.15f);             // reflectivity
+    //skała
+    Materials[0] = Material(0.8f, 0.8f, 0.8f,   // diffuse (metallic grey)
+        0.8f, 0.8f, 0.8f,   // specular (bright grey)
+        0.3f, 0.3f, 0.3f,   // ambient (dark grey)
+        1.0f,               // alpha
+        1.0f,              // shininess  
+        0.0f);             // reflectivity
     ///////////////////////////////////////////////
     //
     //Alokacja i przekazanie danych do karty
@@ -277,6 +250,9 @@ int main() {
     index = 4;
     Transform << <blocksPerGrid, threadsPerBlock >> > (d_Vertices, Vert_NUM, d_Object_to_Vertex, index, TranslateX, TranslateY, TranslateZ, rotateX, rotateY, rotateZ, scaleX, scaleY, scaleZ);
     cudaDeviceSynchronize();
+    index = 5;
+    Transform << <blocksPerGrid, threadsPerBlock >> > (d_Vertices, Vert_NUM, d_Object_to_Vertex, index, TranslateX, TranslateY, TranslateZ, rotateX, rotateY, rotateZ, scaleX, scaleY, scaleZ);
+    cudaDeviceSynchronize();
     threadsPerBlock = 256;
     blocksPerGrid = (Face_NUM + threadsPerBlock - 1) / threadsPerBlock;
     Update_normals_and_Planes << <blocksPerGrid, threadsPerBlock >> > (d_Vertices, d_Faces, d_Object_to_Face, index, d_Normals, d_Planes, d_number_of_vertices_in_one_face, d_normal_index_to_face, d_start_face_at_index, Face_NUM, Normal_NUM);
@@ -291,7 +267,7 @@ int main() {
     double focal_length = 10;
     point3 h_camera_center(120.0, -70.0, -70.0);
     point3  h_camera_focal(120.0 / 2, -70.0 / 2, -70.0 / 2);
-    vec3 world_light_dir = vec3(-0.7,1,1);
+    vec3 world_light_dir = vec3(-0.7,1,-1);
     point3* d_camera_center;
     point3* d_camera_focal;
     vec3* d_world_light_dir;
@@ -418,21 +394,18 @@ int main() {
 
     for (int i = 0; i < WIDTH * HEIGHT; i++)
     {
-        Material Mat;
-        Mat = Materials[Object_to_Face[Reflected_surface[i]]];
-        Reflections[i * 3] = Mat.Reflectivity * Reflections[i * 3] + Colors[i*3]* (1 - Mat.Reflectivity);
-        Reflections[i * 3 +1] = Mat.Reflectivity * Reflections[i * 3 + 1] + Colors[i * 3 + 1] * (1 - Mat.Reflectivity);
-        Reflections[i * 3 + 2] = Mat.Reflectivity * Reflections[i * 3 + 2] + Colors[i * 3 + 2] * (1 - Mat.Reflectivity);
-        if (Reflections[i * 3] > 1) { Reflections[i * 3] = 1.0f; }
-        if (Reflections[i * 3] < 0) { Reflections[i * 3] = 0.0f; }
-        if (Reflections[i * 3 + 1] > 1) { Reflections[i * 3 + 1] = 1.0f; }
-        if (Reflections[i * 3 + 1] < 0) { Reflections[i * 3 + 1] = 0.0f; }
-        if (Reflections[i * 3 + 2] > 1) { Reflections[i * 3 + 2] = 1.0f; }
-        if (Reflections[i * 3 + 2] < 0) { Reflections[i * 3 + 2] = 0.0f; }
-        if (shadows[i * 3] >= 1){ Reflections[i * 3] -= 0.1f;if (Reflections[i * 3] < 0) { Reflections[i * 3] = 0.0f; }}
-        if (shadows[i * 3 + 1] >= 1) { Reflections[i * 3 + 1] -= 0.1f; if (Reflections[i * 3 + 1] < 0) { Reflections[i * 3 + 1] = 0.0f; } }
-        if (shadows[i * 3 + 2] >= 1) { Reflections[i * 3 + 2] -= 0.1f; if (Reflections[i * 3 + 2] < 0) { Reflections[i * 3 + 2] = 0.0f; } }
-
+        if (Reflected_surface[i] != -1) 
+        {
+            Material Mat;
+            Mat = Materials[Object_to_Face[Reflected_surface[i]]];
+            Reflections[i * 3] = Mat.Reflectivity * Reflections[i * 3] + Colors[i * 3] * (1 - Mat.Reflectivity);
+            Reflections[i * 3 + 1] = Mat.Reflectivity * Reflections[i * 3 + 1] + Colors[i * 3 + 1] * (1 - Mat.Reflectivity);
+            Reflections[i * 3 + 2] = Mat.Reflectivity * Reflections[i * 3 + 2] + Colors[i * 3 + 2] * (1 - Mat.Reflectivity);
+            if (shadows[i * 3] >= 1) { Reflections[i * 3] -= 0.1f; if (Reflections[i * 3] < 0) { Reflections[i * 3] = 0.0f; } }
+            if (shadows[i * 3 + 1] >= 1) { Reflections[i * 3 + 1] -= 0.1f; if (Reflections[i * 3 + 1] < 0) { Reflections[i * 3 + 1] = 0.0f; } }
+            if (shadows[i * 3 + 2] >= 1) { Reflections[i * 3 + 2] -= 0.1f; if (Reflections[i * 3 + 2] < 0) { Reflections[i * 3 + 2] = 0.0f; } }
+        
+        }
 
     }
     saveAsBMP(Reflections, WIDTH, HEIGHT, "Complete_image.bmp");

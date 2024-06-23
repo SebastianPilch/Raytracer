@@ -3,7 +3,7 @@
 #include <ctime>
 #include <iomanip>
 #include "vec3.cuh"
-#include "Parllel_fun.cuh"
+#include "Parallel_functions.cuh"
 #include "Ray.cuh"
 #include <cuda_runtime.h>
 #include <device_launch_parameters.h>
@@ -112,7 +112,7 @@ __global__ void Generate_distances(ray* viewport_rays,point3* camera_center, flo
     }
     bool Is_Hitten_correct = true;
 
-    ray UV_ray = viewport_rays[j * HEIGHT + i];
+    ray UV_ray = viewport_rays[j * WIDTH + i];
 
     Plane plane = Plane((double)d_Planes[f * 4], (double)d_Planes[f * 4 + 1], (double)d_Planes[f * 4 + 2], (double)d_Planes[f * 4 + 3]);
     inter_ inter_data = UV_ray.findIntersection(plane);
@@ -157,10 +157,7 @@ __global__ void Generate_distances(ray* viewport_rays,point3* camera_center, flo
         {
             Is_Hitten_correct = false;
         }
-        if (current_vertex[0] == 0 && current_vertex[1] == 0 && current_vertex[2] == 0)
-        {
-            //printf("%d", vertex_index);
-        }
+
     }
     vec3 dis;
     if (reflections == 0) 
@@ -222,7 +219,6 @@ __global__ void Choose_closest(float* d_distances,int Face_NUM, float* d_colors,
 
         int closest = -1;
         float lowest_distance = INFINITY;
-        float far = -1.0f;
 
         for (int f = 0; f < Face_NUM; f++)
         {
@@ -231,8 +227,6 @@ __global__ void Choose_closest(float* d_distances,int Face_NUM, float* d_colors,
                 closest = f;
                 lowest_distance = d_distances[j * Face_NUM * WIDTH + i * Face_NUM + f];
             }
-
-
         }
         if (lowest_distance == INFINITY || closest == -1)
         {
@@ -341,11 +335,10 @@ __global__ void Add_shadows(float* d_intersections, float* d_shadows, int* d_nor
         point3 intersection = inter_data.intersection;
         double t = inter_data.t;
 
-        //if (intersection[0] == INFINITY || intersection[0] == -INFINITY || intersection[1] == INFINITY ||
-        //    intersection[1] == -INFINITY || intersection[2] == INFINITY || intersection[2] == -INFINITY)
-        //{
-        //    Is_Hitten_correct = false;
-        //}
+        if (d_intersections[0] == INFINITY || d_intersections[1] == INFINITY || d_intersections[2] == INFINITY )
+        {
+            Is_Hitten_correct = false;
+        }
         //printf("%f , %f , %f \n", d_intersections[(j * WIDTH + i) * 3], d_intersections[(j * WIDTH + i) * 3 + 1], d_intersections[(j * WIDTH + i) * 3 + 2]);
 
         vec3 edge;
@@ -388,7 +381,7 @@ __global__ void Add_shadows(float* d_intersections, float* d_shadows, int* d_nor
         }
 
 
-        if(Is_Hitten_correct && t > 0 )
+        if(Is_Hitten_correct && t >= 0.03 )
         {
             d_shadows[(j * WIDTH + i)*3] = 1;
             d_shadows[(j * WIDTH + i)*3 + 1] = 1;
@@ -400,17 +393,6 @@ __global__ void Add_shadows(float* d_intersections, float* d_shadows, int* d_nor
         __syncthreads();
     }
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 
