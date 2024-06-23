@@ -265,7 +265,7 @@ __global__ void Choose_closest(float* d_distances,int Face_NUM, float* d_colors,
             vec3 normal = vec3((float)plane.A, (float)plane.B, (float)plane.C);
             //color face_color;
             normal = normal / normal.length();
-            vec3 reflection_vector = 2 * dotProduct_(normal, L) * normal - L;
+            vec3 reflection_vector = L - 2 * dotProduct_(normal, L) * normal;
             color face_color = {
                 ambient[0] * light_ambient[0] +
                 alpha * (
